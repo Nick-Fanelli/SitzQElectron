@@ -1,12 +1,19 @@
 import './App.css'
 
+import Dockspace from './Components/Docking/Dockspace'
+import Window from './Components/Docking/Window';
+
 function App() {
-    
-  return (
-    <>
-      <h1>Hello World</h1>
-    </>
-  )
+
+    return (
+        <>
+            <Dockspace>
+                <Window title="Example Window">
+                    <h1>Some Window</h1>
+                </Window>
+            </Dockspace>
+        </>
+    )
 }
 
-export default App
+export default App;

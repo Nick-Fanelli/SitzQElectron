@@ -1,0 +1,11 @@
+#dockspace {
+
+    width: 100vw;
+    height: 100vh;
+    background: darkslategray;
+    position: absolute;
+    margin: 0;
+    top: 0;
+    left: 0;
+
+}

@@ -1,0 +1,90 @@
+:root {
+    --color-window-border: #111111;
+    --color-window-header-text: #ffffff;
+}
+
+.resizable-window {
+
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 0 0 3px 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 15px;
+    min-height: 15px;
+
+}
+
+.resizable-window .header {
+
+    position: absolute;
+    top: -20px;
+    width: 100%;
+    height: 20px;
+    background-color: var(--color-window-border);
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+    cursor: pointer;
+    
+}
+
+.resizable-window .header p {
+
+    margin: 0 1em;
+    font-size: 0.9rem;
+    color: var(--color-window-header-text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+.resizable-window .resizer {
+
+    position: absolute;
+    background: var(--color-window-border);
+
+}
+
+.resizable-window .resizer-right {
+
+    cursor: col-resize;
+    height: 100%;
+    right: 0;
+    top: 0;
+    width: 3px;
+
+}
+
+.resizable-window .resizer-left {
+
+    cursor: col-resize;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 3px;
+    
+}
+
+.resizable-window .resizer-top {
+
+    cursor: row-resize;
+    height: 3px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    
+}
+
+.resizable-window .resizer-bottom {
+
+    cursor: row-resize;
+    height: 3px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    
+}

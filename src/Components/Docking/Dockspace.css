@@ -1,12 +1,66 @@
+:root {
+    --color-dockspace-bg: #152020;
+    --color-docking-highlight-background: #008cff33;
+    --color-docking-highlight-border: #008cff;
+}
+
 #dockspace {
 
     width: 100vw;
     height: 100vh;
-    background: darkslategray;
+    background: var(--color-dockspace-bg);
     position: absolute;
     margin: 0;
     top: 0;
     left: 0;
     overflow: hidden;
 
+}
+
+#dockspace .docking-highlight {
+    
+    position: absolute;
+    background-color: var(--color-docking-highlight-background);
+    border: solid 2px var(--color-docking-highlight-border);
+    border-radius: 10px;
+    z-index: 2;
+    pointer-events: none;
+
+}
+
+#dockspace .docking-highlight.hidden { display: none !important; }
+
+#dockspace .docking-highlight.left {
+
+    top: 2px;
+    left: 0;
+    width: 33%;
+    height: calc(100vh - 8px);
+
+}
+
+#dockspace .docking-highlight.right {
+
+    top: 0;
+    right: 0;
+    height: calc(100vh - 8px);
+    width: 33%;
+
+}
+
+#dockspace .docking-highlight.top {
+
+    top: 2px;
+    left: 0;
+    width: calc(100vw - 6px);
+    height: 33%;
+
+}
+
+#dockspace .docking-highlight.bottom {
+
+    bottom: 0;
+    left: 0;
+    width: calc(100vw - 6px);
+    height: 33%;
 }

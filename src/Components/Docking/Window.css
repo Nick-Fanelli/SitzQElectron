@@ -18,6 +18,7 @@
     background-color: var(--color-window-background);
     border-radius: 0 0 10px 10px;
     filter: drop-shadow(5px 5px 15px #0000003c);
+    z-index: 1;
 
 }
 

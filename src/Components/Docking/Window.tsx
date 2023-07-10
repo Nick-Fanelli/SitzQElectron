@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { Transform } from '../../Utils/Math';
+
 import './Window.css'
+
+export const WindowHeaderSize = 23;
 
 export type WindowPreferences = {
     minimumWidth?: number,
@@ -11,20 +15,11 @@ const defaultWindowPreferences: WindowPreferences = {
     minimumHeight: 15
 }
 
-type Transform = {
-    position: {
-        x: number,
-        y: number
-    },
-    scale: {
-        width: number,
-        height: number
-    }
-}
-
 type Props = {
     title?: string
     windowPreferences?: WindowPreferences
+    onWindowMoveCallback?: Function
+    onResolveMoveCallback?: Function
     children?: JSX.Element | JSX.Element[]
 }
 
@@ -81,12 +76,16 @@ const Window = (props: Props) => {
     // Window Manual Movement
     useEffect(() => {
 
+        // Temporary Variables
         let offsetX = 0;
         let offsetY = 0;
 
-        let prevScale = 0;
+        let prevScale = 0; // Temporary Variable
 
+        // ====================================================================================================================
         // Window Move
+        // ====================================================================================================================
+
         const onResizableWindowMouseMove = (e: MouseEvent) => {
 
             setTransform((prev: Transform) => ({
@@ -98,11 +97,14 @@ const Window = (props: Props) => {
                 }
             }));
 
+            props.onWindowMoveCallback!(e.clientX, e.clientY);
         }
 
         const onResizableWindowMouseUp = () => {
             document.removeEventListener("mousemove", onResizableWindowMouseMove);
             document.removeEventListener("mouseup", onResizableWindowMouseUp);
+
+            props.onResolveMoveCallback!(setTransform);
         }
 
         const onResizableWindowMouseDown = (e: MouseEvent) => {
@@ -119,7 +121,10 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizableWindowMouseUp);
         }
 
+        // ====================================================================================================================
         // Right Resizer
+        // ====================================================================================================================
+
         const onResizerRightMouseMove = (e: MouseEvent) => {
             let deltaScale = e.clientX - offsetX;
 
@@ -146,7 +151,10 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizerRightMouseUp);
         }
 
+        // ====================================================================================================================
         // Bottom Resizer
+        // ====================================================================================================================
+
         const onResizerBottomMouseMove = (e: MouseEvent) => {
             let deltaScale = e.clientY - offsetY;
 
@@ -173,7 +181,10 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizerBottomMouseUp);
         }
 
+        // ====================================================================================================================
         // Top Resizer
+        // ====================================================================================================================
+
         const onResizerTopMouseMove = (e: MouseEvent) => {
 
             setTransform((prev: Transform) => ({
@@ -203,7 +214,10 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizerTopMouseUp);
         }
 
+        // ====================================================================================================================
         // Left Resizer
+        // ====================================================================================================================
+
         const onResizerLeftMouseMove = (e: MouseEvent) => {
 
             setTransform((prev: Transform) => ({
@@ -233,7 +247,10 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizerLeftMouseUp);
         }
 
+        // ====================================================================================================================
         // Corner Resizer
+        // ====================================================================================================================
+
         const onResizeCornerMouseMove = (e: MouseEvent) => {
 
             let deltaX = e.clientX - offsetX;
@@ -265,6 +282,9 @@ const Window = (props: Props) => {
             document.addEventListener("mouseup", onResizeCornerMouseUp);
         }
 
+        // ====================================================================================================================
+        // Mouse Down Event Listeners
+        // ====================================================================================================================
         resizableWindowRef?.current?.addEventListener("mousedown", onResizableWindowMouseDown);
         resizerRightRef?.current?.addEventListener("mousedown", onResizerRightMouseDown);
         resizerBottomRef?.current?.addEventListener("mousedown", onResizerBottomMouseDown);
@@ -282,7 +302,7 @@ const Window = (props: Props) => {
             resizerLeftRef?.current?.removeEventListener("mousedown", onResizerLeftMouseDown);
             resizeCornerHandleRef?.current?.removeEventListener("mousedown", onResizeCornerMouseDown);
         }
-    }, [transform, setTransform]);
+    }, [transform, setTransform, props.onWindowMoveCallback, props.onResolveMoveCallback]);
 
     return (
         <>
@@ -298,7 +318,7 @@ const Window = (props: Props) => {
                     height: 100
                 }
               }));
-        }}>Hello World</button>
+        }}>Reset Window</button>
         <div ref={resizableWindowRef} className="resizable-window">
 
             <div className="header">

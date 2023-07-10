@@ -10,6 +10,9 @@ function App() {
             <Dockspace>
                 <Window title="Example Window" windowPreferences={{minimumWidth: 100, minimumHeight: 100}}>
                 </Window>
+
+                <Window title="Another Window" windowPreferences={{minimumWidth: 100, minimumHeight: 100}}>
+                </Window>
             </Dockspace>
         </>
     )

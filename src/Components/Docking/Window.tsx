@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import './Window.css'
 
+export type WindowPreferences = {
+    minimumWidth?: number,
+    minimumHeight?: number
+}
+
+const defaultWindowPreferences: WindowPreferences = {
+    minimumWidth: 15,
+    minimumHeight: 15
+}
+
 type Transform = {
     position: {
         x: number,
@@ -14,12 +24,24 @@ type Transform = {
 
 type Props = {
     title?: string
+    windowPreferences?: WindowPreferences
     children?: JSX.Element | JSX.Element[]
 }
 
 const Window = (props: Props) => {
 
-    const [transform, setTransform] = useState<Transform>({ position: { x: 200, y: 200 }, scale: { width: 100, height: 100}});
+    const [ preferences, setPreferences ] = useState<WindowPreferences>(defaultWindowPreferences);
+
+    useEffect(() => {
+
+        setPreferences((prev: WindowPreferences) => ({
+            ...prev,
+            ...props.windowPreferences
+        }));
+
+    }, [props.windowPreferences, setPreferences]);
+
+    const [ transform, setTransform ] = useState<Transform>({ position: { x: 200, y: 200 }, scale: { width: 100, height: 100}});
 
     // Resizable Refs
     const resizableWindowRef = useRef<HTMLDivElement>(null);
@@ -38,6 +60,15 @@ const Window = (props: Props) => {
 
         if(resizableWindowRef.current) {
 
+            transform.scale.width = Math.max(transform.scale.width, preferences.minimumWidth || transform.scale.width);
+            transform.scale.height = Math.max(transform.scale.height, preferences.minimumHeight || transform.scale.height);
+
+            transform.position.x = Math.max(transform.position.x, 0);
+            transform.position.y = Math.max(transform.position.y, 0);
+
+            transform.position.x = Math.min(transform.position.x, window.innerWidth - transform.scale.width);
+            transform.position.y = Math.min(transform.position.y, window.innerHeight - transform.scale.height);
+
             resizableWindowRef.current.style.left = `${transform!.position!.x}px`;
             resizableWindowRef.current.style.top = `${transform!.position!.y + 20}px`;
             resizableWindowRef.current.style.width = `${transform!.scale!.width}px`;
@@ -45,7 +76,7 @@ const Window = (props: Props) => {
 
         }
 
-    }, [transform]);
+    }, [transform, preferences]);
 
     // Window Manual Movement
     useEffect(() => {
@@ -281,9 +312,9 @@ const Window = (props: Props) => {
             <div ref={resizerRightRef} className="resizer resizer-right"></div>
             <div ref={resizeCornerHandleRef} className="corner-handle"></div>
 
-            {/* <div className="children-wrapper">
+            <div className="children-wrapper">
                 {props.children}
-            </div> */}
+            </div>
 
         </div>
         </>

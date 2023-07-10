@@ -8,8 +8,7 @@ function App() {
     return (
         <>
             <Dockspace>
-                <Window title="Example Window">
-                    <h1>Some Window</h1>
+                <Window title="Example Window" windowPreferences={{minimumWidth: 100, minimumHeight: 100}}>
                 </Window>
             </Dockspace>
         </>

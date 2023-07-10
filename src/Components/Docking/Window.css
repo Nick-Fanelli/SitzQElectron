@@ -1,5 +1,6 @@
 :root {
-    --color-window-border: #111111;
+    --color-window-header: #232323;
+    --color-window-background: #343434;
     --color-window-header-text: #ffffff;
 }
 
@@ -14,6 +15,9 @@
     align-items: center;
     min-width: 15px;
     min-height: 15px;
+    background-color: var(--color-window-background);
+    border-radius: 0 0 10px 10px;
+    filter: drop-shadow(5px 5px 15px #0000003c);
 
 }
 
@@ -22,12 +26,13 @@
     position: absolute;
     top: -20px;
     width: 100%;
-    height: 20px;
-    background-color: var(--color-window-border);
+    height: 23px;
+    background-color: var(--color-window-header);
     display: flex;
     justify-content: space-between;
     user-select: none;
     cursor: pointer;
+    border-radius: 6px 6px 0 0;
     
 }
 
@@ -45,7 +50,7 @@
 .resizable-window .resizer {
 
     position: absolute;
-    background: var(--color-window-border);
+    background: transparent;
 
 }
 
@@ -53,7 +58,7 @@
 
     cursor: col-resize;
     height: 100%;
-    right: 0;
+    right: -3px;
     top: 0;
     width: 3px;
 
@@ -63,7 +68,7 @@
 
     cursor: col-resize;
     height: 100%;
-    left: 0;
+    left: -3px;
     top: 0;
     width: 3px;
     
@@ -84,8 +89,8 @@
 
     cursor: row-resize;
     height: 3px;
-    left: 0;
-    top: 0;
+    left: 0px;
+    top: 3px;
     width: 100%;
     
 }
@@ -94,8 +99,8 @@
 
     cursor: row-resize;
     height: 3px;
-    left: 0;
-    bottom: 0;
+    left: -3px;
+    bottom: -3px;
     width: 100%;
     
 }

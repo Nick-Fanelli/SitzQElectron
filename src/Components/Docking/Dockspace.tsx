@@ -2,7 +2,7 @@ import React, { useCallback, useRef } from 'react'
 
 import './Dockspace.css'
 import { Transform } from '../../Utils/Math';
-import { WindowHeaderSize } from './Window';
+import { WindowHeaderSize, WindowPreferences } from './Window';
 
 const DOCKING_TRIGGER_MARGIN: number = 200; // px
 
@@ -71,7 +71,7 @@ const Dockspace = (props: Props) => {
     }, [dockspaceRef.current?.style, topDockingHighlightRef, leftDockingHighlightRef, bottomDockingHighlightRef, rightDockingHighlightRef, tempDockingAreaRef]);
 
     // Resolve Window Move
-    const onResolveMoveCallback = useCallback((setTransform: Function) => {
+    const onResolveMoveCallback = useCallback((transform: Transform, setTransform: Function, setUndockedCachedScale: Function, setPreferences: Function) => {
 
         if(tempDockingAreaRef.current !== DockingArea.NONE) {
 
@@ -83,6 +83,13 @@ const Dockspace = (props: Props) => {
 
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
+
+            setUndockedCachedScale({ width: transform.scale.width, height: transform.scale.height });
+
+            setPreferences((prev: WindowPreferences) => ({
+                ...prev,
+                isDocked: true
+            }));
 
             switch(tempDockingAreaRef.current) {
 

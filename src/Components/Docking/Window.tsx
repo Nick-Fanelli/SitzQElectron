@@ -3,16 +3,25 @@ import { Transform } from '../../Utils/Math';
 
 import './Window.css'
 
+const DEBUG_SHOULD_SHOW_PREFERENCES = true;
+
 export const WindowHeaderSize = 23;
 
 export type WindowPreferences = {
-    minimumWidth?: number,
+    minimumWidth?: number
     minimumHeight?: number
+    isDocked?: boolean
+}
+
+export type WindowScale = {
+    width: number
+    height: number
 }
 
 const defaultWindowPreferences: WindowPreferences = {
     minimumWidth: 15,
-    minimumHeight: 15
+    minimumHeight: 15,
+    isDocked: false
 }
 
 type Props = {
@@ -26,6 +35,7 @@ type Props = {
 const Window = (props: Props) => {
 
     const [ preferences, setPreferences ] = useState<WindowPreferences>(defaultWindowPreferences);
+    const [ undockedCachedScale, setUndockedCachedScale ] = useState<WindowScale | null>(null);
 
     useEffect(() => {
 
@@ -97,6 +107,21 @@ const Window = (props: Props) => {
                 }
             }));
 
+            if(preferences.isDocked) { // Return to previous docked scale
+                if(undockedCachedScale !== null) {
+                    setTransform((prev: Transform) => ({
+                        ...prev,
+                        scale: {
+                            width: undockedCachedScale.width,
+                            height: undockedCachedScale.height
+                        }
+                    }));
+                }
+
+                setUndockedCachedScale(null);
+                preferences.isDocked = false;
+            }
+
             props.onWindowMoveCallback!(e.clientX, e.clientY);
         }
 
@@ -104,7 +129,7 @@ const Window = (props: Props) => {
             document.removeEventListener("mousemove", onResizableWindowMouseMove);
             document.removeEventListener("mouseup", onResizableWindowMouseUp);
 
-            props.onResolveMoveCallback!(setTransform);
+            props.onResolveMoveCallback!(transform, setTransform, setUndockedCachedScale, setPreferences);
         }
 
         const onResizableWindowMouseDown = (e: MouseEvent) => {
@@ -302,7 +327,7 @@ const Window = (props: Props) => {
             resizerLeftRef?.current?.removeEventListener("mousedown", onResizerLeftMouseDown);
             resizeCornerHandleRef?.current?.removeEventListener("mousedown", onResizeCornerMouseDown);
         }
-    }, [transform, setTransform, props.onWindowMoveCallback, props.onResolveMoveCallback]);
+    }, [transform, setTransform, props.onWindowMoveCallback, props.onResolveMoveCallback, preferences, setPreferences, undockedCachedScale, setUndockedCachedScale]);
 
     return (
         <>
@@ -319,7 +344,7 @@ const Window = (props: Props) => {
                 }
               }));
         }}>Reset Window</button>
-        <div ref={resizableWindowRef} className="resizable-window">
+        <div ref={resizableWindowRef} className={`resizable-window ${preferences.isDocked ? "docked" : ""}`}>
 
             <div className="header">
                 <p>{props.title}</p>
@@ -334,6 +359,17 @@ const Window = (props: Props) => {
 
             <div className="children-wrapper">
                 {props.children}
+
+                {
+                DEBUG_SHOULD_SHOW_PREFERENCES ?
+
+                <>
+                <p>Is Docked: {preferences.isDocked ? "True" : "False"}</p>
+                </>
+
+                : ""
+
+                }
             </div>
 
         </div>

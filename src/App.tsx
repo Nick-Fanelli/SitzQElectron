@@ -1,4 +1,7 @@
 import { createContext, useState } from 'react'
+
+import CueListComponent from './Components/CueListComponent'
+
 import './App.css'
 
 type ThemeContext = {
@@ -23,12 +26,7 @@ function App() {
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
 
             <div id="root" className={`theme-${theme}`}>
-
-                <h1>Hello World</h1>
-                <button>Hello World</button>
-                <br />
-                <input type="text" placeholder="Hello World" />
-
+                <CueListComponent />
             </div>
 
         </ThemeContext.Provider>

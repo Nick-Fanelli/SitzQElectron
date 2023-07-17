@@ -8,6 +8,8 @@
 
     --background-color: #fdfdfd;
     --secondary-background-color: #f7f7f7;
+    
+    --table-header-color: #d7d3d3;
 
     --text-color: #213e5a;
     --heading-text-color: #213e5a;
@@ -34,6 +36,8 @@
 
     --background-color: #191c1e;
     --secondary-background-color: #3a3f42;
+
+    --table-header-color: #282c2e;
 
     --text-color: #fdfdfd;
     --heading-text-color: #fdfdfd;

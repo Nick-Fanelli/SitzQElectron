@@ -1,11 +1,33 @@
 #cue-list {
 
+    /* Variables */
+    --cue-row-height: 40px;
+
     border-collapse: collapse;
     margin: 25px 0;
-    font-size: 0.9rem;
+    font-size: 1ch;
     min-width: 400px;
     table-layout: auto;
     width: 100%;
+    font-size: 1rem;
+
+}
+
+#cue-list input.hidden-input {
+
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+
+}
+
+/* Hide Spin Buttons (inc. up + down buttons) */
+#cue-list input.hidden-input::-webkit-outer-spin-button,
+#cue-list input.hidden-input::-webkit-inner-spin-button {
+
+    appearance: none;
+    margin: 0;
 
 }
 
@@ -13,14 +35,20 @@
 
     resize: horizontal;
     background-color: var(--table-header-color);
-    border-top: 1px solid #cccccc3f;
-    border-right: 1px solid #cccccc3f;
-    border-bottom: 1px solid #cccccc3f;
+    border-top: 1px solid var(--divider-color);
+    border-right: 1px solid var(--divider-color);
+    border-bottom: 1px solid var(--divider-color);
+    font-size: 0.95rem;
 
 }
 
-#cue-list th:last-of-type { border-right: none !important; }
-#cue-list th:first-of-type { border-left: none !important; }
+#cue-list th:last-of-type {
+    border-right: none !important;
+}
+
+#cue-list th:first-of-type {
+    border-left: none !important;
+}
 
 #cue-list th,
 #cue-list td {
@@ -28,6 +56,12 @@
     padding: 0.25em;
     text-align: left;
     overflow: auto;
+
+}
+
+#cue-list th:first-of-type {
+
+    overflow: unset;
 
 }
 
@@ -40,10 +74,32 @@
 
 }
 
+#cue-list td.info {
+
+    height: 100%;
+    padding: 0;
+
+}
+
+#cue-list td.info .machine-id {
+
+    width: 5px;
+    height: var(--cue-row-height);
+    background-color: slategray;
+
+}
+
 #cue-list tbody tr {
 
     background-color: var(--background-color);
     cursor: default !important;
+    height: var(--cue-row-height);
+
+}
+
+#cue-list tbody tr>td:first-of-type {
+
+    border-right: solid 1px var(--divider-color);
 
 }
 

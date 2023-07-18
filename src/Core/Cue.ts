@@ -6,6 +6,7 @@ class Cue {
 
     uuid: UUID;
     number: number | null = null;
+    name: string | null = null;
 
     constructor(uuid: UUID) {
         this.uuid = uuid;
@@ -14,8 +15,6 @@ class Cue {
 }
 
 class SoundCue extends Cue {
-
-    static IdentificationBits: string = "01";
 
     constructor(uuid: UUID) {
         super(uuid);
@@ -50,13 +49,24 @@ namespace CueList {
         return uuid;
     }
 
-    const getIndexByUUID = (cues: Cue[], uuid: UUID): number => {
+    const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
         return cues.findIndex(cue => cue.uuid === uuid);
     }
 
-    export const createNewCue = <CueType extends Cue>(cuesToCopy: Cue[], cueType: { new (uuid: UUID) : CueType }): Cue[] => {
+    const getIndexByUUIDCallback = (cues: ReadonlyArray<Cue>, uuid: UUID, callback: (index: number) => Cue[]) : Cue[] => {
+        const index = getIndexByUUID(cues, uuid);
 
-        let cues = [...cuesToCopy];
+        if(index === -1) {
+            console.warn(`Could not find cue with UUID of: '${uuid}' in the array of cues`);
+            return [...cues];
+        }
+
+        return callback(index);
+    }
+
+    export const createNewCue = <CueType extends Cue>(constCues: ReadonlyArray<Cue>, cueType: { new (uuid: UUID) : CueType }): Cue[] => {
+
+        let cues = [...constCues];
 
         let uuid = generateUniqueUUID(cues);
         let cue = new cueType(uuid);
@@ -66,18 +76,38 @@ namespace CueList {
         return cues;
     }
 
-    export const deleteCue = (cuesToCopy: Cue[], uuid: UUID): Cue[] => {
-        let cues = [...cuesToCopy];
+    export const deleteCue = (constCues: ReadonlyArray<Cue>, uuid: UUID): Cue[] => {
+        let cues = [...constCues];
 
-        let index = getIndexByUUID(cues, uuid);
+        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
 
-        if(index === -1) {
-            console.warn(`Could not find cue with UUID of: '${uuid}' in the array of cues`);
+            cues.splice(index, 1);
+
             return cues;
-        }
 
-        cues.splice(index, 1);
-        return cues;
+        });
+    }
+
+    export const updateCueName = (constCues: ReadonlyArray<Cue>, uuid: UUID, newName: string) => {
+        const cues = [...constCues];
+
+        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
+            cues[index].name = newName;
+
+            return cues;
+        });
+    }
+
+    export const updateCueNumber = (constCues: ReadonlyArray<Cue>, uuid: UUID, newNumber: number | null) => {
+
+        const cues = [...constCues];
+
+        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
+            cues[index].number = newNumber;
+
+            return cues;
+        });
+
     }
 
 }

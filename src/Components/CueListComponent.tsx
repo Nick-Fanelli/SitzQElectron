@@ -1,10 +1,31 @@
-import { useCallback, useState } from "react";
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
+import React, { ChangeEvent, useCallback, useState } from "react";
+import { DragDropContext, Draggable, DraggableStateSnapshot, DropResult } from "react-beautiful-dnd";
 import { Cue, CueList } from "../Core/Cue";
 import { ArrayUtils } from "../Utils/Utils";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 
 import './CueListComponent.css'
+
+const getRowStyle = (style: React.CSSProperties, snapshot: DraggableStateSnapshot) : React.CSSProperties => {
+
+    const defaultStyle: React.CSSProperties = {
+        display: snapshot.isDragging ? "table" : 'table-row',
+    }
+
+    if(!snapshot.isDropAnimating) {
+        return {
+            ...defaultStyle,
+            ...style
+        };
+    }
+
+    return {
+        ...style,
+        ...defaultStyle,
+        transition: "all 0.2s ease",
+    }
+
+}
 
 const CueListComponent = () => {
 
@@ -41,7 +62,7 @@ const CueListComponent = () => {
                         <table id="cue-list">
                             <thead>
                                 <tr>
-                                    <th></th> { /* Cue Type */ }
+                                    <th></th>
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Duration</th>
@@ -55,19 +76,22 @@ const CueListComponent = () => {
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
-                                                style={{
-                                                    display: snapshot.isDragging ? "table" : 'table-row',
-                                                    ...provided.draggableProps.style
-                                                }}
+                                                style={getRowStyle(provided.draggableProps.style!, snapshot)}
                                             >
-                                                <td>
-                                                    
+                                                <td className="info" style={{width: "100px"}}>
+                                                    <div className="machine-id"></div>
                                                 </td>
-                                                <td>{cue.number}</td>
-                                                <td>{cue.uuid}</td>
                                                 <td>
-                                                    hey
+                                                    <input type="number" className="hidden-input" value={cue.number ? cue.number : ""} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                        setCueList((prev) => CueList.updateCueNumber(prev, cue.uuid, e.target.value.length === 0 ? null : +e.target.value));
+                                                    }} />
                                                 </td>
+                                                <td>
+                                                    <input type="text" className="hidden-input" value={cue.name ? cue.name : ""} onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                                        setCueList((prev) => CueList.updateCueName(prev, cue.uuid, e.target.value));
+                                                    }}/>
+                                                </td>
+                                                <td>{cue.name} {cue.number}</td>
                                             </tr>
                                         )}
                                     </Draggable>

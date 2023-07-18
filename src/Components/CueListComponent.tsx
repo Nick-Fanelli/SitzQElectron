@@ -48,13 +48,6 @@ const CueListComponent = () => {
 
     return (
         <>
-
-        <button onClick={() => {
-            setCueList((prev) => CueList.createNewCue(prev, Cue));
-        }}>Create New Cue</button>
-        
-        <button onClick={() => setCueList([])}>Clear Cues</button>
-
         <DragDropContext onDragEnd={onDragEnd}>
             <StrictModeDroppable droppableId="cue-list-droppable">
                 {(provided) => (
@@ -104,6 +97,12 @@ const CueListComponent = () => {
             </StrictModeDroppable>
         </DragDropContext>
 
+
+        <button onClick={() => {
+            setCueList((prev) => CueList.createNewCue(prev, Cue));
+        }}>Create New Cue</button>
+        
+        <button onClick={() => setCueList([])}>Clear Cues</button>
         </>
 
     )

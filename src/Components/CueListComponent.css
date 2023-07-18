@@ -4,7 +4,7 @@
     --cue-row-height: 40px;
 
     border-collapse: collapse;
-    margin: 25px 0;
+    margin: 0 0 25px 0;
     font-size: 1ch;
     min-width: 400px;
     table-layout: auto;
@@ -18,7 +18,6 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    background-color: transparent;
 
 }
 

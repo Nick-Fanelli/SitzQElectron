@@ -1,0 +1,36 @@
+#header {
+
+    width: 100%;
+    height: 55px;
+    background-color: var(--application-header-color);
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    -webkit-app-region: drag;
+    padding: 0 1.5em;
+
+}
+
+#header .project-name {
+
+    font-size: 1.5rem;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+    -webkit-app-region: no-drag;
+
+}
+
+#header .settings-btn {
+
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+
+}

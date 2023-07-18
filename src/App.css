@@ -1,44 +1,12 @@
-#root { /* Defaults */
+:root { /* Defaults */
 
-    --selected-color: #007aff;
+    --selection-color: #007aff;
 
-}
-
-#root.theme-light { /* Light */
-
-    --background-color: #fdfdfd;
-    --secondary-background-color: #f7f7f7;
-    
-    --table-header-color: #d7d3d3;
-    --divider-color: #cccccc3f;
-
-    --text-color: #213e5a;
-    --heading-text-color: #213e5a;
-    --secondary-text-color: #656e72;
-
-    --button-background-color: #3a3f42;
-    --button-text-color: #fdfdfd;
-    --button-hovered-color: #656e72;
-    --button-active-color: #25282b;
-    --secondary-button-text-color: #fdfdfd;
-
-    --link-color: #213e5a;
-    --visited-link-color: #656e72;
-    --hovered-link-color: #ff6188;
-
-    --input-background-color: #3a3f42;
-    --input-text-color: #fdfdfd;
-    --input-placeholder-text-color: #fdfdfd;
-    --input-border-color: #d8d8d8;
-
-}
-
-#root.theme-dark { /* Dark */
-
-    --background-color: #191c1e;
+    --background-color: #1e1e1e;
     --secondary-background-color: #3a3f42;
 
-    --table-header-color: #282c2e;
+    --application-header-color: #161616;
+    --table-header-color: #2c2c2c;
     --divider-color: #cccccc3f;
 
     --text-color: #fdfdfd;
@@ -58,7 +26,7 @@
     --input-background-color: #3a3f42;
     --input-text-color: #fdfdfd;
     --input-placeholder-text-color: #dadada;
-    
+
 }
 
 * {
@@ -69,7 +37,7 @@
 
 }
 
-#root {
+:root {
 
     position: absolute;
     min-width: 100vw;
@@ -79,12 +47,13 @@
 
     background-color: var(--background-color);
     color: var(--text-color);
+    user-select: none;
 
 }
 
-#root h1 { font-size: 2rem; }
+:root h1 { font-size: 2rem; }
 
-#root button {
+:root button {
 
     background-color: var(--button-background-color);
     border: none;
@@ -96,7 +65,7 @@
 
 }
 
-#root input {
+:root input {
 
     background-color: var(--input-background-color);
     border: none;
@@ -108,5 +77,18 @@
 
 }
 
-#root button:hover { background-color: var(--button-hovered-color); }
-#root button:active { background-color: var(--button-active-color); }
+:root input.hidden-input {
+
+    background-color: transparent;
+    border-radius: 5px;
+
+}
+
+:root input.hidden-input:focus {
+
+    border: solid 1px var(--selection-color);
+
+}
+
+:root button:hover { background-color: var(--button-hovered-color); }
+:root button:active { background-color: var(--button-active-color); }

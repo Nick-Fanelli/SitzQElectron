@@ -27,6 +27,7 @@ function createWindow() {
         },
         focusable: true,
         title: "SitzQ",
+        titleBarStyle: "hidden"
     })
 
     // Test active push message to Renderer-process.

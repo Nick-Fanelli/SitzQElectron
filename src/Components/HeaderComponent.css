@@ -1,6 +1,6 @@
 #header {
 
-    width: 100%;
+    width: 100vw;
     height: 55px;
     min-height: 55px;
     max-height: 55px;
@@ -10,7 +10,28 @@
     justify-content: space-between;
     align-items: center;
     -webkit-app-region: drag;
-    padding: 0 1.5em;
+}
+
+#header > div {
+
+    width: 33vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#header > div:first-of-type {
+
+    justify-content: flex-start;
+    padding: 0 0 0 2em;
+
+}
+
+#header > div:last-of-type {
+
+    justify-content: flex-end;
+    padding: 0 2em 0 0;
 
 }
 

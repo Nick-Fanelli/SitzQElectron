@@ -1,9 +1,14 @@
+import HiddenInputComponent from './HiddenInputComponent'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 
 import './HeaderComponent.css'
+import { useState } from 'react'
 
 const Header = () => {
+
+    const [ projectName, setProjectName ] = useState<string>("Development Project");
 
     return (
         <>
@@ -13,7 +18,7 @@ const Header = () => {
             </div>
 
             <div>
-                <input type="text" defaultValue="Development Project" className="project-name hidden-input" />
+                <HiddenInputComponent className="project-name" value={projectName} setValue={setProjectName} />
             </div>
 
             <div>

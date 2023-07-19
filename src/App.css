@@ -77,19 +77,6 @@
 
 }
 
-:root input.hidden-input {
-
-    background-color: transparent;
-    border-radius: 5px;
-
-}
-
-:root input.hidden-input:focus {
-
-    border: solid 1px var(--selection-color);
-
-}
-
 :root button:hover { background-color: var(--button-hovered-color); }
 :root button:active { background-color: var(--button-active-color); }
 

@@ -25,15 +25,6 @@
 
 }
 
-/* Hide Spin Buttons (inc. up + down buttons) */
-#cue-list input.hidden-input::-webkit-outer-spin-button,
-#cue-list input.hidden-input::-webkit-inner-spin-button {
-
-    appearance: none;
-    margin: 0;
-
-}
-
 #cue-list th {
 
     resize: horizontal;

@@ -1,8 +1,10 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { DragDropContext, Draggable, DraggableStateSnapshot, DropResult } from "react-beautiful-dnd";
 import { Cue, CueList, UUID } from "../Core/Cue";
 import { ArrayUtils } from "../Utils/Utils";
 import { StrictModeDroppable } from "./StrictModeDroppable";
+
+import HiddenInputComponent from "./HiddenInputComponent";
 
 import './CueListComponent.css'
 
@@ -60,13 +62,9 @@ const CueListComponent = () => {
 
     }, [cueList, setCueList]);
 
-    const reportOnCueClick = useCallback((e: React.MouseEvent, uuid: UUID) => {
+    const reportOnCueClick = useCallback((uuid: UUID) => {
 
-        let trigger = (e.target as HTMLElement).getAttribute('no-trigger-selection');
-
-        if(trigger === null) {
-            setCueSelection([ uuid ]);
-        }
+        setCueSelection([ uuid ]);
 
     }, [setCueSelection]);
   
@@ -103,20 +101,21 @@ const CueListComponent = () => {
                                                     {...provided.dragHandleProps}
                                                     style={getRowStyle(provided.draggableProps.style!, snapshot)}
                                                     className={`${cueSelection.includes(cue.uuid) ? "selected" : ""}`}
-                                                    onClick={(e: React.MouseEvent) => reportOnCueClick(e, cue.uuid)}
+                                                    onClick={() => reportOnCueClick(cue.uuid)}
                                                 >
                                                     <td className="info" style={{width: "100px"}}>
                                                         <div className="machine-id"></div>
                                                         <div className="machine-highlight"></div>
                                                     </td>
                                                     <td className="cue-number" style={{width: "100px"}}>
-                                                        <input type="number" no-trigger-selection="true" className="hidden-input" value={cue.number ? cue.number : ""} onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                            setCueList((prev) => CueList.updateCueNumber(prev, cue.uuid, e.target.value.length === 0 ? null : +e.target.value));
-                                                        }} />
+                                                        <HiddenInputComponent type="number" value={cue.number || ""} customSetter={(newValue: string) => {
+                                                            setCueList((prev) => CueList.updateCueNumber(prev, cue.uuid, newValue.length === 0 ? null : +newValue));
+                                                        }}/>
                                                     </td>
                                                     <td>
-                                                        <input type="text" no-trigger-selection="true" className="hidden-input" value={cue.name ? cue.name : ""} onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                                            setCueList((prev) => CueList.updateCueName(prev, cue.uuid, e.target.value));
+
+                                                        <HiddenInputComponent value={cue.name || ""} customSetter={(newValue: string) => {
+                                                            setCueList((prev) => CueList.updateCueName(prev, cue.uuid, newValue))
                                                         }}/>
                                                     </td>
                                                     <td>{cue.name} {cue.number}</td>

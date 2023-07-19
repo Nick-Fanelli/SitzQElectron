@@ -1,8 +1,10 @@
 #status-bar {
 
+    --height: 30px;
+
     width: 100vw;
-    height: 50px;
-    min-height: 50px;
+    height: var(--height);
+    min-height: var(--height);
     background-color: #555555;
 
     display: flex;

@@ -14,13 +14,13 @@ process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 
-let win: BrowserWindow | null
+let mainWindow: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
     // Where the window is created
-    win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         icon: path.join(process.env.PUBLIC, 'electron-vite.svg'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -31,20 +31,20 @@ function createWindow() {
     })
 
     // Test active push message to Renderer-process.
-    win.webContents.on('did-finish-load', () => {
-        win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
 
     if (VITE_DEV_SERVER_URL) {
-        win.loadURL(VITE_DEV_SERVER_URL)
+        mainWindow.loadURL(VITE_DEV_SERVER_URL)
     } else {
         // win.loadFile('dist/index.html')
-        win.loadFile(path.join(process.env.DIST, 'index.html'))
+        mainWindow.loadFile(path.join(process.env.DIST, 'index.html'))
     }
 }
 
 app.on('window-all-closed', () => {
-    win = null
+    mainWindow = null
 })
 
 app.whenReady().then(createWindow)

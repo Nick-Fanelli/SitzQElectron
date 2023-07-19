@@ -1,0 +1,12 @@
+#status-bar {
+
+    width: 100vw;
+    height: 50px;
+    min-height: 50px;
+    background-color: #555555;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

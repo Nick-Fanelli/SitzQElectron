@@ -1,11 +1,42 @@
 #cue-properties {
 
+    --resize-handle-size: 10px;
+
     width: 100vw;
-    height: 300px;
     background-color: #333333;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    margin: var(--resize-handle-size) 0 0 0;
+
+    position: relative;
+
+}
+
+#cue-properties .resize-handle {
+
+    position: absolute;
+    top: calc(var(--resize-handle-size) * -1);
+    left: 0;
+
+    width: 100vw;
+    height: var(--resize-handle-size);
+    background-color: #222222;
+
+    cursor: ns-resize;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#cue-properties .resize-handle > .line {
+
+    background-color: #666666;
+    width: 100px;
+    height: 2px;
 
 }

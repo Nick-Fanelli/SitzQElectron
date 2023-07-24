@@ -4,12 +4,12 @@ import CueListComponent from './Components/CueListComponent'
 import CuePropertiesComponent from './Components/CuePropertiesComponent'
 import StatusBarComponent from './Components/StatusBarComponent'
 
-import './App.css'
+import './AppView.css'
 
-function App() {
+const AppView = () => {
 
     return (
-        <section id="app">
+        <section id="app-view">
             <Header />
             <CueTemplateComponent />
             <CueListComponent />
@@ -17,6 +17,7 @@ function App() {
             <StatusBarComponent />
         </section>
     )
+
 }
 
-export default App
+export default AppView;

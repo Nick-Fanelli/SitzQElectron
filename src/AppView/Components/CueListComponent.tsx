@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { DragDropContext, Draggable, DraggableStateSnapshot, DropResult } from "react-beautiful-dnd";
-import { Cue, CueList, UUID } from "../Core/Cue";
-import { ArrayUtils } from "../Utils/Utils";
+import { Cue, CueList, UUID } from "../../Core/Cue";
+import { ArrayUtils } from "../../Utils/Utils";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 
 import HiddenInputComponent from "./HiddenInputComponent";

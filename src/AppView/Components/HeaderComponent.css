@@ -12,12 +12,53 @@
     -webkit-app-region: drag;
 }
 
+#header .back-arrow {
+
+    --size: 30px;
+
+    width: var(--size);
+    height: var(--size);
+
+    position: relative;
+    cursor: pointer;
+    
+    -webkit-app-region: no-drag;
+
+}
+
+#header .back-arrow > .arrow {
+
+    position: absolute;
+    height: 18px;
+    width: 18px;
+
+    border-top: 4px solid;
+    border-left: 4px solid;
+    border-color: var(--text-color);
+    border-radius: 2px;
+
+    transition: 0.4s ease;
+    transform: rotate(45deg);
+
+    top: 6px;
+    left: 10px;
+
+    transform: rotate(-45deg);
+
+}
+
+#header .back-arrow:hover > .arrow {
+
+    filter: brightness(60%);
+
+}
+
 #header > div {
 
-    width: 33vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: visible;
 
 }
 

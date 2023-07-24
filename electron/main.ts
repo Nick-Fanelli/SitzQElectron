@@ -13,7 +13,6 @@ import path from 'node:path'
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
-
 let mainWindow: BrowserWindow | null
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -27,8 +26,10 @@ function createWindow() {
         },
         focusable: true,
         title: "SitzQ",
-        titleBarStyle: "hidden"
+        titleBarStyle: "hidden",
     })
+
+    mainWindow.setSize(1024, 800);
 
     // Test active push message to Renderer-process.
     mainWindow.webContents.on('did-finish-load', () => {

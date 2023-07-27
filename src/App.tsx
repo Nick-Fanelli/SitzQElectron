@@ -1,3 +1,4 @@
+import LanderView from './LanderView/LanderView'
 import AppView from './AppView/AppView';
 
 import './App.css'
@@ -28,16 +29,14 @@ export const useAppContext = () => {
 
 const App = () => {
 
-    const [ currentView, setCurrentView ] = useState<View>(View.AppView);
+    const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
 
     let view: any = null;
 
     switch(currentView) {
 
     case View.LanderView:
-        view = <button onClick={() => {
-            setCurrentView(View.AppView)
-        }}>Change Views</button>
+        view = <LanderView />;
         break;
 
     case View.AppView:

@@ -1,0 +1,101 @@
+#lander-view > .header {
+
+    width: 100vw;
+    height: 2em;
+    -webkit-app-region: drag;
+
+}
+
+#lander-view > .container {
+
+    width: 100vw;
+    height: calc(100vh - 2em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 0 0 2em 0;
+
+}
+
+#lander-view  h1 {
+
+    font-size: 4rem;
+    font-weight: 400;
+    line-height: 4rem;
+
+}
+
+#lander-view h3 {
+
+    font-weight: 300;
+    margin: 2px 0 0 0;
+
+}
+
+
+#lander-view .logo {
+
+    width: 150px;
+    height: auto;
+
+}
+
+#lander-view .fading-content {
+
+    position: absolute;
+    top: 15em;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    margin: 4em 0 0 0;
+
+}
+
+@keyframes slideAndFade {
+
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        transform: translate(-50%, -120%) scale(0.8);
+    }
+
+}
+
+@keyframes fadeIn {
+
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+#lander-view .sliding-content {
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: slideAndFade 1.5s ease-in-out forwards;
+
+}
+
+#lander-view .fading-content.fadeIn {
+
+    animation: fadeIn 1s linear;
+    opacity: 1;
+
+}

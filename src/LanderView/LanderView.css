@@ -34,6 +34,75 @@
 
 }
 
+#lander-view ul {
+
+    list-style: none;
+    text-align: center;
+
+}
+
+@keyframes projectHoverIcon {
+
+    0% {
+
+        opacity: 0;
+        margin: 0;
+
+    }
+
+    100% {
+
+        opacity: 1.0;
+        margin: 0 0 0 2em;
+
+    }
+
+}
+
+#lander-view ul > li {
+
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    border-bottom: solid 2px rgba(255, 255, 255, 0.074);
+    cursor: pointer;
+
+}
+
+#lander-view ul > li > p {
+
+    margin: 0 2em;
+
+}
+
+#lander-view ul > li > .icon {
+
+    margin: 0;
+    display: none;
+
+}
+
+#lander-view ul > li:hover > .icon {
+
+    animation: projectHoverIcon 1s ease-out;
+    margin: 0 0 0 2em;
+    display: block;
+
+}
+
+#lander-view ul > li:hover > p {
+    
+    margin: 0;
+
+}
+
+#lander-view ul > li:last-of-type {
+
+    border-bottom: none;
+
+}
 
 #lander-view .logo {
 
@@ -51,11 +120,43 @@
     right: 0;
 
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     opacity: 0;
     margin: 4em 0 0 0;
+
+}
+
+#lander-view .fading-content .recent-projects {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+
+}
+
+#lander-view .fading-content > .control-buttons {
+
+    margin: 0 0 2em 0;
+
+}
+
+#lander-view .fading-content > .control-buttons > .icon {
+
+    font-size: 2rem;
+    margin: 0 1em;
+    opacity: 0.75;
+    cursor: pointer;
+
+}
+
+#lander-view .fading-content > .control-buttons > .icon:hover {
+
+    opacity: 1.0;
 
 }
 
@@ -66,7 +167,7 @@
     }
 
     100% {
-        transform: translate(-50%, -120%) scale(0.8);
+        transform: translate(-50%, -50vh) scale(0.8);
     }
 
 }

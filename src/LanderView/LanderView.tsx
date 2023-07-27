@@ -5,6 +5,9 @@ import logoIcon  from '../Resources/logo-icon.png'
 import './LanderView.css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
+
 const Lander = () => {
 
     const [ versionOutput, setVersionOutput ] = useState<string>(BuildSpecs.BUILD_VERSION);
@@ -47,8 +50,31 @@ const Lander = () => {
 
                 <div ref={fadingContentRef} className="fading-content">
 
-                    <button>Create Project</button>
-                    <button>Open Project</button>
+                    <div className="recent-projects">
+                        <div>
+                            <ul>
+                                <li>
+                                    <p>Example Project 1</p>
+                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
+                                </li>
+                                <li>
+                                    <p>Example Project 2</p>
+                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
+                                </li>
+                                <li>
+                                    <p>Example Project 3</p>
+                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="control-buttons">
+
+                        <FontAwesomeIcon icon={faFolder} className='icon' />
+                        <FontAwesomeIcon icon={faPlus} className='icon' />
+
+                    </div>
 
                 </div>
 

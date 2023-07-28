@@ -1,7 +1,8 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
 
-// The built directory structure
+import { Notification } from 'electron'
+
 //
 // ├─┬─┬ dist
 // │ │ └── index.html
@@ -36,16 +37,22 @@ function createWindow() {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
 
-    if (VITE_DEV_SERVER_URL) {
-        mainWindow.loadURL(VITE_DEV_SERVER_URL)
-    } else {
-        // win.loadFile('dist/index.html')
-        mainWindow.loadFile(path.join(process.env.DIST, 'index.html'))
-    }
+    mainWindow.loadFile(path.join(process.env.DIST, "index.html"));
 }
 
 app.on('window-all-closed', () => {
     mainWindow = null
+})
+
+ipcMain.on('notify', async() => {
+    
+    console.log("Hello World");
+
+    new Notification({
+        title: "Something Cool",
+        body: "Another thing that's cool"
+    }).show();
+
 })
 
 app.whenReady().then(createWindow)

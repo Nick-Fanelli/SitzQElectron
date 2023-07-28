@@ -1,5 +1,7 @@
 {
     "name": "sitzq",
+    "description": "All in one theater lighting, sound, and video system.",
+    "author": "Nick Fanelli",
     "private": true,
     "version": "1.0.0",
     "scripts": {
@@ -38,11 +40,5 @@
         "vite-plugin-electron": "^0.11.2",
         "vite-plugin-electron-renderer": "^0.14.5"
     },
-    "main": "dist-electron/main.js",
-    "build": {
-        "appId": "com.sitzq.sitzq",
-        "productName": "SitzQ",
-        "copyright": "Copyright © 2023 ${author}",
-        "buildVersion": "SNAPSHOT-1.0"
-    }
+    "main": "dist-electron/main.js"
 }

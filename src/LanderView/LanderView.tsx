@@ -25,6 +25,12 @@ const Lander = () => {
 
     }, [setVersionOutput]);
 
+    const notify = () => {
+
+        (window as any).api.send("notify");
+
+    }
+
     useEffect(() => {
 
         if(slidingContentRef.current) {
@@ -70,7 +76,7 @@ const Lander = () => {
                     <div className="control-buttons interactable">
 
                         <FontAwesomeIcon icon={faFolder} className='icon' />
-                        <FontAwesomeIcon icon={faPlus} className='icon' />
+                        <FontAwesomeIcon icon={faPlus} onClick={notify} className='icon' />
 
                     </div>
 

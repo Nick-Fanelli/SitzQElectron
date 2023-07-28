@@ -15,8 +15,6 @@ process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 let mainWindow: BrowserWindow | null
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
-const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
     // Where the window is created
@@ -37,7 +35,7 @@ function createWindow() {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
 
-    mainWindow.loadFile(path.join(process.env.DIST, "index.html"));
+    mainWindow.loadFile(path.join(process.env.DIST, 'index.html'));
 }
 
 app.on('window-all-closed', () => {

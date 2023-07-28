@@ -7,7 +7,7 @@
         "build": "tsc && vite build && electron-builder",
         "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "release": "standard-version"
+        "generate-changelog": "standard-version --skip.bump --skip.commit --skip.tag"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.4.0",

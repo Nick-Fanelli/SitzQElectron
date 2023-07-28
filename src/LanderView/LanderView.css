@@ -1,11 +1,3 @@
-#lander-view > .header {
-
-    width: 100vw;
-    height: 2em;
-    -webkit-app-region: drag;
-
-}
-
 #lander-view > .container {
 
     width: 100vw;
@@ -16,6 +8,14 @@
     text-align: center;
     flex-direction: column;
     padding: 0 0 2em 0;
+
+    -webkit-app-region: drag;
+
+}
+
+#lander-view .interactable {
+
+    -webkit-app-region: no-drag !important;
 
 }
 
@@ -31,6 +31,7 @@
 
     font-weight: 300;
     margin: 2px 0 0 0;
+    cursor: pointer;
 
 }
 

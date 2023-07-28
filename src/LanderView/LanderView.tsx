@@ -39,20 +39,18 @@ const Lander = () => {
 
     return (
         <section id="lander-view">
-            <div className="header"></div>
-
             <div className='container'>
                 <div ref={slidingContentRef} className='sliding-content'>
                     <img src={logoIcon} alt="SitzQ Icon Logo" className='logo' />
                     <h1>SitzQ</h1>
-                    <h3 onClick={toggleVersion}>{versionOutput}</h3>
+                    <h3 onClick={toggleVersion} className='interactable'>{versionOutput}</h3>
                 </div>
 
                 <div ref={fadingContentRef} className="fading-content">
 
                     <div className="recent-projects">
                         <div>
-                            <ul>
+                            <ul className='interactable'>
                                 <li>
                                     <p>Example Project 1</p>
                                     <FontAwesomeIcon className="icon" icon={faGreaterThan} />
@@ -69,7 +67,7 @@ const Lander = () => {
                         </div>
                     </div>
 
-                    <div className="control-buttons">
+                    <div className="control-buttons interactable">
 
                         <FontAwesomeIcon icon={faFolder} className='icon' />
                         <FontAwesomeIcon icon={faPlus} className='icon' />

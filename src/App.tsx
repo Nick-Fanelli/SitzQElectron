@@ -29,7 +29,7 @@ export const useAppContext = () => {
 
 const App = () => {
 
-    const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
+    const [ currentView, setCurrentView ] = useState<View>(View.AppView);
 
     let view: any = null;
 
@@ -40,7 +40,7 @@ const App = () => {
         break;
 
     case View.AppView:
-        view = <AppView />;
+        view = <AppView showFilepath={"/Users/nickfanelli/Desktop/Example Project/Example Project.sqshow"} />;
         break;
 
     default:

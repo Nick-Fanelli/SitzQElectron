@@ -21,26 +21,10 @@ export namespace ArrayUtils {
 
 }
 
-import { MachineAPI } from '../../electron/api/machine-api';
 import packageJSON from '../../package.json'
 
 export namespace BuildSpecs {
 
     export const BUILD_VERSION = packageJSON.version;
-
-}
-
-export namespace ProjectUtils {
-
-    export const createProjectFromDirectory = (machineAPI: MachineAPI, directoryPath: string) => {
-
-        const showName = FilepathUtils.getBasename(directoryPath);
-
-        const resourceDirectory = directoryPath + "/" + "Resources";
-        const showFilePath = directoryPath + "/" + showName + ".sqshow";
-
-        machineAPI.mkdir(resourceDirectory);
-        machineAPI.touch(showFilePath);
-    }
 
 }

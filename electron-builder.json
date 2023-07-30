@@ -5,7 +5,7 @@
     "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
     "appId": "com.github.nickfanelli5",
     "productName": "SitzQ",
-    "icon": "sitzq.png",
+    "icon": "Application.icns",
     "asar": true,
     "directories": {
         "output": "release/${version}"
@@ -42,7 +42,8 @@
         {
             "ext": "sqshow",
             "name": "SitzQ Show File",
-            "role": "Editor"
+            "role": "Editor",
+            "icon": "ShowFileIcon.icns"
         }
     ]
 }

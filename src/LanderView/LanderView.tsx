@@ -27,7 +27,7 @@ const Lander = () => {
     
         setVersionOutput((prev) => {
             if(prev === `v${BuildSpecs.BUILD_VERSION}`) {
-                const updatedBuildVersion = `${BuildSpecs.BUILD_VERSION}-${api.osAPI.arch}-${api.osAPI.osVersion}`;
+                const updatedBuildVersion = `${BuildSpecs.BUILD_VERSION}-${api.machineAPI.arch}-${api.machineAPI.osVersion}`;
 
                 return updatedBuildVersion;
 

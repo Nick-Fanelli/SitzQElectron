@@ -1,41 +1,22 @@
-import os from 'os';
+import { MachineAPI, boundMachineAPI } from './machineAPI';
 
-// =====================================================================================
-// Operating System API
-// =====================================================================================
-
-interface OperatingSystemAPI {
-
-    osVersion: string
-    homeDir: string
-    arch: string
-
-}
-
-export const osAPI: OperatingSystemAPI = {
-
-    osVersion: os.version(),
-    homeDir: os.homedir(),
-    arch: os.arch()
-
-}
-
-// =====================================================================================
-// Electron API
-// =====================================================================================
-
+// 1. Add API definitions to here
 interface ElectronAPI {
 
-    osAPI: OperatingSystemAPI
+    machineAPI: MachineAPI
 
 }
 
+// 2. Add bindings here
 export const boundElectronAPI : ElectronAPI = {
 
-    osAPI
+    machineAPI: boundMachineAPI
 
 }
 
+// ====================================================================================
+// API Window Context (don't change)
+// ====================================================================================
 interface APIWindowContext extends Window {
 
     electronAPI: ElectronAPI

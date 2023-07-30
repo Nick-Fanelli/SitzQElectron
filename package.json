@@ -3,7 +3,7 @@
     "description": "All in one theater lighting, sound, and video system.",
     "author": "Nick Fanelli",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.0.0-alpha",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build && electron-builder",

@@ -10,11 +10,13 @@ import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-ico
 
 import APIWindowContext from '../../electron/api/api'
 
+const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
+
 const Lander = () => {
 
     const api = (window as Window as APIWindowContext).electronAPI;
 
-    const [ versionOutput, setVersionOutput ] = useState<string>(`v${BuildSpecs.BUILD_VERSION}`);
+    const [ versionOutput, setVersionOutput ] = useState<string>(DefaultBuildVersion);
 
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
@@ -26,16 +28,15 @@ const Lander = () => {
     const toggleVersion = useCallback(() => {
     
         setVersionOutput((prev) => {
-            if(prev === `v${BuildSpecs.BUILD_VERSION}`) {
+            if(prev === DefaultBuildVersion) {
                 const updatedBuildVersion = `${BuildSpecs.BUILD_VERSION}-${api.machineAPI.arch}-${api.machineAPI.osVersion}`;
 
                 return updatedBuildVersion;
 
             } else {
-                return `v${BuildSpecs.BUILD_VERSION}`;
+                return DefaultBuildVersion;
             }
         }); 
-        // prev === BuildSpecs.BUILD_VERSION ? "TODO: REPLACE WITH LONGER BUILD VERSION" : BuildSpecs.BUILD_VERSION);
 
     }, [setVersionOutput]);
 

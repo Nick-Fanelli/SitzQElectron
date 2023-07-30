@@ -1,4 +1,4 @@
-import { MachineAPI, boundMachineAPI } from './machineAPI';
+import MachineSubAPIContext, { MachineAPI } from './machine-api';
 
 // 1. Add API definitions to here
 interface ElectronAPI {
@@ -10,17 +10,18 @@ interface ElectronAPI {
 // 2. Add bindings here
 export const boundElectronAPI : ElectronAPI = {
 
-    machineAPI: boundMachineAPI
+    machineAPI: MachineSubAPIContext.apiBindings
 
 }
 
-// ====================================================================================
-// API Window Context (don't change)
-// ====================================================================================
-interface APIWindowContext extends Window {
+export const bindAllIPCs = () => {
 
-    electronAPI: ElectronAPI
+    MachineSubAPIContext.onBindIPCs();
 
 }
 
-export default APIWindowContext;
+declare global {
+    interface Window {
+        electronAPI: ElectronAPI
+    }
+}

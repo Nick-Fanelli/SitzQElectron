@@ -1,4 +1,4 @@
-import { BuildSpecs } from '../Utils/Utils'
+import { BuildSpecs, ProjectUtils } from '../Utils/Utils'
 
 import logoIcon  from '../Resources/logo-icon.png'
 
@@ -8,13 +8,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
 
-import APIWindowContext from '../../electron/api/api'
-
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
 const Lander = () => {
 
-    const api = (window as Window as APIWindowContext).electronAPI;
+    const api = window.electronAPI;
 
     const [ versionOutput, setVersionOutput ] = useState<string>(DefaultBuildVersion);
 
@@ -52,6 +50,15 @@ const Lander = () => {
 
     }, [slidingContentRef.current]);
 
+    const handleNewProject = () => {
+
+        // Setup Project Structure
+        api.machineAPI.createDirectory().then((value) => {
+            ProjectUtils.createProjectFromDirectory(api.machineAPI, value);
+        });
+
+    }
+
     return (
         <section id="lander-view">
             <div className='container'>
@@ -85,7 +92,7 @@ const Lander = () => {
                     <div className="control-buttons interactable">
 
                         <FontAwesomeIcon icon={faFolder} className='icon' />
-                        <FontAwesomeIcon icon={faPlus} className='icon' />
+                        <FontAwesomeIcon icon={faPlus} onClick={handleNewProject} className='icon' />
 
                     </div>
 

@@ -37,5 +37,12 @@
         "perMachine": false,
         "allowToChangeInstallationDirectory": true,
         "deleteAppDataOnUninstall": false
-    }
+    },
+    "fileAssociations": [
+        {
+            "ext": "sqshow",
+            "name": "SitzQ Show File",
+            "role": "Editor"
+        }
+    ]
 }

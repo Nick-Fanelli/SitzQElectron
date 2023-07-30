@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
+import { bindAllIPCs } from './api/api'
 
 //
 // ├─┬─┬ dist
@@ -15,7 +16,7 @@ process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.D
 let mainWindow: BrowserWindow | null
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
-function createWindow() {
+const createWindow = () => {
     // Where the window is created
     mainWindow = new BrowserWindow({
         icon: path.join(process.env.PUBLIC, 'Application.icns'),
@@ -36,15 +37,29 @@ function createWindow() {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
 
+    bindAllIPCs();
+
+    setDefaultProtocolClient();
+
     if (VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(VITE_DEV_SERVER_URL);
     } else {
         // win.loadFile('dist/index.html')
         mainWindow.loadFile(path.join(process.env.DIST, 'index.html'))
-    }}
+    }
+}
+
+const setDefaultProtocolClient = () => {
+
+    const customExt = '.sqshow';
+    const exePath = process.execPath;
+    const fileArg = __filename;
+
+    app.setAsDefaultProtocolClient(customExt, exePath, [fileArg]);
+}
 
 app.on('window-all-closed', () => {
     mainWindow = null
 });
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);

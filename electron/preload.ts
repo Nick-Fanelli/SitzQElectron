@@ -1,13 +1,4 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import { contextBridge } from 'electron';
+import { boundElectronAPI } from './api/api';
 
-contextBridge.exposeInMainWorld(
-    "api", {
-        send:(channel: string, data: any) => {
-            ipcRenderer.send(channel, data);
-        },
-
-        receive:(channel: string, func: any) => {
-            ipcRenderer.on(channel, (_, ...args) => func(...args));
-        }
-    }
-)
+contextBridge.exposeInMainWorld('electronAPI', boundElectronAPI);

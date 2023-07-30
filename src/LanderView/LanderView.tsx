@@ -8,9 +8,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
 
+import APIWindowContext from '../../electron/api/api'
+
 const Lander = () => {
 
-    const [ versionOutput, setVersionOutput ] = useState<string>(BuildSpecs.BUILD_VERSION);
+    const api = (window as Window as APIWindowContext).electronAPI;
+
+    const [ versionOutput, setVersionOutput ] = useState<string>(`v${BuildSpecs.BUILD_VERSION}`);
 
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
@@ -20,16 +24,20 @@ const Lander = () => {
     }   
 
     const toggleVersion = useCallback(() => {
+    
+        setVersionOutput((prev) => {
+            if(prev === `v${BuildSpecs.BUILD_VERSION}`) {
+                const updatedBuildVersion = `${BuildSpecs.BUILD_VERSION}-${api.osAPI.arch}-${api.osAPI.osVersion}`;
 
-        setVersionOutput((prev) => prev === BuildSpecs.BUILD_VERSION ? "TODO: REPLACE WITH LONGER BUILD VERSION" : BuildSpecs.BUILD_VERSION);
+                return updatedBuildVersion;
+
+            } else {
+                return `v${BuildSpecs.BUILD_VERSION}`;
+            }
+        }); 
+        // prev === BuildSpecs.BUILD_VERSION ? "TODO: REPLACE WITH LONGER BUILD VERSION" : BuildSpecs.BUILD_VERSION);
 
     }, [setVersionOutput]);
-
-    const notify = () => {
-
-        (window as any).api.send("notify");
-
-    }
 
     useEffect(() => {
 
@@ -76,7 +84,7 @@ const Lander = () => {
                     <div className="control-buttons interactable">
 
                         <FontAwesomeIcon icon={faFolder} className='icon' />
-                        <FontAwesomeIcon icon={faPlus} onClick={notify} className='icon' />
+                        <FontAwesomeIcon icon={faPlus} className='icon' />
 
                     </div>
 

@@ -1,7 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
-
-import { Notification } from 'electron'
 
 //
 // ├─┬─┬ dist
@@ -15,12 +13,15 @@ process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 let mainWindow: BrowserWindow | null
+const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
     // Where the window is created
     mainWindow = new BrowserWindow({
         icon: path.join(process.env.PUBLIC, 'sitzq.png'),
         webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: true,
             preload: path.join(__dirname, 'preload.js'),
         },
         focusable: true,
@@ -35,22 +36,15 @@ function createWindow() {
         mainWindow?.webContents.send('main-process-message', (new Date).toLocaleString())
     })
 
-    mainWindow.loadFile(path.join(process.env.DIST, 'index.html'));
-}
+    if (VITE_DEV_SERVER_URL) {
+        mainWindow.loadURL(VITE_DEV_SERVER_URL);
+    } else {
+        // win.loadFile('dist/index.html')
+        mainWindow.loadFile(path.join(process.env.DIST, 'index.html'))
+    }}
 
 app.on('window-all-closed', () => {
     mainWindow = null
-})
-
-ipcMain.on('notify', async() => {
-    
-    console.log("Hello World");
-
-    new Notification({
-        title: "Something Cool",
-        body: "Another thing that's cool"
-    }).show();
-
-})
+});
 
 app.whenReady().then(createWindow)

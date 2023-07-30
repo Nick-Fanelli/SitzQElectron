@@ -1,4 +1,5 @@
-import { BuildSpecs, ProjectUtils } from '../Utils/Utils'
+import { BuildSpecs } from '../Utils/Utils'
+import { ProjectUtils } from '../Core/Project'
 
 import logoIcon  from '../Resources/logo-icon.png'
 

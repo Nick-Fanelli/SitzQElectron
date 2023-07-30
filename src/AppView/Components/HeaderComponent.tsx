@@ -4,14 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 
 import './HeaderComponent.css'
-import { useState } from 'react'
 import { View, useAppContext } from '../../App'
+import { useAppViewContext } from '../AppView'
 
 const Header = () => {
 
-    const [ projectName, setProjectName ] = useState<string>("Development Project");
-    
     const appContext = useAppContext();
+    const appViewContext = useAppViewContext();
 
     const handleGoBack = () => {
 
@@ -33,7 +32,7 @@ const Header = () => {
                     <div className="arrow"></div>
                 </div>
 
-                <HiddenInputComponent className="project-name" value={projectName} setValue={setProjectName} />
+                <HiddenInputComponent className="project-name" value={appViewContext.projectName} setValue={appViewContext.setProjectName} />
             </div>
 
             <div>

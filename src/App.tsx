@@ -40,7 +40,7 @@ const App = () => {
         break;
 
     case View.AppView:
-        view = <AppView />;
+        view = <AppView showFilepath={"/Users/nickfanelli/Desktop/Example Project/Example Project.sqshow"} />;
         break;
 
     default:

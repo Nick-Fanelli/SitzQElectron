@@ -34,6 +34,8 @@ const CueListComponent = () => {
     const [ cueList, setCueList ] = useState<Cue[]>([]);
     const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
 
+    console.log("render");
+
     // Debug
     useEffect(() => {
 

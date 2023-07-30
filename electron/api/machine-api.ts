@@ -18,6 +18,8 @@ export interface MachineAPI {
     // Functions
     mkdir: (filepath: string) => Promise<void>
     touch: (filepath: string) => Promise<void>
+    writeFile: (filepath: string, fileContents: string) => Promise<void>
+    readFile: (filepath: string) => Promise<any>
     createDirectory: () => Promise<any>
 
 }
@@ -64,6 +66,27 @@ const touch = async (filepath: string): Promise<void> => {
 
 }
 
+const writeFile = async (filepath: string, fileContents: string): Promise<void> => {
+
+    const absolutePath = path.resolve(filepath);
+
+    try {
+        await fs.writeFile(absolutePath, fileContents);
+    } catch (err) {
+        console.error(`Error writing file: ${absolutePath}`, err);
+    }
+
+}
+
+const readFile = async (filepath: string) : Promise<any> => {
+
+    const absolutePath = path.resolve(filepath);
+
+    return fs.readFile(absolutePath, 'utf-8');
+
+}
+
+
 // ========================================================================================================================================
 // IPC Bindings
 // ========================================================================================================================================
@@ -107,6 +130,8 @@ const boundMachineAPI: MachineAPI = {
     
     mkdir,
     touch,
+    writeFile,
+    readFile,
     createDirectory: () => ipcRenderer.invoke('open-directory')
 
 }

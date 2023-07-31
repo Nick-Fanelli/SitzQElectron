@@ -4,19 +4,13 @@ import CueListComponent from './Components/CueListComponent'
 import CuePropertiesComponent from './Components/CuePropertiesComponent'
 import StatusBarComponent from './Components/StatusBarComponent'
 
-import Project, { ProjectUtils } from '../Core/Project'
+import { ProjectUtils } from '../Core/Project'
 
 import './AppView.css'
-import { createContext, useContext, useEffect, useState, useRef } from 'react'
-import { Cue } from '../Core/Cue'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { useProjectStore } from './State/Store'
 
 const AppViewContext = createContext<{
-
-    projectName: string,
-    setProjectName: React.Dispatch<React.SetStateAction<string>>,
-
-    cueList: Cue[] | null,
-    setCueList: React.Dispatch<React.SetStateAction<Cue[] | null>>
 
 } | null>(null);
 
@@ -41,29 +35,18 @@ const AppView = (props: Props) => {
 
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
 
-    const [ projectName, setProjectName ] = useState<string>("");
-    const [ cueList, setCueList ] = useState<Cue[] | null>(null);
-
-    const autoSaveProject = useRef<Project | null>(null);
-
-    // useEffect(() => {
-
-    //     autoSaveProject.current.cueList = cueList;
-
-    // }, [cueList, autoSaveProject.current])
+    const setProjectName = useProjectStore((state) => state.setProjectName);
 
     useEffect(() => {
         ProjectUtils.loadProjectFromShowFile(window.electronAPI.machineAPI, props.showFilepath).then((res) => {
 
             setProjectName(res.projectName);
-            setCueList(res.cueList);
 
             setIsLoaded(true);
 
-            autoSaveProject.current = res;
         });
 
-    }, [props.showFilepath, setIsLoaded, setProjectName, setCueList, autoSaveProject]);
+    }, [props.showFilepath, setIsLoaded, setProjectName]);
 
     return (
         !isLoaded ?
@@ -72,7 +55,7 @@ const AppView = (props: Props) => {
 
         :
 
-            <AppViewContext.Provider value={{ projectName, setProjectName, cueList, setCueList }}>
+            <AppViewContext.Provider value={{}}>
                 <section id="app-view">
                     <div className="top">
                         <Header />

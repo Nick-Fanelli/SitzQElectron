@@ -7,8 +7,7 @@ interface HandleInputComponentProps {
     type?: string
 
     value: any
-    setValue?: React.Dispatch<React.SetStateAction<string>>
-    customSetter?: (newValue: string) => void
+    setValue?: (value: string) => void
 
     className?: string
 
@@ -38,11 +37,7 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
         <input ref={ref} className={`hidden-input ${props.className}`} type={props.type || "text"} defaultValue={props.value} 
         
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            if(props.customSetter) {
-                props.customSetter(e.currentTarget.value);
-            } else {
-                props.setValue ? props.setValue(e.currentTarget.value) : console.warn("Should have props.setValue set if props.customSetter is not defined");
-            }
+            props.setValue ? props.setValue(e.currentTarget.value) : console.warn("props.setValue should be defined");
         }} 
         
         onMouseDown={(e) => {

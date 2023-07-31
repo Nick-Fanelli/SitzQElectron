@@ -110,13 +110,13 @@ const CueListComponent = () => {
                                                         <div className="machine-highlight"></div>
                                                     </td>
                                                     <td className="cue-number" style={{width: "100px"}}>
-                                                        <HiddenInputComponent type="number" value={cue.number || ""} customSetter={(newValue: string) => {
+                                                        <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
                                                             setCueList((prev) => CueList.updateCueNumber(prev, cue.uuid, newValue.length === 0 ? null : +newValue));
                                                         }}/>
                                                     </td>
                                                     <td>
 
-                                                        <HiddenInputComponent value={cue.name || ""} customSetter={(newValue: string) => {
+                                                        <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
                                                             setCueList((prev) => CueList.updateCueName(prev, cue.uuid, newValue))
                                                         }}/>
                                                     </td>

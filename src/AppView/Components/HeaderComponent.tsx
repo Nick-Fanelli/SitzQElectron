@@ -5,12 +5,14 @@ import { faGear } from '@fortawesome/free-solid-svg-icons'
 
 import './HeaderComponent.css'
 import { View, useAppContext } from '../../App'
-import { useAppViewContext } from '../AppView'
+import { useProjectStore } from '../State/Store'
 
 const Header = () => {
 
     const appContext = useAppContext();
-    const appViewContext = useAppViewContext();
+
+    const projectName = useProjectStore((state) => state.projectName);
+    const setProjectName = useProjectStore((state) => state.setProjectName);
 
     const handleGoBack = () => {
 
@@ -32,7 +34,7 @@ const Header = () => {
                     <div className="arrow"></div>
                 </div>
 
-                <HiddenInputComponent className="project-name" value={appViewContext.projectName} setValue={appViewContext.setProjectName} />
+                <HiddenInputComponent className="project-name" value={projectName} setValue={setProjectName} />
             </div>
 
             <div>

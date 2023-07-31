@@ -49,7 +49,7 @@ namespace CueList {
         return uuid;
     }
 
-    const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
+    export const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
         return cues.findIndex(cue => cue.uuid === uuid);
     }
 

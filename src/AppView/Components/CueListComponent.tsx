@@ -1,20 +1,21 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { DragDropContext, Draggable, DraggableStateSnapshot, DropResult } from "react-beautiful-dnd";
-import { Cue, CueList, UUID } from "../../Core/Cue";
+import { SoundCue, UUID } from "../../Core/Cue";
 import { ArrayUtils } from "../../Utils/Utils";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 
 import HiddenInputComponent from "./HiddenInputComponent";
 
-import './CueListComponent.css'
+import { useProjectStore } from "../State/Store";
+import './CueListComponent.css';
 
-const getRowStyle = (style: React.CSSProperties, snapshot: DraggableStateSnapshot) : React.CSSProperties => {
+const getRowStyle = (style: React.CSSProperties, snapshot: DraggableStateSnapshot): React.CSSProperties => {
 
     const defaultStyle: React.CSSProperties = {
         display: snapshot.isDragging ? "table" : 'table-row',
     }
 
-    if(!snapshot.isDropAnimating) {
+    if (!snapshot.isDropAnimating) {
         return {
             ...defaultStyle,
             ...style
@@ -31,27 +32,16 @@ const getRowStyle = (style: React.CSSProperties, snapshot: DraggableStateSnapsho
 
 const CueListComponent = () => {
 
-    const [ cueList, setCueList ] = useState<Cue[]>([]);
-    const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
+    const cueList = useProjectStore((state) => state.cueList);
+    const setCueList = useProjectStore((state) => state.setCueList);
+    const createCue = useProjectStore((state) => state.createCue);
+    const updateCueByUUID = useProjectStore((state) => state.updateCueByUUID);
 
-    console.log("render");
-
-    // Debug
-    useEffect(() => {
-
-        let tempCues: Cue[] = [];
-
-        for(let i = 0; i < 20; i++) {
-            tempCues = CueList.createNewCue(tempCues, Cue);
-        }
-
-        setCueList(tempCues);
-
-    }, [setCueList]);
+    const [cueSelection, setCueSelection] = useState<UUID[]>([]);
 
     const onDragEnd = useCallback((result: DropResult) => {
 
-        if(!result.destination)
+        if (!result.destination)
             return;
 
         const reorderedCues = ArrayUtils.reorderArray(
@@ -66,18 +56,16 @@ const CueListComponent = () => {
 
     const reportOnCueClick = useCallback((uuid: UUID) => {
 
-        setCueSelection([ uuid ]);
+        setCueSelection([uuid]);
 
     }, [setCueSelection]);
-  
+
     return (
         <section id="cue-list">
-{/* 
+
             <button onClick={() => {
-                setCueList((prev) => CueList.createNewCue(prev, Cue));
-            }}>Create New Cue</button>
-            
-            <button onClick={() => setCueList([])}>Clear Cues</button> */}
+                createCue(SoundCue);
+            }}>New Cue</button>
 
             <DragDropContext onDragEnd={onDragEnd}>
                 <StrictModeDroppable droppableId="cue-list-droppable">
@@ -105,20 +93,29 @@ const CueListComponent = () => {
                                                     className={`${cueSelection.includes(cue.uuid) ? "selected" : ""}`}
                                                     onClick={() => reportOnCueClick(cue.uuid)}
                                                 >
-                                                    <td className="info" style={{width: "100px"}}>
+                                                    <td className="info" style={{ width: "100px" }}>
                                                         <div className="machine-id"></div>
                                                         <div className="machine-highlight"></div>
                                                     </td>
-                                                    <td className="cue-number" style={{width: "100px"}}>
+                                                    <td className="cue-number" style={{ width: "100px" }}>
                                                         <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
-                                                            setCueList((prev) => CueList.updateCueNumber(prev, cue.uuid, newValue.length === 0 ? null : +newValue));
-                                                        }}/>
+                                                            updateCueByUUID(cue.uuid, (prevCue) => {
+                                                                return {
+                                                                    ...prevCue,
+                                                                    number: newValue.length === 0 ? null : +newValue
+                                                                }
+                                                            })
+                                                        }} />
                                                     </td>
                                                     <td>
-
                                                         <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
-                                                            setCueList((prev) => CueList.updateCueName(prev, cue.uuid, newValue))
-                                                        }}/>
+                                                            updateCueByUUID(cue.uuid, (prevCue) => {
+                                                                return {
+                                                                    ...prevCue,
+                                                                    name: newValue
+                                                                }
+                                                            })
+                                                        }} />
                                                     </td>
                                                     <td>{cue.name} {cue.number}</td>
                                                 </tr>

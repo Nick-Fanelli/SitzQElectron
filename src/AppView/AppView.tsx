@@ -9,6 +9,7 @@ import { ProjectUtils } from '../Core/Project'
 import './AppView.css'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useProjectStore } from './State/Store'
+import LoadingComponent from '../Components/LoadingComponent'
 
 const AppViewContext = createContext<{
 
@@ -42,7 +43,7 @@ const AppView = (props: Props) => {
 
             setProjectName(res.projectName);
 
-            setIsLoaded(true);
+            // setIsLoaded(true);
 
         });
 
@@ -51,8 +52,10 @@ const AppView = (props: Props) => {
     return (
         !isLoaded ?
 
-            <h1>Loading Project...</h1>
-
+            <div className='loading-drag-window'>
+                <LoadingComponent loadingText='Loading Project...' size="50%" autoHeight={true} />
+            </div>
+            
         :
 
             <AppViewContext.Provider value={{}}>

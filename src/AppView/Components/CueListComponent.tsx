@@ -63,10 +63,6 @@ const CueListComponent = () => {
     return (
         <section id="cue-list">
 
-            <button onClick={() => {
-                createCue(SoundCue);
-            }}>New Cue</button>
-
             <DragDropContext onDragEnd={onDragEnd}>
                 <StrictModeDroppable droppableId="cue-list-droppable">
                     {(provided) => (

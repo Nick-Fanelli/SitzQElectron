@@ -34,7 +34,7 @@ const CueListComponent = () => {
 
     const cueList = useProjectStore((state) => state.cueList);
     const setCueList = useProjectStore((state) => state.setCueList);
-    const createCue = useProjectStore((state) => state.createCue);
+    // const createCue = useProjectStore((state) => state.createCue);
     const updateCueByUUID = useProjectStore((state) => state.updateCueByUUID);
 
     const [cueSelection, setCueSelection] = useState<UUID[]>([]);

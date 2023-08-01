@@ -1,3 +1,4 @@
+import isDev from 'electron-is-dev'
 
 const getMenuTemplate = () => {
 
@@ -91,6 +92,19 @@ const getMenuTemplate = () => {
         windowMenu,
         helpMenu,
     ];
+
+    if(isDev) {
+        const devMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Dev Tools',
+            submenu: [
+                { role: 'reload' },
+                { role: 'forceReload' },
+                { role: 'toggleDevTools' },
+            ]
+        }
+
+        template.push(devMenu);
+    }
 
     if (isMac) {
         template.unshift({ role: 'appMenu' });

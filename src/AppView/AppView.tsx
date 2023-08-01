@@ -43,7 +43,7 @@ const AppView = (props: Props) => {
 
             setProjectName(res.projectName);
 
-            // setIsLoaded(true);
+            setIsLoaded(true);
 
         });
 

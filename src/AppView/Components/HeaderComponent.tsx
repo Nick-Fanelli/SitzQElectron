@@ -1,7 +1,7 @@
 import HiddenInputComponent from './HiddenInputComponent'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faPlay } from '@fortawesome/free-solid-svg-icons'
 
 import './HeaderComponent.css'
 import { View, useAppContext } from '../../App'

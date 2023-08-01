@@ -1,4 +1,5 @@
 import isDev from 'electron-is-dev'
+import { BuildSpecs } from '../src/Utils/Utils';
 
 const getMenuTemplate = () => {
 
@@ -29,13 +30,23 @@ const getMenuTemplate = () => {
             { role: 'delete' },
             { type: 'separator' },
             { role: 'selectAll' },
-            { label: 'Preferences' },
         ],
     };
 
-    const workspaceMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Workspace',
+    const viewMenu: Electron.MenuItemConstructorOptions = {
+        label: 'View',
         submenu: [
+            { role: 'zoom' },
+            { role: 'zoomIn' },
+            { role: 'zoomOut' },
+            { role: 'resetZoom' },
+        ],
+    };
+
+    const projectMenu: Electron.MenuItemConstructorOptions = {
+        label: 'Project',
+        submenu: [
+            { label: 'Project Settings' }
         ],
     };
 
@@ -85,7 +96,8 @@ const getMenuTemplate = () => {
     const template: Electron.MenuItemConstructorOptions[] = [
         fileMenu,
         editMenu,
-        workspaceMenu,
+        viewMenu,
+        projectMenu,
         cueMenu,
         playbackMenu,
         deviceMenu,
@@ -107,7 +119,16 @@ const getMenuTemplate = () => {
     }
 
     if (isMac) {
-        template.unshift({ role: 'appMenu' });
+        template.unshift({
+            label: 'SitzQ',
+            submenu: [
+                { role: 'about', label: `About SitzQ v${BuildSpecs.BUILD_VERSION}` },
+                { type: 'separator' },
+                { label: 'Global Settings' },
+                { type: 'separator' },
+                { role: 'quit' }
+            ]
+        });
     }
 
     return template;

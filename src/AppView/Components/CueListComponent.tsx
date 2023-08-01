@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { DragDropContext, Draggable, DraggableStateSnapshot, DropResult } from "react-beautiful-dnd";
-import { SoundCue, UUID } from "../../Core/Cue";
+import { UUID } from "../../Core/Cue";
 import { ArrayUtils } from "../../Utils/Utils";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 

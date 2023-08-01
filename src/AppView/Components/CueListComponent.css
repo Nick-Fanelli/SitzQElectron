@@ -10,8 +10,10 @@
     table-layout: auto;
     width: 100%;
     font-size: 1rem;
+    max-height: 100% !important;
 
-    height: 100%;
+    height: auto;
+
     overflow-y: auto;
     overflow-x: hidden;
 

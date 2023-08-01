@@ -29,7 +29,7 @@ export const useAppContext = () => {
 
 const App = () => {
 
-    const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
+    const [ currentView, setCurrentView ] = useState<View>(View.AppView);
 
     let view: any = null;
 

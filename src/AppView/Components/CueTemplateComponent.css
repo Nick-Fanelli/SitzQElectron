@@ -1,8 +1,8 @@
 #cue-templates {
 
+    position: relative;
+
     width: 100%;
-    height: 50px;
-    min-height: 50px;
     background-color: var(--application-header-color);
 
     display: flex;

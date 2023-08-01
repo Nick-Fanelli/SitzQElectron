@@ -10,11 +10,19 @@ const AppView = () => {
 
     return (
         <section id="app-view">
-            <Header />
-            <CueTemplateComponent />
-            <CueListComponent />
-            <CuePropertiesComponent />
-            <StatusBarComponent />
+            <div className="top">
+                <Header />
+                <CueTemplateComponent />
+            </div>
+
+            <div className="main">
+                <CueListComponent />
+                <CuePropertiesComponent />
+            </div>
+
+            <div className="bottom">
+                <StatusBarComponent />
+            </div>
         </section>
     )
 

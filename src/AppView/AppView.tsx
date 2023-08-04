@@ -62,7 +62,6 @@ const AppView = (props: Props) => {
                 <section id="app-view">
                     <div className="top">
                         <Header />
-                        <CueTemplateComponent />
                     </div>
 
                     <div className="main">

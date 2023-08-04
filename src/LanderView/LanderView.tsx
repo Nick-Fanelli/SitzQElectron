@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { useAppStore } from '../State/AppStore'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
@@ -19,6 +20,8 @@ const Lander = () => {
 
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
+
+    const setActiveProject = useAppStore((state) => state.setActiveProject);
 
     const assignFadeInAnimation = () => {
         fadingContentRef.current!.classList.add("fadeIn");
@@ -55,8 +58,19 @@ const Lander = () => {
 
         // Setup Project Structure
         api.machineAPI.createDirectory().then((value) => {
-            ProjectUtils.createProjectFromDirectory(api.machineAPI, value);
+            const showFilepath = ProjectUtils.createProjectFromDirectory(api.machineAPI, value);
+            setActiveProject(showFilepath);
         });
+
+    }
+
+    const handleOpenProject = () => {
+
+        api.machineAPI.openProject().then((value) => {
+
+            setActiveProject(value);
+
+        })
 
     }
 
@@ -92,7 +106,7 @@ const Lander = () => {
 
                     <div className="control-buttons interactable">
 
-                        <FontAwesomeIcon icon={faFolder} className='icon' />
+                        <FontAwesomeIcon icon={faFolder} onClick={handleOpenProject} className='icon' />
                         <FontAwesomeIcon icon={faPlus} onClick={handleNewProject} className='icon' />
 
                     </div>

@@ -6,7 +6,7 @@ import { StrictModeDroppable } from "./StrictModeDroppable";
 
 import HiddenInputComponent from "./HiddenInputComponent";
 
-import { useProjectStore } from "../State/Store";
+import { useProjectStore } from "../State/AppViewStore";
 import './CueListComponent.css';
 
 const getRowStyle = (style: React.CSSProperties, snapshot: DraggableStateSnapshot): React.CSSProperties => {

@@ -2,7 +2,8 @@ import LanderView from './LanderView/LanderView'
 import AppView from './AppView/AppView';
 
 import './App.css'
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useAppStore } from './State/AppStore';
 
 export enum View {
 
@@ -11,25 +12,21 @@ export enum View {
 
 }
 
-const AppContext = createContext<{
-
-    currentView: View,
-    setCurrentView: React.Dispatch<React.SetStateAction<View>>
-
-} | null>(null);
-
-export const useAppContext = () => {
-    const context = useContext(AppContext);
-
-    if(!context) 
-        throw new Error("useAppContext must be used within a AppContextProvider");
-
-    return context;
-}
-
 const App = () => {
 
-    const [ currentView, setCurrentView ] = useState<View>(View.AppView);
+    const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
+
+    const activeProject = useAppStore((state) => state.activeProject);
+
+    useEffect(() => {
+
+        if(activeProject === null) {
+            setCurrentView(View.LanderView);
+        } else {
+            setCurrentView(View.AppView);
+        }
+
+    }, [activeProject]);
 
     let view: any = null;
 
@@ -40,7 +37,10 @@ const App = () => {
         break;
 
     case View.AppView:
-        view = <AppView showFilepath={"/Users/nickfanelli/Desktop/Example Project/Example Project.sqshow"} />;
+        if(activeProject !== null)
+            view = <AppView showFilepath={activeProject} />;
+        else 
+            view = <h1>ERROR: TODO FIX ME</h1> // TODO: MAKE THIS BE AN ACTUAL PAGE TO RETURN FROM
         break;
 
     default:
@@ -49,11 +49,9 @@ const App = () => {
     }
 
     return (
-        <AppContext.Provider value={{ currentView, setCurrentView }}>
-            <section id="app">
-                {view}
-            </section>
-        </AppContext.Provider>
+        <section id="app">
+            {view}
+        </section>
     )
 }
 

@@ -8,7 +8,7 @@ import { ProjectUtils } from '../Core/Project'
 
 import './AppView.css'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useProjectStore } from './State/Store'
+import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 
 const AppViewContext = createContext<{

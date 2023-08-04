@@ -4,21 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 
 import './HeaderComponent.css'
-import { View, useAppContext } from '../../App'
-import { useProjectStore } from '../State/Store'
+import { useProjectStore } from '../State/AppViewStore'
+import { useAppStore } from '../../State/AppStore'
 
 const Header = () => {
-
-    const appContext = useAppContext();
 
     const projectName = useProjectStore((state) => state.projectName);
     const setProjectName = useProjectStore((state) => state.setProjectName);
 
+    const setActiveProject = useAppStore((state) => state.setActiveProject);
+
     const handleGoBack = () => {
 
         // TODO: SAVE PROJECT ETC...
-        
-        appContext.setCurrentView(View.LanderView);
+
+        setActiveProject(null);
 
     }
 

@@ -1,4 +1,4 @@
-import { useProjectStore } from '../State/Store';
+import { useProjectStore } from '../State/AppViewStore';
 import './StatusBarComponent.css'
 
 const StatusBarComponent = () => {

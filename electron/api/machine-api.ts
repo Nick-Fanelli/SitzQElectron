@@ -19,9 +19,12 @@ export interface MachineAPI {
     mkdir: (filepath: string) => Promise<void>
     touch: (filepath: string) => Promise<void>
     writeFile: (filepath: string, fileContents: string) => Promise<void>
-    readFile: (filepath: string) => Promise<any>
+    readFile: (filepath: string) => Promise<string>
     createDirectory: () => Promise<any>
     openProject: () => Promise<any>
+    osType: () => 'MacOS' | 'Windows' | 'Linux' | 'Other'
+
+    pathJoin: (...paths: string[]) => string
 
 }
 
@@ -70,8 +73,10 @@ const touch = async (filepath: string): Promise<void> => {
 const writeFile = async (filepath: string, fileContents: string): Promise<void> => {
 
     const absolutePath = path.resolve(filepath);
+    const dirname = path.dirname(absolutePath);
 
     try {
+        await fs.mkdir(dirname, { recursive: true });
         await fs.writeFile(absolutePath, fileContents);
     } catch (err) {
         console.error(`Error writing file: ${absolutePath}`, err);
@@ -79,11 +84,28 @@ const writeFile = async (filepath: string, fileContents: string): Promise<void> 
 
 }
 
-const readFile = async (filepath: string) : Promise<any> => {
+const readFile = async (filepath: string) : Promise<string> => {
 
     const absolutePath = path.resolve(filepath);
 
     return fs.readFile(absolutePath, 'utf-8');
+
+}
+
+const osType = (): 'MacOS' | 'Windows' | 'Linux' | 'Other' => {
+
+    switch(os.type()) {
+        
+        case 'Darwin':
+            return 'MacOS';
+        case 'Windows_NT':
+            return 'Windows';
+        case 'Linux':
+            return 'Linux';
+        default:
+            return 'Other';
+
+    }
 
 }
 
@@ -163,7 +185,10 @@ const boundMachineAPI: MachineAPI = {
     writeFile,
     readFile,
     createDirectory: () => ipcRenderer.invoke('open-directory'),
-    openProject: () => ipcRenderer.invoke('open-project')
+    openProject: () => ipcRenderer.invoke('open-project'),
+    osType,
+
+    pathJoin: path.join
 
 }
 

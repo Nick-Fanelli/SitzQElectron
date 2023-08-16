@@ -1,9 +1,11 @@
-import LanderView from './LanderView/LanderView'
 import AppView from './AppView/AppView';
+import LanderView from './LanderView/LanderView';
 
-import './App.css'
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import './App.css';
 import { useAppStore } from './State/AppStore';
+import ApplicationCache from './Utils/ApplicationCache';
+// import { machineId } from 'node-machine-id';
 
 export enum View {
 
@@ -27,6 +29,25 @@ const App = () => {
         }
 
     }, [activeProject]);
+
+    const handleWindowClosing = () => { // On Window Close
+
+        ApplicationCache.saveCache(window.electronAPI.machineAPI);
+
+    }
+
+    // Load Cache
+    useEffect(() => {
+
+        ApplicationCache.loadCache(window.electronAPI.machineAPI);
+        
+        window.electronAPI.addOnWindowClosingListener(handleWindowClosing);
+
+        return () => {
+            window.electronAPI.removeOnWindowClosingListener(handleWindowClosing);
+        }
+
+    }, []);
 
     let view: any = null;
 

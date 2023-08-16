@@ -1,7 +1,8 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, dialog, Menu } from 'electron'
 import path from 'node:path'
 import { bindAllIPCs } from './api/api'
 import getMenuTemplate from './menubar'
+import electronIsDev from 'electron-is-dev'
 
 //
 // ├─┬─┬ dist
@@ -51,6 +52,36 @@ const createWindow = () => {
         // win.loadFile('dist/index.html')
         mainWindow.loadFile(path.join(process.env.DIST, 'index.html'))
     }
+
+    const handleSaveOnClose = () => {
+        mainWindow?.webContents.send('window-closing');
+    }
+
+    mainWindow.on('close', (e) => {
+
+        if(electronIsDev) {
+            handleSaveOnClose();
+        } else {
+ 
+            const choice = dialog.showMessageBoxSync(mainWindow!, {
+                type: "question",
+                buttons: [ 'Yes', 'No' ],
+                title: "Confirm",
+                message: "Are you sure you want to close? Your current project will be saved."
+            });
+
+            if(choice === 1) {
+                e.preventDefault();
+            } else {
+                handleSaveOnClose();
+            }
+        }
+
+    });
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    })
 }
 
 const setDefaultProtocolClient = () => {
@@ -68,5 +99,9 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-    mainWindow = null
+
+    if(process.platform !== 'darwin') {
+        app.quit();
+    }
+
 });

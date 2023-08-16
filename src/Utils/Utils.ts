@@ -2,6 +2,8 @@ export namespace FilepathUtils {
 
     export const getBasename = (filepath: string) => {
 
+        // TODO: USE PATH to do this better
+
         const parts = filepath.split("/");
         return parts[parts.length - 1];
         

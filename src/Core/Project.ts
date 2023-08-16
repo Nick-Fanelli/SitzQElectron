@@ -33,9 +33,8 @@ export namespace ProjectUtils {
 
         const showName = FilepathUtils.getBasename(directoryPath);
 
-        // TODO: USE PATH or something to not use "/"
-        const resourceDirectory = directoryPath + "/" + "Resources";
-        const showFilePath = directoryPath + "/" + showName + ".sqshow";
+        const resourceDirectory = machineAPI.pathJoin(directoryPath, "Resources");
+        const showFilePath = machineAPI.pathJoin(directoryPath, showName + ".sqshow");
 
         const showFile: Project = {
 

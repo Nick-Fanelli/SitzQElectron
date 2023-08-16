@@ -1,20 +1,33 @@
+import { create } from "zustand";
 import { MachineAPI } from "../../electron/api/machine-api";
 
 namespace ApplicationCache {
 
     const CACHE_FILENAME = 'application-cache.json';
 
-    type Cache = {
+    export type CachedProjectInfo = {
+        
+        projectName: string,
+        showFilepath: string
 
-        lastActiveProjects: [string] | null
+    }
+
+    type ActiveProjectArray = [ CachedProjectInfo | null, CachedProjectInfo | null, CachedProjectInfo | null ];
+
+    interface ApplicationCacheState {
+
+        lastActiveProjects: ActiveProjectArray,
+        setLastActiveProjects: (activeProject: ActiveProjectArray) => void
 
     }
 
-    export var activeCache: Cache = {
+    export const useApplicationCacheStore = create<ApplicationCacheState>((set) => ({
+        
+        lastActiveProjects: [ null, null, null ],
+        setLastActiveProjects: (lastActiveProjects: ActiveProjectArray) => set({ lastActiveProjects })
 
-        lastActiveProjects: null
+    }))
 
-    }
 
     const getCacheFilepath = (machineAPI: MachineAPI) => {
 
@@ -30,17 +43,15 @@ namespace ApplicationCache {
 
         }
 
-        return ''
-
     }
 
     export const loadCache = async (machineAPI: MachineAPI): Promise<boolean> => {
 
         try {
             const cacheFileContents = await machineAPI.readFile(getCacheFilepath(machineAPI));
-            const jsonCache = JSON.parse(cacheFileContents);
+            const parsedCacheState = JSON.parse(cacheFileContents);
 
-            activeCache = jsonCache;
+            useApplicationCacheStore.setState(parsedCacheState);
 
             return true;
         } catch(err) { // DNE
@@ -49,9 +60,42 @@ namespace ApplicationCache {
     }
 
     export const saveCache = (machineAPI: MachineAPI): Promise<void> => {
-        return machineAPI.writeFile(getCacheFilepath(machineAPI), JSON.stringify(activeCache))
+
+        const currentState = useApplicationCacheStore.getState();
+
+        return machineAPI.writeFile(getCacheFilepath(machineAPI), JSON.stringify(currentState));
+
     }
 
+
+    // Helper Functions
+    export const pushBackRecentProject = (lastActiveProjects: ActiveProjectArray, setLastActiveProjects: (activeProject: ActiveProjectArray) => void, cachedProjectInfo: CachedProjectInfo) => {
+
+        const indexOfActiveProjectArray = (array: ActiveProjectArray, obj: CachedProjectInfo) => {
+            for (let i = 0; i < array.length; i++) {
+                if (obj !== null && array[i] !== null &&
+                    obj.projectName === array[i]!.projectName && obj.showFilepath === array[i]!.showFilepath) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+
+        const index = indexOfActiveProjectArray(lastActiveProjects, cachedProjectInfo);
+
+        const updatedLastActiveProjects: ActiveProjectArray = [...lastActiveProjects];
+
+        if(index !== -1) {
+            updatedLastActiveProjects.splice(index, 1);
+        } else {
+            updatedLastActiveProjects.shift();
+        }
+        
+        updatedLastActiveProjects.push(cachedProjectInfo);
+
+        setLastActiveProjects(updatedLastActiveProjects);
+
+    }
 
 }
 

@@ -1,5 +1,4 @@
 import Header from './Components/HeaderComponent'
-import CueTemplateComponent from './Components/CueTemplateComponent'
 import CueListComponent from './Components/CueListComponent'
 import CuePropertiesComponent from './Components/CuePropertiesComponent'
 import StatusBarComponent from './Components/StatusBarComponent'
@@ -10,6 +9,8 @@ import './AppView.css'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
+import ApplicationCache from '../Utils/ApplicationCache'
+import { shallow } from 'zustand/shallow'
 
 const AppViewContext = createContext<{
 
@@ -38,12 +39,16 @@ const AppView = (props: Props) => {
 
     const setProjectName = useProjectStore((state) => state.setProjectName);
 
+    const [ lastActiveProjects, setLastActiveProjects ] = ApplicationCache.useApplicationCacheStore(state => [ state.lastActiveProjects, state.setLastActiveProjects ], shallow);
+
     useEffect(() => {
         ProjectUtils.loadProjectFromShowFile(window.electronAPI.machineAPI, props.showFilepath).then((res) => {
 
             setProjectName(res.projectName);
-
             setIsLoaded(true);
+
+            // Save Open Project to Cache
+            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: props.showFilepath });
 
         });
 

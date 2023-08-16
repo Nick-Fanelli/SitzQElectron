@@ -16,6 +16,7 @@ export enum View {
 
 const App = () => {
 
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
     const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
 
     const activeProject = useAppStore((state) => state.activeProject);
@@ -39,15 +40,15 @@ const App = () => {
     // Load Cache
     useEffect(() => {
 
-        ApplicationCache.loadCache(window.electronAPI.machineAPI);
-        
         window.electronAPI.addOnWindowClosingListener(handleWindowClosing);
+
+        ApplicationCache.loadCache(window.electronAPI.machineAPI).then(() => { setIsLoading(false); })
 
         return () => {
             window.electronAPI.removeOnWindowClosingListener(handleWindowClosing);
         }
 
-    }, []);
+    }, [setIsLoading]);
 
     let view: any = null;
 
@@ -71,7 +72,13 @@ const App = () => {
 
     return (
         <section id="app">
-            {view}
+            { 
+                isLoading ? 
+                    // TODO: REPLACE WITH LOADING SCREEN
+                    <h1>Loading...</h1>
+                :
+                    view
+                }
         </section>
     )
 }

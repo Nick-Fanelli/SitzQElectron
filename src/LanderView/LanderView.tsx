@@ -9,12 +9,15 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useAppStore } from '../State/AppStore'
+import ApplicationCache from '../Utils/ApplicationCache'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
 const Lander = () => {
 
     const api = window.electronAPI;
+
+    const lastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.lastActiveProjects);
 
     const [ versionOutput, setVersionOutput ] = useState<string>(DefaultBuildVersion);
 
@@ -74,6 +77,14 @@ const Lander = () => {
 
     }
 
+    const handleOpenProjectFromCache = (cachedProjectInfo: ApplicationCache.CachedProjectInfo) => {
+
+        // TODO: VALIDATE SHOW FILEPATH STILL EXISTS OTHERWISE REMOVE FROM CACHE AND DON'T OPEN
+    
+        setActiveProject(cachedProjectInfo.showFilepath);
+
+    }
+
     return (
         <section id="lander-view">
             <div className='container'>
@@ -88,18 +99,21 @@ const Lander = () => {
                     <div className="recent-projects">
                         <div>
                             <ul className='interactable'>
-                                <li>
-                                    <p>Example Project 1</p>
-                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
-                                </li>
-                                <li>
-                                    <p>Example Project 2</p>
-                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
-                                </li>
-                                <li>
-                                    <p>Example Project 3</p>
-                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
-                                </li>
+                                {
+                                    lastActiveProjects &&
+                                    lastActiveProjects.map((project, index) => {
+                                        if(project != null) {
+                                            return (
+                                                <li key={index} onClick={() => handleOpenProjectFromCache(project)}>
+                                                    <p>{project?.projectName}</p>
+                                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
+                                                </li>
+                                            )
+                                        } else {
+                                            return null;
+                                        }
+                                    })
+                                }
                             </ul>
                         </div>
                     </div>

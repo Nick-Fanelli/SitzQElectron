@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { useAppStore } from './State/AppStore';
 import ApplicationCache from './Utils/ApplicationCache';
-// import { machineId } from 'node-machine-id';
 
 export enum View {
 

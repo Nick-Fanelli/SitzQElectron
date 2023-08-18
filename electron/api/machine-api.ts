@@ -21,7 +21,6 @@ export interface MachineAPI {
     writeFile: (filepath: string, fileContents: string) => Promise<void>
     readFile: (filepath: string) => Promise<string>
     createDirectory: () => Promise<any>
-    openProject: () => Promise<any>
     osType: () => 'MacOS' | 'Windows' | 'Linux' | 'Other'
 
     pathJoin: (...paths: string[]) => string
@@ -115,7 +114,7 @@ const osType = (): 'MacOS' | 'Windows' | 'Linux' | 'Other' => {
 
 const onBindIPCs = () => {
 
-    ipcMain.handle('open-directory', async (e) => {
+    ipcMain.handle('machine-open-directory', async (e) => {
 
         const mainWindow = BrowserWindow.fromWebContents(e.sender)!;
 
@@ -138,35 +137,6 @@ const onBindIPCs = () => {
         return null;
     });
 
-    ipcMain.handle('open-project', async (e) => {
-
-        const mainWindow = BrowserWindow.fromWebContents(e.sender)!;
-
-        try {
-
-            const result = await dialog.showOpenDialog(mainWindow, {
-                properties: ['openFile'],
-                filters: [
-                    { name: "SitzQ Show File", extensions: [ 'sqshow' ] }
-                ]
-            });
-
-            if(!result.canceled && result.filePaths.length > 0) {
-
-                const selectedFile = result.filePaths[0];
-
-                return selectedFile;
-
-            }
-
-        } catch(error) {
-            console.error("Error while opening project: ", error);
-        }
-
-        return null;
-
-    });
-
 }
 
 // ========================================================================================================================================
@@ -183,8 +153,7 @@ const boundMachineAPI: MachineAPI = {
     touch,
     writeFile,
     readFile,
-    createDirectory: () => ipcRenderer.invoke('open-directory'),
-    openProject: () => ipcRenderer.invoke('open-project'),
+    createDirectory: () => ipcRenderer.invoke('machine-open-directory'),
     osType,
 
     pathJoin: path.join

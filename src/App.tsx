@@ -19,6 +19,22 @@ const App = () => {
     const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
 
     const activeProject = useAppStore((state) => state.activeProject);
+    const setActiveProject = useAppStore((state) => state.setActiveProject);
+
+    const onFileOpened = (_: any, filepath: string) => {
+        console.log("Opening project at filepath: " + filepath);
+        setActiveProject(filepath);
+    }
+
+    useEffect(() => {
+
+        window.electronAPI.appAPI.addOnFileOpenedListener(onFileOpened);
+
+        return () => {
+            window.electronAPI.appAPI.removeOnFileOpenedListener(onFileOpened);
+        }
+
+    }, []);
 
     useEffect(() => {
 

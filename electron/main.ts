@@ -103,9 +103,17 @@ const setDefaultProtocolClient = () => {
     
 }
 
-
 app.whenReady().then(() => {
     createWindow();
+})
+
+
+app.on('open-file', (event, filepath) => {
+
+    event.preventDefault();
+
+    mainWindow?.webContents.send('file-opened', filepath);
+
 })
 
 app.on('window-all-closed', () => {

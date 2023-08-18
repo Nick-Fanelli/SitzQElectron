@@ -69,7 +69,7 @@ const Lander = () => {
 
     const handleOpenProject = () => {
 
-        api.machineAPI.openProject().then((value) => {
+        api.appAPI.openProject().then((value) => {
 
             setActiveProject(value);
 

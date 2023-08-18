@@ -67,7 +67,7 @@ const createWindow = () => {
                 type: "question",
                 buttons: [ 'Yes', 'No' ],
                 title: "Confirm",
-                message: "Are you sure you want to close? Your current project will be saved."
+                message: "Are you sure you want to close SitzQ?"
             });
 
             if(choice === 1) {
@@ -86,11 +86,21 @@ const createWindow = () => {
 
 const setDefaultProtocolClient = () => {
 
-    const customExt = '.sqshow';
+    const customProtocols: { protocol: string, extension: string }[] = [
+
+        { protocol: 'SitzQ Show File', extension: 'sqshow' }
+
+    ];
+
     const exePath = process.execPath;
     const fileArg = __filename;
 
-    app.setAsDefaultProtocolClient(customExt, exePath, [fileArg]);
+    customProtocols.forEach(({ protocol, extension }) => {
+
+        app.setAsDefaultProtocolClient(protocol, exePath, [ fileArg + '.' + extension ]);
+
+    });
+    
 }
 
 

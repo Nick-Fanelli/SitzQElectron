@@ -1,10 +1,17 @@
 import { ipcRenderer, ipcMain, BrowserWindow, dialog } from "electron";
 import SubAPIContext from "./subapi";
 
+let applicationOpenedFile: string | null = null;
+
+export const setApplicationOpenedFile = (filepath: string) => { applicationOpenedFile = filepath; }
+
 export interface AppAPI {
 
     addOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     removeOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+
+    getApplicationOpenedFile: (callback: (filepath: string) => void) => void
+
     openProject: () => Promise<any>
 
 }
@@ -47,6 +54,9 @@ const boundAppAPI: AppAPI = {
 
     addOnFileOpenedListener: (listener) => ipcRenderer.on('file-opened', listener),
     removeOnFileOpenedListener: (listener) => ipcRenderer.removeListener('file-opened', listener),
+
+    getApplicationOpenedFile: (callback: (filepath: string) => void) => { if(applicationOpenedFile !== null) callback(applicationOpenedFile); },
+
     openProject: () => ipcRenderer.invoke('app-open-project')
 
 }

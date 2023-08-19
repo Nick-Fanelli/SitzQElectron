@@ -26,7 +26,13 @@ const App = () => {
         setActiveProject(filepath);
     }
 
+    // Handle Open Project File
     useEffect(() => {
+
+        window.electronAPI.appAPI.getApplicationOpenedFile((filepath: string) => {
+            alert(filepath);
+            setActiveProject(filepath);
+        })
 
         window.electronAPI.appAPI.addOnFileOpenedListener(onFileOpened);
 

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { bindAllIPCs } from './api/api'
 import getMenuTemplate from './menubar'
 import electronIsDev from 'electron-is-dev'
+import { setApplicationOpenedFile } from './api/app-api'
 
 //
 // ├─┬─┬ dist
@@ -107,12 +108,12 @@ app.whenReady().then(() => {
     createWindow();
 })
 
-
 app.on('open-file', (event, filepath) => {
 
     event.preventDefault();
 
     mainWindow?.webContents.send('file-opened', filepath);
+    setApplicationOpenedFile(filepath);
 
 })
 

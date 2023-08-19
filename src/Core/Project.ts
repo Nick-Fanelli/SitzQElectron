@@ -29,7 +29,7 @@ export namespace ProjectUtils {
         
     }
 
-    export const createProjectFromDirectory = (machineAPI: MachineAPI, directoryPath: string) : string => {
+    export const createProjectFromDirectory = async (machineAPI: MachineAPI, directoryPath: string) : Promise<string> => {
 
         const showName = FilepathUtils.getBasename(directoryPath);
 
@@ -43,8 +43,8 @@ export namespace ProjectUtils {
 
         }
 
-        machineAPI.mkdir(resourceDirectory);
-        machineAPI.writeFile(showFilePath, ProjectUtils.projectToJSON(showFile));
+        await machineAPI.mkdir(resourceDirectory);
+        await machineAPI.writeFile(showFilePath, ProjectUtils.projectToJSON(showFile));
 
         return showFilePath;
     }

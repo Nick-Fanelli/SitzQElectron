@@ -61,8 +61,9 @@ const Lander = () => {
 
         // Setup Project Structure
         api.machineAPI.createDirectory().then((value) => {
-            const showFilepath = ProjectUtils.createProjectFromDirectory(api.machineAPI, value);
-            setActiveProject(showFilepath);
+            ProjectUtils.createProjectFromDirectory(api.machineAPI, value).then((showFilepath) => {
+                setActiveProject(showFilepath);
+            });
         });
 
     }
@@ -112,7 +113,7 @@ const Lander = () => {
                                         } else {
                                             return null;
                                         }
-                                    })
+                                    }).reverse()
                                 }
                             </ul>
                         </div>

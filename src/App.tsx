@@ -83,7 +83,7 @@ const App = () => {
         if(activeProject !== null)
             view = <AppView showFilepath={activeProject} />;
         else 
-            view = <h1>ERROR: TODO FIX ME</h1> // TODO: MAKE THIS BE AN ACTUAL PAGE TO RETURN FROM
+            setCurrentView(View.LanderView);
         break;
 
     default:

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { MachineAPI } from "../../electron/api/machine-api";
+import { useEffect, useRef } from "react";
+import { useAppStore } from "../State/AppStore";
 
 namespace ApplicationCache {
 
@@ -27,7 +29,6 @@ namespace ApplicationCache {
         setLastActiveProjects: (lastActiveProjects: ActiveProjectArray) => set({ lastActiveProjects })
 
     }))
-
 
     const getCacheFilepath = (machineAPI: MachineAPI) => {
 
@@ -59,12 +60,28 @@ namespace ApplicationCache {
         }
     }
 
-    export const saveCache = (machineAPI: MachineAPI): Promise<void> => {
+    export const getAsJSON = (): string => {
+
+        const currentState = useApplicationCacheStore.getState();
+        return JSON.stringify(currentState);
+
+    }
+
+    export const saveCacheFromJSON = (json: string) => {
+
+        window.electronAPI.machineAPI.writeFile(getCacheFilepath(window.electronAPI.machineAPI), json);
+
+    }
+
+    export const saveCache = (machineAPI: MachineAPI): string => {
 
         const currentState = useApplicationCacheStore.getState();
 
-        return machineAPI.writeFile(getCacheFilepath(machineAPI), JSON.stringify(currentState));
+        const stateJSON = JSON.stringify(currentState);
 
+        machineAPI.writeFile(getCacheFilepath(machineAPI), stateJSON);
+
+        return stateJSON;
     }
 
 
@@ -80,7 +97,7 @@ namespace ApplicationCache {
             }
             return -1;
         };
-
+        
         const index = indexOfActiveProjectArray(lastActiveProjects, cachedProjectInfo);
 
         const updatedLastActiveProjects: ActiveProjectArray = [...lastActiveProjects];
@@ -96,6 +113,54 @@ namespace ApplicationCache {
         setLastActiveProjects(updatedLastActiveProjects);
 
     }
+
+}
+
+export const ApplicationCacheElement = () => {
+
+    const prevCacheRef = useRef<string>("");
+
+    const isCacheLoaded = useAppStore(state => state.isCacheLoaded);
+    const setIsCacheLoaded = useAppStore(state => state.setIsCacheLoaded);
+
+    const handleWindowClosing = () => {
+
+        ApplicationCache.saveCache(window.electronAPI.machineAPI);
+
+    }
+
+    const saveCache = () => {
+
+        const json = ApplicationCache.getAsJSON();
+
+        if(json !== prevCacheRef.current) {
+
+            console.log("WRITING TO CACHE FILE");
+
+            ApplicationCache.saveCacheFromJSON(json);
+            prevCacheRef.current = json;
+
+        }
+    }
+
+    useEffect(() => {
+
+        window.electronAPI.addOnWindowClosingListener(handleWindowClosing);
+        
+        ApplicationCache.loadCache(window.electronAPI.machineAPI).then(() => setIsCacheLoaded(true))
+
+        ApplicationCache.useApplicationCacheStore.subscribe(() => {
+            if(isCacheLoaded)
+                saveCache();
+        });
+
+        return () => {
+            window.electronAPI.removeOnWindowClosingListener(handleWindowClosing);
+        }
+
+    }, [isCacheLoaded]);
+
+    return null;
 
 }
 

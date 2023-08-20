@@ -11,6 +11,7 @@ import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 import ApplicationCache from '../Utils/ApplicationCache'
 import { shallow } from 'zustand/shallow'
+import { useAppStore } from '../State/AppStore'
 
 const AppViewContext = createContext<{
 
@@ -27,32 +28,28 @@ export const useAppViewContext = () => {
 
 }
 
-interface Props {
-
-    showFilepath: string
-
-}
-
-const AppView = (props: Props) => {
+const AppView = () => {
 
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
+
+    const activeProject = useAppStore(state => state.activeProject);
 
     const setProjectName = useProjectStore((state) => state.setProjectName);
 
     const [ lastActiveProjects, setLastActiveProjects ] = ApplicationCache.useApplicationCacheStore(state => [ state.lastActiveProjects, state.setLastActiveProjects ], shallow);
 
     useEffect(() => {
-        ProjectUtils.loadProjectFromShowFile(window.electronAPI.machineAPI, props.showFilepath).then((res) => {
+        ProjectUtils.loadProjectFromShowFile(window.electronAPI.machineAPI, activeProject!).then((res) => {
 
             setProjectName(res.projectName);
             setIsLoaded(true);
 
             // Save Open Project to Cache
-            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: props.showFilepath });
+            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: activeProject! });
 
         });
 
-    }, [props.showFilepath, setIsLoaded, setProjectName]);
+    }, [activeProject, setIsLoaded, setProjectName]);
 
     return (
         !isLoaded ?

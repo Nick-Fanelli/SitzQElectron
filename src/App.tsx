@@ -4,7 +4,7 @@ import LanderView from './LanderView/LanderView';
 import { useEffect, useState } from 'react';
 import './App.css';
 import { useAppStore } from './State/AppStore';
-import ApplicationCache from './Utils/ApplicationCache';
+import { ApplicationCacheElement } from './Utils/ApplicationCache';
 
 export enum View {
 
@@ -15,11 +15,10 @@ export enum View {
 
 const App = () => {
 
-    const [ isLoading, setIsLoading ] = useState<boolean>(true);
-    const [ currentView, setCurrentView ] = useState<View>(View.LanderView);
-
     const activeProject = useAppStore((state) => state.activeProject);
     const setActiveProject = useAppStore((state) => state.setActiveProject);
+
+    const isCacheLoaded = useAppStore(state => state.isCacheLoaded);
 
     const onFileOpened = (_: any, filepath: string) => {
         console.log("Opening project at filepath: " + filepath);
@@ -42,65 +41,23 @@ const App = () => {
 
     }, []);
 
-    useEffect(() => {
-
-        if(activeProject === null) {
-            setCurrentView(View.LanderView);
-        } else {
-            setCurrentView(View.AppView);
-        }
-
-    }, [activeProject]);
-
-    const handleWindowClosing = () => { // On Window Close
-
-        ApplicationCache.saveCache(window.electronAPI.machineAPI);
-
-    }
-
-    // Load Cache
-    useEffect(() => {
-
-        window.electronAPI.addOnWindowClosingListener(handleWindowClosing);
-
-        ApplicationCache.loadCache(window.electronAPI.machineAPI).then(() => { setIsLoading(false); })
-
-        return () => {
-            window.electronAPI.removeOnWindowClosingListener(handleWindowClosing);
-        }
-
-    }, [setIsLoading]);
+    const isReady = isCacheLoaded;
 
     let view: any = null;
 
-    switch(currentView) {
-
-    case View.LanderView:
-        view = <LanderView />;
-        break;
-
-    case View.AppView:
-        if(activeProject !== null)
-            view = <AppView showFilepath={activeProject} />;
-        else 
-            setCurrentView(View.LanderView);
-        break;
-
-    default:
-        break;
-
+    if(isReady) {
+        view = activeProject === null ? <LanderView /> : <AppView/>;
+    } else {
+        view = <h1>Loading...</h1> // TODO: REPLACE W/ LOADING
     }
 
     return (
-        <section id="app">
-            { 
-                isLoading ? 
-                    // TODO: REPLACE WITH LOADING SCREEN
-                    <h1>Loading...</h1>
-                :
-                    view
-                }
-        </section>
+        <>
+            <ApplicationCacheElement />
+            <section id="app">
+                {view}
+            </section>
+        </>
     )
 }
 

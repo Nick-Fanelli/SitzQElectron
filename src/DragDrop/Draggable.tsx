@@ -1,5 +1,4 @@
-import React, { ReactElement } from "react"
-import { ReactNode, useEffect, useRef } from "react"
+import React, { ReactNode, useRef, useState } from "react"
 
 export type DraggableProvided = {
 
@@ -9,22 +8,35 @@ export type DraggableProvided = {
 
 }
 
-type Props = {
+export type DraggableSnapshot = {
 
-    children: (provided: DraggableProvided) => ReactNode
-    isDraggable?: boolean
-    customCreateDraggableElement?: () => Element
+    isBeingDragged: boolean
 
 }
 
-const Draggable = ({ children, isDraggable = true, customCreateDraggableElement }: Props) => {
+type Props = {
+
+    children: (provided: DraggableProvided, snapshot: DraggableSnapshot) => ReactNode
+    isDraggable?: boolean
+    customCreateDraggableElement?: () => Element
+    onDragStart?: () => void
+    onDragEnd?: () => void
+
+}
+
+
+const Draggable = (props: Props) => {
+
+    const [ snapshot, setSnapshot ] = useState<DraggableSnapshot>({
+        isBeingDragged: false
+    });
 
     const draggablePreviewRef = useRef<Element | null>(null);
 
     const createDraggableElement = () => {
         
-        if(customCreateDraggableElement) {
-            draggablePreviewRef.current = customCreateDraggableElement();
+        if(props.customCreateDraggableElement) {
+            draggablePreviewRef.current = props.customCreateDraggableElement();
             document.body.appendChild(draggablePreviewRef.current);
         }
 
@@ -32,14 +44,16 @@ const Draggable = ({ children, isDraggable = true, customCreateDraggableElement 
 
     const destroyDraggableElement = () => {
 
-        if(draggablePreviewRef.current)
-            document.body.removeChild(draggablePreviewRef.current);
+        if(draggablePreviewRef.current) {
+            draggablePreviewRef.current.remove();
+            draggablePreviewRef.current = null;
+        }
 
     }
 
     const provided: DraggableProvided = {
 
-        draggable: isDraggable,
+        draggable: props.isDraggable === undefined ? true : props.isDraggable,
 
         onDragStart: (event) => {
             createDraggableElement();
@@ -49,15 +63,31 @@ const Draggable = ({ children, isDraggable = true, customCreateDraggableElement 
                     draggablePreviewRef.current, 0, 0
                 );
             }
+
+            setSnapshot((prev) => ({
+                ...prev,
+                isBeingDragged: true
+            }));
+
+            if(props.onDragStart)
+                props.onDragStart();
         },
 
         onDragEnd: () => {
             destroyDraggableElement();
+
+            setSnapshot((prev) => ({
+                ...prev,
+                isBeingDragged: false
+            }));
+
+            if(props.onDragEnd)
+                props.onDragEnd();
         },
 
     }
 
-    return children(provided);
+    return props.children(provided, snapshot);
 }
 
 export default Draggable;

@@ -101,6 +101,15 @@
     background-color: var(--background-color);
     cursor: default !important;
     height: var(--cue-row-height);
+    cursor: grab;
+    transition: all ease-in-out 0.2s;
+    transition: opacity 0s;
+
+}
+
+#cue-list tbody tr.beingDragged {
+
+    opacity: 0;
 
 }
 
@@ -132,31 +141,36 @@
     border: none;
     height: var(--height);
     transform: translateY(calc((var(--height) / 2) * -1));
+    z-index: -10;
 
 }
 
-#cue-list tbody tr.drop-target .light {
+#cue-list tbody tr.light {
 
     --local-height: 5px;
 
-    opacity: 0;
+    opacity: 1;
     height: var(--local-height);
     width: 100%;
-    background-color: rgb(118, 193, 118) !important;
+    background-color: var(--selection-color);
     transform: translateY(calc(var(--height) / 2 - var(--local-height) / 2));
+    border: none;
+    pointer-events: none;
+    position: absolute;
+    z-index: 10;
+    border: none;
+    opacity: 0;
+
+}
+
+#cue-list tbody tr.light > td {
+    
     border: none;
 
 }
 
-#cue-list tbody tr.drop-target.hovered > .light {
+#cue-list tbody tr.light.hovered {
 
     opacity: 1;
     
-}
-
-#DND-cue-drag-image {
-
-    display: none;
-    color: green;
-
 }

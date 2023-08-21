@@ -7,6 +7,7 @@ import { useProjectStore } from "../State/AppViewStore";
 import './CueListComponent.css';
 import Draggable from "../../DragDrop/Draggable";
 import DropTarget from "../../DragDrop/DropTarget";
+import InputForwardingParent from "../../Utils/InputForwardingParent";
 
 const CueListComponent = () => {
 
@@ -15,7 +16,7 @@ const CueListComponent = () => {
     const createCue = useProjectStore((state) => state.createCue);
     const updateCueByUUID = useProjectStore((state) => state.updateCueByUUID);
 
-    const [cueSelection, setCueSelection] = useState<UUID[]>([]);
+    const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
 
     const reportOnCueClick = useCallback((uuid: UUID) => {
 
@@ -39,82 +40,87 @@ const CueListComponent = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {cueList.map((cue, index) => ([
-                            <Draggable key={cue.uuid} customCreateDraggableElement={() => {
-                                let element = document.createElement('div');
+                        {cueList.map((cue, index) => (
+                            <InputForwardingParent key={cue.uuid}>
+                                {inputForwardingProvided => ([
+                                    <Draggable key={cue.uuid + "draggable"}
+                                        customCreateDraggableElement={() => {
+                                            let element = document.createElement('div');
 
-                                let content: string = (cue.number !== null ? `${cue.number}. ` : '') + (cue.name !== null ? cue.name : '');
+                                            let content: string = (cue.number !== null ? `${cue.number}. ` : '') + (cue.name !== null ? cue.name : '');
 
-                                if(content.trim().length === 0)
-                                    content = "Unnamed Cue";
+                                            if(content.trim().length === 0)
+                                                content = "Unnamed Cue";
 
-                                element.innerHTML = `
-                                    <p style="
-                                        background-color: var(--background-color);
-                                        flex: 0 1 auto;
-                                        padding: 3px 0.5em;
-                                        border-radius: 5px;
-                                        box-shadow: 0px 0px 0px rgba(0,0,0,1);
-                                        overflow: visible;
-                                        opacity: 1;
-                                        border: solid 2px #101010;
-                                    ">${content}</p>
-                                `;
+                                            element.innerHTML = `
+                                                <p style="
+                                                    background-color: var(--background-color);
+                                                    flex: 0 1 auto;
+                                                    padding: 3px 0.5em;
+                                                    border-radius: 5px;
+                                                    box-shadow: 0px 0px 0px rgba(0,0,0,1);
+                                                    overflow: visible;
+                                                    opacity: 1;
+                                                    border: solid 2px #101010;
+                                                ">${content}</p>
+                                            `;
 
-                                element.style.cssText = `
-                                    display: flex;
-                                    overflow: visible;
-                                    opacity: 1;
-                                `
+                                            element.style.cssText = `
+                                                display: flex;
+                                                overflow: visible;
+                                                opacity: 1;
+                                            `
 
-                                return element;
+                                            return element;
 
-                            }}>
-                                {(provided) => (
-                                    <tr
-                                        className={index % 2 !== 0 ? "odd" : undefined}
-                                        onClick={() => reportOnCueClick(cue.uuid)}
-                                        {...provided}
+                                        }}
                                     >
-                                        <td className="info" style={{ width: "100px" }}>
-                                            <div className="machine-id"></div>
-                                            <div className="machine-highlight"></div>
-                                        </td>
-                                        <td className="cue-number" style={{ width: "100px" }}>
-                                            <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
-                                                updateCueByUUID(cue.uuid, (prevCue) => {
-                                                    return {
-                                                        ...prevCue,
-                                                        number: newValue.length === 0 ? null : +newValue
-                                                    }
-                                                })
-                                            }} />
-                                        </td>
-                                        <td>
-                                            <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
-                                                updateCueByUUID(cue.uuid, (prevCue) => {
-                                                    return {
-                                                        ...prevCue,
-                                                        name: newValue
-                                                    }
-                                                })
-                                            }} />
-                                        </td>
-                                        <td>{cue.name} {cue.number}</td>
-                                    </tr>
-                                )}
-                            </Draggable>,
-                            <DropTarget key={cue.uuid + "drop-target"}>
-                                {(provided, snapshot) => (
-                                    <tr className={`drop-target ${snapshot.isDraggedOver ? 'hovered' : ''}`} {...provided}>
-                                        <td className="light"></td>
-                                        <td className="light"></td>
-                                        <td className="light"></td>
-                                        <td className="light"></td>
-                                    </tr>
-                                )}
-                            </DropTarget>  
-                        ]))}
+                                        {(provided, snapshot) => (
+                                            <tr
+                                                className={`${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
+                                                onClick={() => { reportOnCueClick(cue.uuid); console.log("CLICK") }}
+                                                {...provided}
+                                                ref={inputForwardingProvided.transmitterRef}
+                                            >
+                                                <td className="info" style={{ width: "100px" }}>
+                                                    <div className="machine-id"></div>
+                                                    <div className="machine-highlight"></div>
+                                                </td>
+                                                <td className="cue-number" style={{ width: "100px" }}>
+                                                    <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
+                                                        updateCueByUUID(cue.uuid, (prevCue) => {
+                                                            return {
+                                                                ...prevCue,
+                                                                number: newValue.length === 0 ? null : +newValue
+                                                            }
+                                                        })
+                                                    }} />
+                                                </td>
+                                                <td>
+                                                    <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
+                                                        updateCueByUUID(cue.uuid, (prevCue) => {
+                                                            return {
+                                                                ...prevCue,
+                                                                name: newValue
+                                                            }
+                                                        })
+                                                    }} />
+                                                </td>
+                                                <td>{cue.name} {cue.number}</td>
+                                            </tr>
+                                        )}
+                                    </Draggable>,
+                                    <DropTarget key={cue.uuid + "drop-target"}>
+                                        {(provided, snapshot) => ([
+                                            <tr className={`drop-target `} {...provided} ref={inputForwardingProvided.receiverRef}>
+                                            </tr>,
+                                            <tr className={`light ${snapshot.isDraggedOver ? 'hovered' : ''}`}>
+                                            </tr>
+                                        ])}
+                                    </DropTarget>  
+                                ])}
+                            </InputForwardingParent>
+                        ))}
                     </tbody>
                 </table>
             </div>

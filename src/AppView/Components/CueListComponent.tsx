@@ -41,9 +41,9 @@ const CueListComponent = () => {
                     </thead>
                     <tbody>
                         {cueList.map((cue, index) => (
-                            <InputForwardingParent key={cue.uuid}>
-                                {inputForwardingProvided => ([
-                                    <Draggable key={cue.uuid + "draggable"}
+                            <DropTarget key={cue.uuid + "draggable"}>
+                                {(dropTargetProvided, dropTargetSnapshot) => (
+                                    <Draggable
                                         customCreateDraggableElement={() => {
                                             let element = document.createElement('div');
 
@@ -75,12 +75,12 @@ const CueListComponent = () => {
 
                                         }}
                                     >
-                                        {(provided, snapshot) => (
+                                        {(provided, snapshot) => ([
                                             <tr
                                                 className={`${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
                                                 onClick={() => { reportOnCueClick(cue.uuid); console.log("CLICK") }}
                                                 {...provided}
-                                                ref={inputForwardingProvided.transmitterRef}
+                                                {...dropTargetProvided}
                                             >
                                                 <td className="info" style={{ width: "100px" }}>
                                                     <div className="machine-id"></div>
@@ -107,19 +107,15 @@ const CueListComponent = () => {
                                                     }} />
                                                 </td>
                                                 <td>{cue.name} {cue.number}</td>
-                                            </tr>
-                                        )}
-                                    </Draggable>,
-                                    <DropTarget key={cue.uuid + "drop-target"}>
-                                        {(provided, snapshot) => ([
-                                            <tr className={`drop-target `} {...provided} ref={inputForwardingProvided.receiverRef}>
                                             </tr>,
-                                            <tr className={`light ${snapshot.isDraggedOver ? 'hovered' : ''}`}>
-                                            </tr>
+                                            dropTargetSnapshot.isDraggedOver ?
+                                            <tr className="light"></tr>
+                                            : <></>
                                         ])}
-                                    </DropTarget>  
-                                ])}
-                            </InputForwardingParent>
+                                    </Draggable>
+                                )}
+                                
+                            </DropTarget>
                         ))}
                     </tbody>
                 </table>

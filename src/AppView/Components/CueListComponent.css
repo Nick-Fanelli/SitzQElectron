@@ -131,20 +131,6 @@
 
 }
 
-#cue-list tbody tr.drop-target {
-
-    --height: 30px;
-
-    background-color: transparent;
-    position: absolute;
-    width: 100%;
-    border: none;
-    height: var(--height);
-    transform: translateY(calc((var(--height) / 2) * -1));
-    z-index: -10;
-
-}
-
 #cue-list tbody tr.light {
 
     --local-height: 5px;
@@ -159,18 +145,6 @@
     position: absolute;
     z-index: 10;
     border: none;
-    opacity: 0;
-
-}
-
-#cue-list tbody tr.light > td {
-    
-    border: none;
-
-}
-
-#cue-list tbody tr.light.hovered {
-
     opacity: 1;
-    
+
 }

@@ -1,6 +1,4 @@
 #cue-list {
-
-    /* Variables */
     --cue-row-height: 35px;
 
     border-collapse: collapse;
@@ -11,13 +9,13 @@
     width: 100%;
     font-size: 1rem;
     max-height: 100% !important;
-
     height: 100%;
 
     overflow-y: auto;
     overflow-x: hidden;
 
 }
+
 
 #cue-list input.hidden-input {
 
@@ -42,6 +40,12 @@
 
 }
 
+#cue-list tbody {
+
+    position: relative;
+
+}
+
 #cue-list th:last-of-type {
     border-right: none !important;
 }
@@ -49,6 +53,7 @@
 #cue-list th:first-of-type {
     border-left: none !important;
 }
+
 
 #cue-list th,
 #cue-list td {
@@ -58,6 +63,7 @@
     overflow: auto;
 
 }
+
 
 #cue-list th.rigid {
 
@@ -76,11 +82,11 @@
 
 #cue-list td.info {
 
-    height: 100%;
     padding: 0;
     position: relative;
 
 }
+
 
 #cue-list td.info .machine-id {
 
@@ -110,8 +116,47 @@
 
 }
 
-#cue-list tbody tr:nth-child(even) {
+#cue-list tbody tr.odd {
 
     background-color: var(--table-header-color);
+
+}
+
+#cue-list tbody tr.drop-target {
+
+    --height: 30px;
+
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    border: none;
+    height: var(--height);
+    transform: translateY(calc((var(--height) / 2) * -1));
+
+}
+
+#cue-list tbody tr.drop-target .light {
+
+    --local-height: 5px;
+
+    opacity: 0;
+    height: var(--local-height);
+    width: 100%;
+    background-color: rgb(118, 193, 118) !important;
+    transform: translateY(calc(var(--height) / 2 - var(--local-height) / 2));
+    border: none;
+
+}
+
+#cue-list tbody tr.drop-target.hovered > .light {
+
+    opacity: 1;
+    
+}
+
+#DND-cue-drag-image {
+
+    display: none;
+    color: green;
 
 }

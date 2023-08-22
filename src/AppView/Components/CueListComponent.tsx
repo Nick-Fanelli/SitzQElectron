@@ -52,7 +52,6 @@ const CueListComponent = () => {
             setCueSelection([uuid]);
         }
 
-
     }, [cueSelection, setCueSelection]);
 
     return (

@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useState } from "react"
+import { ReactNode, useState } from "react"
 
 export type DropTargetProvided = {
 
@@ -29,12 +29,36 @@ const DropTarget = (props: Props) => {
         isDraggedOver: false
     });
 
-    const shouldAccept = (dropID: string, validationString: string | undefined) => {
+    const decipherTransferKey = (transferKey: string): { dropID: string, validationString: string | null } | null => {
 
-        if(props.acceptOnly === undefined || props.acceptOnly.includes(dropID)) {
+        const parts = transferKey.split(':');
 
-            if(props.ruleOnValidationString && validationString !== undefined) {
-                return props.ruleOnValidationString(validationString);
+        if(parts.length !== 2) {
+            console.error(`Transfer Key of '${transferKey}' is invalid`)
+            return null;
+        }
+
+        let dropID: string = parts[0];
+        let validationString: string | null = parts[1];
+
+        if(validationString.length === 0)
+            validationString = null;
+        
+        return { dropID, validationString };
+
+    }
+
+    const shouldAccept = (transferKey: string) => {
+
+        const keys = decipherTransferKey(transferKey);
+
+        if(keys === null)
+            return false;
+
+        if(props.acceptOnly === undefined || props.acceptOnly.includes(keys.dropID)) {
+
+            if(props.ruleOnValidationString && keys.validationString !== null) {
+                return props.ruleOnValidationString(keys.validationString);
             } else {
                 return true;
             }
@@ -52,12 +76,11 @@ const DropTarget = (props: Props) => {
             event.stopPropagation();
             event.preventDefault();
 
-            const transferType = event.dataTransfer.types.at(0);
+            const transferKey = event.dataTransfer.types.at(0);
 
-            if(transferType !== undefined) {
-                const validationString = event.dataTransfer.types.at(1);
+            if(transferKey !== undefined) {
 
-                const isAcceptable = shouldAccept(transferType, validationString);
+                const isAcceptable = shouldAccept(transferKey);
 
                 if(isAcceptable) {
                     if(!snapshot.isDraggedOver) {
@@ -84,14 +107,9 @@ const DropTarget = (props: Props) => {
 
             event.preventDefault();
 
-            const transferType = event.dataTransfer.types.at(1); // flip
+            const transferKey = event.dataTransfer.types.at(0);
 
-            if(!transferType)
-                return;
-
-            const validationString = event.dataTransfer.types.at(0);
-
-            if(!shouldAccept(transferType, validationString))
+            if(!transferKey || !shouldAccept(transferKey))
                 return;
 
             setSnapshot((prev) => ({
@@ -100,12 +118,12 @@ const DropTarget = (props: Props) => {
             }))
 
 
-            if(transferType) {
-                const dataTransfer = JSON.parse(event.dataTransfer.getData(transferType));
+            if(transferKey) {
+                const dataTransfer = JSON.parse(event.dataTransfer.getData(transferKey));
                 event.dataTransfer.clearData();
 
                 if(props.onDrop)
-                    props.onDrop(transferType, dataTransfer);
+                    props.onDrop(transferKey.split(":")[0], dataTransfer);
             }
 
         }

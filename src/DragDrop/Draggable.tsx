@@ -70,12 +70,8 @@ const Draggable = (props: Props) => {
                 );
             }
 
-            event.dataTransfer.setData(props.dragID, JSON.stringify(props.dropData)); // Transfer Index 0
-
-            if(props.validationString) {
-                event.dataTransfer.setData(props.validationString, ""); // Transfer Index 1
-            }
-
+            event.dataTransfer.setData(props.validationString ? props.dragID + `:${props.validationString}` : props.dragID, JSON.stringify(props.dropData));
+            
             setSnapshot((prev) => ({
                 ...prev,
                 isBeingDragged: true

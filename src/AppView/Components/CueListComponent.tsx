@@ -105,7 +105,7 @@ const CueListComponent = () => {
                                         {(provided, snapshot) => ([
                                             <tr
                                                 key={cue.uuid + 'cue-elm'}
-                                                className={`${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
+                                                className={`${cueSelection.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
                                                 onClick={() => { reportOnCueClick(cue.uuid) }}
                                                 {...provided}
                                                 {...dropTargetProvided}

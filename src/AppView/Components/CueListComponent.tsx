@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Cue, UUID } from "../../Core/Cue";
 
 import HiddenInputComponent from "./HiddenInputComponent";
@@ -16,6 +16,15 @@ const CueListComponent = () => {
     const createCue = useProjectStore((state) => state.createCue);
     const updateCueByUUID = useProjectStore((state) => state.updateCueByUUID);
 
+    const singleSelectKey: 'meta' | 'control' = useMemo(() => {
+
+        if(window.electronAPI.machineAPI.osType() === "MacOS")
+            return 'meta';
+
+        return 'control';
+
+    }, [window.electronAPI.machineAPI.osType])
+
     const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
 
     const moveCue = useCallback((sourceIndex: number, destinationIndex: number) => {
@@ -24,11 +33,27 @@ const CueListComponent = () => {
         setCueList(reorderedCues);
     }, [cueList, setCueList]);
 
-    const reportOnCueClick = useCallback((uuid: UUID) => {
+    const reportOnCueClick = useCallback((event: React.MouseEvent, uuid: UUID) => {
 
-        setCueSelection([uuid]);
+        if(singleSelectKey === 'meta' ? event.metaKey : event.ctrlKey) { // Single Select
 
-    }, [setCueSelection]);
+            const updatedCues = [...cueSelection];
+            const index = updatedCues.indexOf(uuid);
+
+            if(index === -1) {
+                updatedCues.push(uuid);
+            } else {
+                updatedCues.splice(index, 1);
+            }
+
+            setCueSelection(updatedCues);
+
+        } else { // Override to just that one cue
+            setCueSelection([uuid]);
+        }
+
+
+    }, [cueSelection, setCueSelection]);
 
     return (
         <section id="cue-list">
@@ -106,7 +131,7 @@ const CueListComponent = () => {
                                             <tr
                                                 key={cue.uuid + 'cue-elm'}
                                                 className={`${cueSelection.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
-                                                onClick={() => { reportOnCueClick(cue.uuid) }}
+                                                onClick={(event) => { reportOnCueClick(event, cue.uuid) }}
                                                 {...provided}
                                                 {...dropTargetProvided}
                                             >

@@ -107,12 +107,6 @@
 
 }
 
-#cue-list tbody tr.beingDragged {
-
-    opacity: 0;
-
-}
-
 #cue-list tbody tr>td:first-of-type {
 
     border-right: solid 1px var(--divider-color);

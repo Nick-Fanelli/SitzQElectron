@@ -7,7 +7,7 @@ import { useProjectStore } from "../State/AppViewStore";
 import './CueListComponent.css';
 import Draggable from "../../DragDrop/Draggable";
 import DropTarget from "../../DragDrop/DropTarget";
-import InputForwardingParent from "../../Utils/InputForwardingParent";
+import { ArrayUtils } from "../../Utils/Utils";
 
 const CueListComponent = () => {
 
@@ -17,6 +17,12 @@ const CueListComponent = () => {
     const updateCueByUUID = useProjectStore((state) => state.updateCueByUUID);
 
     const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
+
+    const moveCue = useCallback((sourceIndex: number, destinationIndex: number) => {
+        const reorderedCues = ArrayUtils.reorderArray(cueList, sourceIndex, destinationIndex);
+
+        setCueList(reorderedCues);
+    }, [cueList, setCueList]);
 
     const reportOnCueClick = useCallback((uuid: UUID) => {
 
@@ -41,9 +47,28 @@ const CueListComponent = () => {
                     </thead>
                     <tbody>
                         {cueList.map((cue, index) => (
-                            <DropTarget key={cue.uuid + "draggable"}>
+                            <DropTarget key={cue.uuid} acceptOnly={['cue']}
+                                onDrop={(dropID, dropData) => {
+                                    if(dropID === 'cue') {
+                                        if(dropData.index <= index) {
+                                            moveCue(dropData.index, index);
+                                        } else {
+                                            moveCue(dropData.index, index + 1);
+                                        }
+                                    }
+                                }}
+
+                                ruleOnValidationString={(validationString) => {
+                                    const targetIndex: number = +validationString;
+                                    return (targetIndex !== index) && (targetIndex !== index + 1)
+                                }}
+                            >
                                 {(dropTargetProvided, dropTargetSnapshot) => (
                                     <Draggable
+                                        key={cue.uuid.toString() + 'draggable'}
+                                        dragID='cue'
+                                        dropData={{ uuid: cue.uuid, index }}
+                                        validationString={index.toString()}
                                         customCreateDraggableElement={() => {
                                             let element = document.createElement('div');
 
@@ -71,14 +96,17 @@ const CueListComponent = () => {
                                                 opacity: 1;
                                             `
 
+                                            element.setAttribute('key', cue.uuid + '-custom-draggable-element');
+
                                             return element;
 
                                         }}
                                     >
                                         {(provided, snapshot) => ([
                                             <tr
+                                                key={cue.uuid + 'cue-elm'}
                                                 className={`${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
-                                                onClick={() => { reportOnCueClick(cue.uuid); console.log("CLICK") }}
+                                                onClick={() => { reportOnCueClick(cue.uuid) }}
                                                 {...provided}
                                                 {...dropTargetProvided}
                                             >
@@ -109,8 +137,8 @@ const CueListComponent = () => {
                                                 <td>{cue.name} {cue.number}</td>
                                             </tr>,
                                             dropTargetSnapshot.isDraggedOver ?
-                                            <tr className="light"></tr>
-                                            : <></>
+                                            <tr className="light" key={cue.uuid + 'cue-light'}></tr>
+                                            : null
                                         ])}
                                     </Draggable>
                                 )}
@@ -120,69 +148,6 @@ const CueListComponent = () => {
                     </tbody>
                 </table>
             </div>
-
-            {/* <DragDropContext onDragEnd={onDragEnd}>
-                <StrictModeDroppable droppableId="cue-list-droppable">
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            <table id="cue-list">
-                                <thead>
-                                    <tr>
-                                        <th className="rigid"></th>
-                                        <th className="">#</th>
-                                        <th>Name</th>
-                                        <th>Duration</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cueList.map((cue, index) => (
-                                        <Draggable key={cue.uuid} draggableId={cue.uuid} index={index}>
-                                            {(provided, snapshot) => (
-                                                <tr
-                                                    hierarchy-value='droppable-parent'
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    style={getRowStyle(provided.draggableProps.style!, snapshot)}
-                                                    className={`${cueSelection.includes(cue.uuid) ? "selected" : ""}`}
-                                                    onClick={() => reportOnCueClick(cue.uuid)}
-                                                >
-                                                    <td className="info" style={{ width: "100px" }}>
-                                                        <div className="machine-id"></div>
-                                                        <div className="machine-highlight"></div>
-                                                    </td>
-                                                    <td className="cue-number" style={{ width: "100px" }}>
-                                                        <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
-                                                            updateCueByUUID(cue.uuid, (prevCue) => {
-                                                                return {
-                                                                    ...prevCue,
-                                                                    number: newValue.length === 0 ? null : +newValue
-                                                                }
-                                                            })
-                                                        }} />
-                                                    </td>
-                                                    <td>
-                                                        <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
-                                                            updateCueByUUID(cue.uuid, (prevCue) => {
-                                                                return {
-                                                                    ...prevCue,
-                                                                    name: newValue
-                                                                }
-                                                            })
-                                                        }} />
-                                                    </td>
-                                                    <td>{cue.name} {cue.number}</td>
-                                                </tr>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                </tbody>
-                            </table>
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </StrictModeDroppable>
-            </DragDropContext> */}
         </section>
 
     )

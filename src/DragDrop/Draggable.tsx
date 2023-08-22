@@ -18,12 +18,17 @@ type Props = {
 
     children: (provided: DraggableProvided, snapshot: DraggableSnapshot) => ReactNode
     isDraggable?: boolean
+
+    dragID: string
+    validationString?: string
+
+    dropData?: any
+
     customCreateDraggableElement?: () => Element
     onDragStart?: () => void
     onDragEnd?: () => void
 
 }
-
 
 const Draggable = (props: Props) => {
 
@@ -56,12 +61,19 @@ const Draggable = (props: Props) => {
         draggable: props.isDraggable === undefined ? true : props.isDraggable,
 
         onDragStart: (event) => {
+
             createDraggableElement();
 
             if(draggablePreviewRef.current) {
                 event.dataTransfer.setDragImage(
                     draggablePreviewRef.current, 0, 0
                 );
+            }
+
+            event.dataTransfer.setData(props.dragID, JSON.stringify(props.dropData)); // Transfer Index 0
+
+            if(props.validationString) {
+                event.dataTransfer.setData(props.validationString, ""); // Transfer Index 1
             }
 
             setSnapshot((prev) => ({
@@ -74,6 +86,7 @@ const Draggable = (props: Props) => {
         },
 
         onDragEnd: () => {
+
             destroyDraggableElement();
 
             setSnapshot((prev) => ({
@@ -83,9 +96,10 @@ const Draggable = (props: Props) => {
 
             if(props.onDragEnd)
                 props.onDragEnd();
-        },
+        }
 
     }
+
 
     return props.children(provided, snapshot);
 }

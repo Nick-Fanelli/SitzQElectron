@@ -13,10 +13,10 @@ export namespace FilepathUtils {
 
 export namespace ArrayUtils {
 
-    export const reorderArray = (list: any[], startIndex: number, endIndex: number) : any[] => {
+    export const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number) : any[] => {
         const result = Array.from(list);
-        const [ removed ] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
+        const [ removed ] = result.splice(sourceIndex, 1);
+        result.splice(destinationIndex, 0, removed);
 
         return result;
     }

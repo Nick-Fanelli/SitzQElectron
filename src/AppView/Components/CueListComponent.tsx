@@ -118,6 +118,9 @@ const CueListComponent = () => {
                                                 display: flex;
                                                 overflow: visible;
                                                 opacity: 1;
+                                                position: absolute;
+                                                top: -100%;
+                                                left: 0;
                                             `
 
                                             element.setAttribute('key', cue.uuid + '-custom-draggable-element');

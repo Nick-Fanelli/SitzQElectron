@@ -27,11 +27,43 @@ const CueListComponent = () => {
 
     const [ cueSelection, setCueSelection ] = useState<UUID[]>([]);
 
-    const moveCue = useCallback((sourceIndex: number, destinationIndex: number) => {
-        const reorderedCues = ArrayUtils.reorderArray(cueList, sourceIndex, destinationIndex);
+    const moveCue = useCallback((sourceUUID: UUID, sourceIndex: number, destinationIndex: number) => {
+
+        let reorderedCues = [...cueList];
+
+        if(cueSelection.length <= 1 || !cueSelection.includes(sourceUUID)) { // Handle Single Cue Move
+
+            reorderedCues = ArrayUtils.reorderArray(reorderedCues, sourceIndex, destinationIndex + (sourceIndex > destinationIndex ? 1 : 0));
+
+        } else { // Handle multi cue move
+
+            let targetCues: Cue[] = [];
+            let firstSelectedDestinationIndex: number | null = null;
+
+            for(let i = 0; i < reorderedCues.length; i++) {
+
+                const targetUUID = reorderedCues[i].uuid;
+                const selectionIndex = cueSelection.indexOf(targetUUID);
+
+                if(selectionIndex !== -1) {
+                    if(!firstSelectedDestinationIndex)
+                        firstSelectedDestinationIndex = i;
+
+                    targetCues.push(reorderedCues[i]);
+                    reorderedCues.splice(i, 1);
+                    i--;
+                }
+
+            }
+
+            if(firstSelectedDestinationIndex !== null) {
+                reorderedCues.splice(destinationIndex + (firstSelectedDestinationIndex > destinationIndex ? 1 : -1), 0, ...targetCues);
+            }
+        }
 
         setCueList(reorderedCues);
-    }, [cueList, setCueList]);
+
+    }, [cueList, setCueList, cueSelection]);
 
     const reportOnCueClick = useCallback((event: React.MouseEvent, uuid: UUID) => {
 
@@ -74,11 +106,7 @@ const CueListComponent = () => {
                             <DropTarget key={cue.uuid} acceptOnly={['cue']}
                                 onDrop={(dropID, dropData) => {
                                     if(dropID === 'cue') {
-                                        if(dropData.index <= index) {
-                                            moveCue(dropData.index, index);
-                                        } else {
-                                            moveCue(dropData.index, index + 1);
-                                        }
+                                        moveCue(dropData.uuid, dropData.index, index);
                                     }
                                 }}
 

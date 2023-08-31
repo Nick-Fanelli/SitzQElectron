@@ -28,20 +28,58 @@ export const useAppViewContext = () => {
 
 }
 
+const HandleProjectAutoSaveComponent = () => {
+
+    const projectFilepath = useAppStore(state => state.activeProject);
+
+    const projectName       = useProjectStore(state => state.projectName);
+    const cueList           = useProjectStore(state => state.cueList);
+
+    const handleOnWindowClose = () => {
+
+        if(projectFilepath === null)
+            return;
+
+        console.log("Saving Project");
+
+        const reconstructedProject = ProjectUtils.reconstructProject(projectName, cueList);
+        ProjectUtils.saveProjectToShowFile(projectFilepath, reconstructedProject);
+    }
+
+     // On Window Close
+     useEffect(() => {
+
+        window.electronAPI.addOnWindowClosingListener(handleOnWindowClose);
+
+        return () => {
+            window.electronAPI.removeOnWindowClosingListener(handleOnWindowClose);
+        }
+
+    });
+
+    return (
+        <button onClick={handleOnWindowClose}>Save Me</button>
+    );
+
+}
+
 const AppView = () => {
 
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
 
     const activeProject = useAppStore(state => state.activeProject);
-
-    const setProjectName = useProjectStore((state) => state.setProjectName);
+    
+    const setProjectName        = useProjectStore((state) => state.setProjectName);
+    const setCueList            = useProjectStore(state => state.setCueList);
 
     const [ lastActiveProjects, setLastActiveProjects ] = ApplicationCache.useApplicationCacheStore(state => [ state.lastActiveProjects, state.setLastActiveProjects ], shallow);
 
     useEffect(() => {
-        ProjectUtils.loadProjectFromShowFile(window.electronAPI.machineAPI, activeProject!).then((res) => {
+        ProjectUtils.loadProjectFromShowFile(activeProject!).then((res) => {
 
             setProjectName(res.projectName);
+            setCueList(res.cueList === null ? [] : res.cueList);
+            
             setIsLoaded(true);
 
             // Save Open Project to Cache
@@ -50,6 +88,7 @@ const AppView = () => {
         });
 
     }, [activeProject, setIsLoaded, setProjectName]);
+   
 
     return (
         !isLoaded ?
@@ -59,23 +98,23 @@ const AppView = () => {
             </div>
             
         :
+        <>
+            <HandleProjectAutoSaveComponent />
+            <section id="app-view">
+                <div className="top">
+                    <Header />
+                </div>
 
-            <AppViewContext.Provider value={{}}>
-                <section id="app-view">
-                    <div className="top">
-                        <Header />
-                    </div>
+                <div className="main">
+                    <CueListComponent />
+                    <CuePropertiesComponent />
+                </div>
 
-                    <div className="main">
-                        <CueListComponent />
-                        <CuePropertiesComponent />
-                    </div>
-
-                    <div className="bottom">
-                        <StatusBarComponent />
-                    </div>
-                </section>
-            </AppViewContext.Provider>
+                <div className="bottom">
+                    <StatusBarComponent />
+                </div>
+            </section>
+        </>
     )
 
 }

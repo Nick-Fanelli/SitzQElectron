@@ -61,7 +61,7 @@ const Lander = () => {
 
         // Setup Project Structure
         api.machineAPI.createDirectory().then((value) => {
-            ProjectUtils.createProjectFromDirectory(api.machineAPI, value).then((showFilepath) => {
+            ProjectUtils.createProjectFromDirectory(value).then((showFilepath) => {
                 setActiveProject(showFilepath);
             });
         });

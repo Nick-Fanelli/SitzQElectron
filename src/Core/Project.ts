@@ -1,6 +1,5 @@
 import { Cue } from './Cue'
 
-import { MachineAPI } from '../../electron/api/machine-api'
 import { FilepathUtils } from '../Utils/Utils'
 
 interface Project {
@@ -21,20 +20,38 @@ export namespace ProjectUtils {
         return JSON.parse(json);
     }
 
-    export const loadProjectFromShowFile = async (machineAPI: MachineAPI, filepath: string) : Promise<Project> => {
+    export const loadProjectFromShowFile = async (filepath: string) : Promise<Project> => {
 
-        const showFileContents = await machineAPI.readFile(filepath);
+        const showFileContents = await window.electronAPI.machineAPI.readFile(filepath);
 
         return jsonToProject(showFileContents);
         
     }
 
-    export const createProjectFromDirectory = async (machineAPI: MachineAPI, directoryPath: string) : Promise<string> => {
+    export const reconstructProject = (projectName: string, cueList: Cue[] | null) : Project => {
+
+        const reconstructedProject: Project = {
+            projectName,
+            cueList
+        }
+
+        return reconstructedProject;
+
+    }
+
+    export const saveProjectToShowFile = async (filepath: string, project: Readonly<Project>) : Promise<void> => {
+
+        const fileContents = ProjectUtils.projectToJSON(project);
+        return window.electronAPI.machineAPI.writeFile(filepath, fileContents);
+
+    }
+
+    export const createProjectFromDirectory = async (directoryPath: string) : Promise<string> => {
 
         const showName = FilepathUtils.getBasename(directoryPath);
 
-        const resourceDirectory = machineAPI.pathJoin(directoryPath, "Resources");
-        const showFilePath = machineAPI.pathJoin(directoryPath, showName + ".sqshow");
+        const resourceDirectory = window.electronAPI.machineAPI.pathJoin(directoryPath, "Resources");
+        const showFilePath = window.electronAPI.machineAPI.pathJoin(directoryPath, showName + ".sqshow");
 
         const showFile: Project = {
 
@@ -43,8 +60,8 @@ export namespace ProjectUtils {
 
         }
 
-        await machineAPI.mkdir(resourceDirectory);
-        await machineAPI.writeFile(showFilePath, ProjectUtils.projectToJSON(showFile));
+        await window.electronAPI.machineAPI.mkdir(resourceDirectory);
+        await saveProjectToShowFile(showFilePath, showFile);
 
         return showFilePath;
     }

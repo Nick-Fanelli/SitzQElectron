@@ -67,7 +67,9 @@ const CueListComponent = () => {
 
     const reportOnCueClick = useCallback((event: React.MouseEvent, uuid: UUID) => {
 
-        if(singleSelectKey === 'meta' ? event.metaKey : event.ctrlKey) { // Single Select
+        if(event.shiftKey) { // Shift Through Multi-select
+
+        } else if(singleSelectKey === 'meta' ? event.metaKey : event.ctrlKey) { // Multi Select
 
             const updatedCues = [...cueSelection];
             const index = updatedCues.indexOf(uuid);

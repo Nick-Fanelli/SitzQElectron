@@ -2,13 +2,14 @@ input.hidden-input {
 
     background-color: transparent !important;
     border-radius: 5px;
-    cursor: text;
+    cursor: default;
 
 }
 
 input.hidden-input:focus {
 
     border: solid 1px var(--selection-color);
+    cursor: text;
 
 }
 

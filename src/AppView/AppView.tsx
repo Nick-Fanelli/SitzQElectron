@@ -42,7 +42,8 @@ const HandleProjectAutoSaveComponent = () => {
     });
 
     return (
-        <button onClick={handleOnWindowClose}>Save Me</button>
+        null
+        // <button onClick={handleOnWindowClose}>Save Me</button>
     );
 
 }

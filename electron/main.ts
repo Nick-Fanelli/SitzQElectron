@@ -30,7 +30,7 @@ const createWindow = () => {
         },
         focusable: true,
         title: "SitzQ",
-        titleBarStyle: "hidden",
+        // titleBarStyle: "hidden",
     })
 
     mainWindow.setSize(1024, 800);

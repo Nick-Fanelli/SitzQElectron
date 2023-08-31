@@ -1,0 +1,58 @@
+.context-menu {
+
+    position: absolute;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+
+
+}
+
+.context-menu > ul {
+
+    cursor: pointer;
+    list-style: none;
+    background-color: var(--secondary-background-color);
+    border-radius: 7px;
+
+}
+
+.context-menu > ul > li {
+
+    min-width: 10em;
+    height: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0 0 1em;
+
+}
+
+.context-menu > ul > li > .icon {
+
+    margin: 0 1em 0 0;
+
+}
+
+.context-menu > ul > li:first-of-type {
+
+    border-radius: 7px 7px 0 0;
+
+}
+
+.context-menu > ul > li:last-of-type {
+
+    border-radius: 0 0 7px 7px;
+
+}
+
+.context-menu > ul > li:only-of-type {
+
+    border-radius: 7px;
+
+}
+
+.context-menu > ul > li:hover {
+
+    background-color: #303436;
+
+}

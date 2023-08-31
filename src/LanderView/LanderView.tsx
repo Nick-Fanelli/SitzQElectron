@@ -7,9 +7,10 @@ import './LanderView.css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFolder, faGreaterThan, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useAppStore } from '../State/AppStore'
 import ApplicationCache from '../Utils/ApplicationCache'
+import RecentProjectElement from './RecentProjectElement'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
@@ -77,15 +78,6 @@ const Lander = () => {
         })
 
     }
-
-    const handleOpenProjectFromCache = (cachedProjectInfo: ApplicationCache.CachedProjectInfo) => {
-
-        // TODO: VALIDATE SHOW FILEPATH STILL EXISTS OTHERWISE REMOVE FROM CACHE AND DON'T OPEN
-    
-        setActiveProject(cachedProjectInfo.showFilepath);
-
-    }
-
     return (
         <section id="lander-view">
             <div className='container'>
@@ -104,12 +96,7 @@ const Lander = () => {
                                     lastActiveProjects &&
                                     lastActiveProjects.map((project, index) => {
                                         if(project != null) {
-                                            return (
-                                                <li key={index} onClick={() => handleOpenProjectFromCache(project)}>
-                                                    <p>{project?.projectName}</p>
-                                                    <FontAwesomeIcon className="icon" icon={faGreaterThan} />
-                                                </li>
-                                            )
+                                            return <RecentProjectElement key={index} cachedProject={project} />
                                         } else {
                                             return null;
                                         }

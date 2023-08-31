@@ -14,19 +14,25 @@ namespace ApplicationCache {
 
     }
 
-    type ActiveProjectArray = [ CachedProjectInfo | null, CachedProjectInfo | null, CachedProjectInfo | null ];
+    export type ActiveProjectArray = [ CachedProjectInfo | null, CachedProjectInfo | null, CachedProjectInfo | null ];
 
     interface ApplicationCacheState {
 
         lastActiveProjects: ActiveProjectArray,
         setLastActiveProjects: (activeProject: ActiveProjectArray) => void
 
+        lastOpenedProjectFilepath: string | null
+        setLastOpenedProjectFilepath: (_: string | null) => void
+
     }
 
     export const useApplicationCacheStore = create<ApplicationCacheState>((set) => ({
         
         lastActiveProjects: [ null, null, null ],
-        setLastActiveProjects: (lastActiveProjects: ActiveProjectArray) => set({ lastActiveProjects })
+        setLastActiveProjects: (lastActiveProjects: ActiveProjectArray) => set({ lastActiveProjects }),
+
+        lastOpenedProjectFilepath: null,
+        setLastOpenedProjectFilepath: (lastOpenedProjectFilepath: string | null) => set({ lastOpenedProjectFilepath })
 
     }))
 

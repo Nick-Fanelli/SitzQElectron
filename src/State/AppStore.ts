@@ -15,7 +15,7 @@ export const useAppStore = create<AppViewState>((set) => ({
     isCacheLoaded: false,
     setIsCacheLoaded: (value: boolean) => set({ isCacheLoaded: value }),
 
-    activeProject: "/Users/nickfanelli/Desktop/Example Project/Example Project.sqshow",
+    activeProject: null,
     setActiveProject: (showFilepath: string | null) => set({ activeProject: showFilepath })
         
 }));

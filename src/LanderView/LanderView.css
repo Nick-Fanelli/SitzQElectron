@@ -9,8 +9,6 @@
     flex-direction: column;
     padding: 0 0 2em 0;
 
-    -webkit-app-region: drag;
-
 }
 
 #lander-view .interactable {
@@ -19,7 +17,7 @@
 
 }
 
-#lander-view  h1 {
+#lander-view h1 {
 
     font-size: 4rem;
     font-weight: 400;
@@ -36,7 +34,7 @@
 
 }
 
-#lander-view ul {
+#lander-view ul.interactable {
 
     list-style: none;
     text-align: center;
@@ -61,7 +59,7 @@
 
 }
 
-#lander-view ul > li {
+#lander-view ul.interactable > li {
 
     height: 3em;
     display: flex;
@@ -73,20 +71,20 @@
 
 }
 
-#lander-view ul > li > p {
+#lander-view ul.interactable > li > p {
 
     margin: 0 2em;
 
 }
 
-#lander-view ul > li > .icon {
+#lander-view ul.interactable > li > .icon {
 
     margin: 0;
     display: none;
 
 }
 
-#lander-view ul > li:hover > .icon {
+#lander-view ul.interactable > li:hover > .icon {
 
     animation: projectHoverIcon 0.5s ease-out;
     margin: 0 0 0 2em;
@@ -94,13 +92,13 @@
 
 }
 
-#lander-view ul > li:hover > p {
+#lander-view ul.interactable > li:hover > p {
     
     margin: 0;
 
 }
 
-#lander-view ul > li:last-of-type {
+#lander-view ul.interactable > li:last-of-type {
 
     border-bottom: none;
 
@@ -115,18 +113,13 @@
 
 #lander-view .fading-content {
 
-    position: absolute;
-    top: 15em;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
     opacity: 0;
-    margin: 4em 0 0 0;
+    margin: 19em 0 0 0;
+    height: 100%;
 
 }
 
@@ -193,6 +186,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     animation: slideAndFade 1.5s ease-in-out forwards;
+    -webkit-app-region: drag;
+    width: 100%;
 
 }
 

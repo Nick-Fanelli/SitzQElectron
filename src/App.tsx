@@ -29,7 +29,6 @@ const App = () => {
     useEffect(() => {
 
         window.electronAPI.appAPI.getApplicationOpenedFile((filepath: string) => {
-            alert(filepath);
             setActiveProject(filepath);
         })
 

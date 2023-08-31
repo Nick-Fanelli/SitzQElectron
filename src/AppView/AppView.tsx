@@ -6,27 +6,13 @@ import StatusBarComponent from './Components/StatusBarComponent'
 import { ProjectUtils } from '../Core/Project'
 
 import './AppView.css'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 import ApplicationCache from '../Utils/ApplicationCache'
 import { shallow } from 'zustand/shallow'
 import { useAppStore } from '../State/AppStore'
 
-const AppViewContext = createContext<{
-
-} | null>(null);
-
-export const useAppViewContext = () => {
-
-    const context = useContext(AppViewContext);
-
-    if(!context)
-        throw new Error("useAppViewContext must be used within an AppViewContext.Provider");
-
-    return context;
-
-}
 
 const HandleProjectAutoSaveComponent = () => {
 
@@ -39,8 +25,6 @@ const HandleProjectAutoSaveComponent = () => {
 
         if(projectFilepath === null)
             return;
-
-        console.log("Saving Project");
 
         const reconstructedProject = ProjectUtils.reconstructProject(projectName, cueList);
         ProjectUtils.saveProjectToShowFile(projectFilepath, reconstructedProject);
@@ -65,15 +49,23 @@ const HandleProjectAutoSaveComponent = () => {
 
 const AppView = () => {
 
+    // Component State
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
 
+    // App Store
     const activeProject = useAppStore(state => state.activeProject);
     
+    // Project Store
     const setProjectName        = useProjectStore((state) => state.setProjectName);
     const setCueList            = useProjectStore(state => state.setCueList);
 
+    // Cache Store
     const [ lastActiveProjects, setLastActiveProjects ] = ApplicationCache.useApplicationCacheStore(state => [ state.lastActiveProjects, state.setLastActiveProjects ], shallow);
+    const setLastOpenedProjectFilepath                  = ApplicationCache.useApplicationCacheStore(state => state.setLastOpenedProjectFilepath);
 
+    // ==========================================================================================
+    // Project Loads Into App View Here
+    // ==========================================================================================
     useEffect(() => {
         ProjectUtils.loadProjectFromShowFile(activeProject!).then((res) => {
 
@@ -84,11 +76,10 @@ const AppView = () => {
 
             // Save Open Project to Cache
             ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: activeProject! });
+            setLastOpenedProjectFilepath(activeProject);
 
         });
-
     }, [activeProject, setIsLoaded, setProjectName]);
-   
 
     return (
         !isLoaded ?

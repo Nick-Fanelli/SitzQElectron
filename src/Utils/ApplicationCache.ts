@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { MachineAPI } from "../../electron/api/machine-api";
 import { useEffect, useRef } from "react";
-import { useAppStore } from "../State/AppStore";
+import { useAppConstantsStore } from "../State/AppStore";
 
 namespace ApplicationCache {
 
@@ -126,8 +126,8 @@ export const ApplicationCacheElement = () => {
 
     const prevCacheRef = useRef<string>("");
 
-    const isCacheLoaded = useAppStore(state => state.isCacheLoaded);
-    const setIsCacheLoaded = useAppStore(state => state.setIsCacheLoaded);
+    const isCacheLoaded = useAppConstantsStore(state => state.isCacheLoaded);
+    const setIsCacheLoaded = useAppConstantsStore(state => state.setIsCacheLoaded);
 
     const handleWindowClosing = () => {
 

@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAppStore } from "../State/AppStore";
 import ApplicationCache from "../Utils/ApplicationCache";
 import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -8,6 +7,7 @@ import ContextMenu from "../Utils/ContextMenu";
 type Props = {
 
     cachedProject: ApplicationCache.CachedProjectInfo
+    handleOpenProject: (showFilepath: string) => void
 
 }
 
@@ -22,19 +22,12 @@ const initialContextMenu = {
 
 const RecentProjectElement = (props: Props) => {
 
-    const setActiveProject = useAppStore(state => state.setActiveProject);
-
     const lastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.lastActiveProjects);
     const setLastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.setLastActiveProjects);
 
     const [ contextMenu, setContextMenu ] = useState(initialContextMenu);
 
-    const handleOpenProjectFromCache = (cachedProjectInfo: ApplicationCache.CachedProjectInfo) => {
-
-        // TODO: VALIDATE SHOW FILEPATH STILL EXISTS OTHERWISE REMOVE FROM CACHE AND DON'T OPEN
-        setActiveProject(cachedProjectInfo.showFilepath);
-
-    }
+    const handleOpenProjectFromCache = (cachedProjectInfo: ApplicationCache.CachedProjectInfo) => props.handleOpenProject(cachedProjectInfo.showFilepath)
 
     const handleContextMenu = (event : React.MouseEvent<HTMLLIElement, globalThis.MouseEvent>) => {
 

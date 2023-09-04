@@ -116,10 +116,10 @@ const onBindIPCs = () => {
 
     ipcMain.handle('machine-open-directory', async (e) => {
 
-        const mainWindow = BrowserWindow.fromWebContents(e.sender)!;
+        const activeWindow = BrowserWindow.fromWebContents(e.sender)!;
 
         try {
-            const result = await dialog.showOpenDialog(mainWindow, {
+            const result = await dialog.showOpenDialog(activeWindow, {
                 properties: ['openDirectory', 'createDirectory']
             });
 

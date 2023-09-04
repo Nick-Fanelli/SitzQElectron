@@ -11,12 +11,14 @@ import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 import ApplicationCache from '../Utils/ApplicationCache'
 import { shallow } from 'zustand/shallow'
-import { useAppStore } from '../State/AppStore'
 
+interface HandleProjectAutoSaveComponentProps {
 
-const HandleProjectAutoSaveComponent = () => {
+    projectFilepath: string
 
-    const projectFilepath = useAppStore(state => state.activeProject);
+}
+
+const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSaveComponentProps) => {
 
     const projectName       = useProjectStore(state => state.projectName);
     const cueList           = useProjectStore(state => state.cueList);
@@ -48,14 +50,22 @@ const HandleProjectAutoSaveComponent = () => {
 
 }
 
-const AppView = () => {
+interface AppViewProps {
+
+    projectFilepath?: string
+
+}
+
+const AppView = ({ projectFilepath }: AppViewProps) => {
+
+    if(!projectFilepath)
+        return null;
+
+    console.log(projectFilepath);
 
     // Component State
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
 
-    // App Store
-    const activeProject = useAppStore(state => state.activeProject);
-    
     // Project Store
     const setProjectName        = useProjectStore((state) => state.setProjectName);
     const setCueList            = useProjectStore(state => state.setCueList);
@@ -68,7 +78,7 @@ const AppView = () => {
     // Project Loads Into App View Here
     // ==========================================================================================
     useEffect(() => {
-        ProjectUtils.loadProjectFromShowFile(activeProject!).then((res) => {
+        ProjectUtils.loadProjectFromShowFile(projectFilepath).then((res) => {
 
             setProjectName(res.projectName);
             setCueList(res.cueList === null ? [] : res.cueList);
@@ -76,11 +86,11 @@ const AppView = () => {
             setIsLoaded(true);
 
             // Save Open Project to Cache
-            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: activeProject! });
-            setLastOpenedProjectFilepath(activeProject);
+            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: projectFilepath });
+            setLastOpenedProjectFilepath(projectFilepath);
 
         });
-    }, [activeProject, setIsLoaded, setProjectName]);
+    }, [projectFilepath, setIsLoaded, setProjectName]);
 
     return (
         !isLoaded ?
@@ -91,7 +101,7 @@ const AppView = () => {
             
         :
         <>
-            <HandleProjectAutoSaveComponent />
+            <HandleProjectAutoSaveComponent projectFilepath={projectFilepath} />
             <section id="app-view">
                 <div className="top">
                     <Header />

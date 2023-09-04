@@ -1,21 +1,15 @@
 import { create } from "zustand"
 
-interface AppViewState {
+interface AppConstantsState {
 
     isCacheLoaded: boolean,
     setIsCacheLoaded: (value: boolean) => void
 
-    activeProject: string | null,
-    setActiveProject: (showFilepath: string | null) => void
-
 }
 
-export const useAppStore = create<AppViewState>((set) => ({
+export const useAppConstantsStore = create<AppConstantsState>((set) => ({
 
     isCacheLoaded: false,
     setIsCacheLoaded: (value: boolean) => set({ isCacheLoaded: value }),
-
-    activeProject: null,
-    setActiveProject: (showFilepath: string | null) => set({ activeProject: showFilepath })
         
 }));

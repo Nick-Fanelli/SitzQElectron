@@ -8,15 +8,18 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useAppStore } from '../State/AppStore'
 import ApplicationCache from '../Utils/ApplicationCache'
 import RecentProjectElement from './RecentProjectElement'
+import AppConstants from '../AppConstants'
+import { useAppConstantsStore } from '../State/AppStore'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
-const Lander = () => {
+const LanderView = () => {
 
     const api = window.electronAPI;
+
+    const isCacheLoaded = useAppConstantsStore(state => state.isCacheLoaded);
 
     const lastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.lastActiveProjects);
 
@@ -24,8 +27,6 @@ const Lander = () => {
 
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
-
-    const setActiveProject = useAppStore((state) => state.setActiveProject);
 
     const assignFadeInAnimation = () => {
         fadingContentRef.current!.classList.add("fadeIn");
@@ -63,63 +64,73 @@ const Lander = () => {
         // Setup Project Structure
         api.machineAPI.createDirectory().then((value) => {
             ProjectUtils.createProjectFromDirectory(value).then((showFilepath) => {
-                setActiveProject(showFilepath);
+                handleOpenProjectFromShowFilepath(showFilepath);
             });
         });
 
     }
 
-    const handleOpenProject = () => {
-
+    const handleOpenProjectDialog = () => {
         api.appAPI.openProject().then((value) => {
+            handleOpenProjectFromShowFilepath(value);
+        });
+    }
 
-            setActiveProject(value);
+    const handleOpenProjectFromShowFilepath = (showFilepath: string) => {
 
-        })
+        window.electronAPI.appAPI.launchProject(showFilepath);
 
     }
+
     return (
-        <section id="lander-view">
-            <div className='container'>
-                <div ref={slidingContentRef} className='sliding-content'>
-                    <img src={logoIcon} alt="SitzQ Icon Logo" className='logo' />
-                    <h1>SitzQ</h1>
-                    <h3 onClick={toggleVersion} className='interactable'>{versionOutput}</h3>
-                </div>
-
-                <div ref={fadingContentRef} className="fading-content">
-
-                    <div className="recent-projects">
-                        <div>
-                            <ul className='interactable'>
-                                {
-                                    lastActiveProjects &&
-                                    lastActiveProjects.map((project, index) => {
-                                        if(project != null) {
-                                            return <RecentProjectElement key={index} cachedProject={project} />
-                                        } else {
-                                            return null;
-                                        }
-                                    }).reverse()
-                                }
-                            </ul>
+        <>
+            <AppConstants />
+            {
+                isCacheLoaded &&
+                <section id="lander-view">
+                    <div className='container'>
+                        <div ref={slidingContentRef} className='sliding-content'>
+                            <img src={logoIcon} alt="SitzQ Icon Logo" className='logo' />
+                            <h1>SitzQ</h1>
+                            <h3 onClick={toggleVersion} className='interactable'>{versionOutput}</h3>
                         </div>
+
+                        <div ref={fadingContentRef} className="fading-content">
+
+                            <div className="recent-projects">
+                                <div>
+                                    <ul className='interactable'>
+                                        {
+                                            lastActiveProjects &&
+                                            lastActiveProjects.map((project, index) => {
+                                                if(project != null) {
+                                                    return <RecentProjectElement key={index} cachedProject={project} handleOpenProject={handleOpenProjectFromShowFilepath} />
+                                                } else {
+                                                    return null;
+                                                }
+                                            }).reverse()
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div className="control-buttons interactable">
+
+                                <FontAwesomeIcon icon={faFolder} onClick={handleOpenProjectDialog} className='icon' />
+                                <FontAwesomeIcon icon={faPlus} onClick={handleNewProject} className='icon' />
+                                {/* <button onClick={() => { window.electronAPI.appAPI.launchSecondaryWindow(); }}>Launch Secondary Window</button> */}
+
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div className="control-buttons interactable">
-
-                        <FontAwesomeIcon icon={faFolder} onClick={handleOpenProject} className='icon' />
-                        <FontAwesomeIcon icon={faPlus} onClick={handleNewProject} className='icon' />
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
+                </section>
+            }
+        </>
     )
 
 }
 
-export default Lander;
+export default LanderView;

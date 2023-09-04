@@ -13,7 +13,7 @@ const runReactApp = () => {
     ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <React.StrictMode>
             <ViewManager />
-        </React.StrictMode>,
+        </React.StrictMode>
     )
     
     postMessage({ payload: 'removeLoading' }, '*')

@@ -35,6 +35,8 @@
     padding: 0;
     box-sizing: border-box;
 
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont;
+
 }
 
 :root {
@@ -51,7 +53,7 @@
 
 }
 
-:root h1 { font-size: 2rem; }
+:root h1 { font-size: 14px; }
 
 :root button {
 

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import './App.css';
-import { ApplicationCacheElement } from './Utils/ApplicationCache';
 
 const AppConstants = () => {
 
@@ -25,7 +24,7 @@ const AppConstants = () => {
     }, []);
 
     return (
-        <ApplicationCacheElement />
+        null
     );
 }
 

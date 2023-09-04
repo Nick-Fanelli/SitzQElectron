@@ -42,7 +42,6 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
         
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
             if(props.shouldLiveUpdate) {
-                console.log("live update");
                 props.setValue ? props.setValue(e.currentTarget.value) : console.warn("props.setValue should be defined");
             }
             else
@@ -68,7 +67,6 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
 
             if(!props.shouldLiveUpdate && changedValue.current !== null) {
                 props.setValue ? props.setValue(changedValue.current) : console.warn("props non-live update didn't work");
-                console.log("delayed update");
             }
 
             document.removeEventListener("keydown", watchKeyInputForFocus);

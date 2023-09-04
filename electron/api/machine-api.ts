@@ -69,7 +69,7 @@ const touch = async (filepath: string): Promise<void> => {
 
 }
 
-const writeFile = async (filepath: string, fileContents: string): Promise<void> => {
+export const writeFile = async (filepath: string, fileContents: string): Promise<void> => {
 
     const absolutePath = path.resolve(filepath);
     const dirname = path.dirname(absolutePath);

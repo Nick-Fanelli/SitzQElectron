@@ -3,25 +3,18 @@ import { ProjectUtils } from '../Core/Project'
 
 import logoIcon  from '../Resources/logo-icon.png'
 
-import './LanderView.css'
+import './LauncherView.css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faPlus } from '@fortawesome/free-solid-svg-icons'
-import ApplicationCache from '../Utils/ApplicationCache'
-import RecentProjectElement from './RecentProjectElement'
 import AppConstants from '../AppConstants'
-import { useAppConstantsStore } from '../State/AppStore'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
-const LanderView = () => {
+const LauncherView = () => {
 
     const api = window.electronAPI;
-
-    const isCacheLoaded = useAppConstantsStore(state => state.isCacheLoaded);
-
-    const lastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.lastActiveProjects);
 
     const [ versionOutput, setVersionOutput ] = useState<string>(DefaultBuildVersion);
 
@@ -30,7 +23,7 @@ const LanderView = () => {
 
     const assignFadeInAnimation = () => {
         fadingContentRef.current!.classList.add("fadeIn");
-    }   
+    }
 
     const toggleVersion = useCallback(() => {
     
@@ -81,12 +74,11 @@ const LanderView = () => {
         window.electronAPI.appAPI.launchProject(showFilepath);
 
     }
-
+    
     return (
         <>
             <AppConstants />
             {
-                isCacheLoaded &&
                 <section id="lander-view">
                     <div className='container'>
                         <div ref={slidingContentRef} className='sliding-content'>
@@ -100,7 +92,7 @@ const LanderView = () => {
                             <div className="recent-projects">
                                 <div>
                                     <ul className='interactable'>
-                                        {
+                                        {/* {
                                             lastActiveProjects &&
                                             lastActiveProjects.map((project, index) => {
                                                 if(project != null) {
@@ -109,7 +101,7 @@ const LanderView = () => {
                                                     return null;
                                                 }
                                             }).reverse()
-                                        }
+                                        } */}
                                     </ul>
                                 </div>
                             </div>
@@ -133,4 +125,4 @@ const LanderView = () => {
 
 }
 
-export default LanderView;
+export default LauncherView;

@@ -1,12 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ApplicationCache from "../Utils/ApplicationCache";
 import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import ContextMenu from "../Utils/ContextMenu";
 
 type Props = {
 
-    cachedProject: ApplicationCache.CachedProjectInfo
+    cachedProject: CachedProjectInfo
     handleOpenProject: (showFilepath: string) => void
 
 }
@@ -22,12 +21,9 @@ const initialContextMenu = {
 
 const RecentProjectElement = (props: Props) => {
 
-    const lastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.lastActiveProjects);
-    const setLastActiveProjects = ApplicationCache.useApplicationCacheStore(state => state.setLastActiveProjects);
-
     const [ contextMenu, setContextMenu ] = useState(initialContextMenu);
 
-    const handleOpenProjectFromCache = (cachedProjectInfo: ApplicationCache.CachedProjectInfo) => props.handleOpenProject(cachedProjectInfo.showFilepath)
+    const handleOpenProjectFromCache = (cachedProjectInfo: CachedProjectInfo) => props.handleOpenProject(cachedProjectInfo.showFilepath)
 
     const handleContextMenu = (event : React.MouseEvent<HTMLLIElement, globalThis.MouseEvent>) => {
 
@@ -64,7 +60,7 @@ const RecentProjectElement = (props: Props) => {
                             updatedLastActiveProjects.splice(index, 1);
                             updatedLastActiveProjects.push(null);
 
-                            setLastActiveProjects(updatedLastActiveProjects as ApplicationCache.ActiveProjectArray);
+                            setLastActiveProjects(updatedLastActiveProjects as ActiveProjectArray);
 
                         }
 

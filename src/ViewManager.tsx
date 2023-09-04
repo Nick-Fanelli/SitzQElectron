@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
-import { PathRoute } from "../electron/utils";
 import AppView from "./AppView/AppView";
-import LanderView from "./LanderView/LanderView";
+import LauncherView from "./LauncherView/LauncherView";
+import { ElectronUtils } from "../electron/electron-utils";
 
 const ViewManager = () => {
 
@@ -39,13 +39,13 @@ const ViewManager = () => {
             rawPathRoute = rawPathRoute.slice(1);
 
 
-        const pathRoute = rawPathRoute as PathRoute;
+        const pathRoute = rawPathRoute as ElectronUtils.PathRoute;
         let element: ReactNode | null = null;
 
         switch(pathRoute) {
 
             case "LanderView":
-                element = <LanderView {...props} />
+                element = <LauncherView {...props} />
                 break;
             case "AppView":
                 element = <AppView {...props} />

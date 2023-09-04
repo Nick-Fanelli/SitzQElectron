@@ -1,8 +1,7 @@
 import { ipcRenderer, ipcMain, BrowserWindow, dialog } from "electron";
 import SubAPIContext from "./subapi";
 import fs from 'fs';
-import path from 'node:path';
-import { pathCreator } from "../utils";
+import { App } from "../app";
 
 let applicationOpenedFile: string | null = null;
 
@@ -60,26 +59,7 @@ const onBindIPCs = () => {
             return; // TODO: RETURN AN ERROR
         }
 
-        let appWindow: BrowserWindow | null = new BrowserWindow({
-            icon: path.join(process.env.PUBLIC, "Application.icns"),
-            webPreferences: {
-                contextIsolation: true,
-                nodeIntegration: true,
-                preload: path.join(__dirname, 'preload.js')
-            },
-            focusable: true,
-            title: showFilepath,
-            titleBarStyle: "hidden",
-            titleBarOverlay: true
-        });
-
-        appWindow.setSize(1024, 800);
-
-        appWindow.loadURL(pathCreator("AppView", [ { key: "projectFilepath", value: showFilepath } ]));
-
-        appWindow.on('closed', () => {
-            appWindow = null;
-        });
+        App.openAppWindow(showFilepath)
 
     });
 
@@ -88,7 +68,7 @@ const onBindIPCs = () => {
 
 const boundAppAPI: AppAPI = {
 
-    addOnFileOpenedListener: (listener) => ipcRenderer.on('file-opened', listener),
+    addOnFileOpenedListener: (listener) => ipcRenderer.addListener('file-opened', listener),
     removeOnFileOpenedListener: (listener) => ipcRenderer.removeListener('file-opened', listener),
 
     getApplicationOpenedFile: (callback: (filepath: string) => void) => { if(applicationOpenedFile !== null) callback(applicationOpenedFile); },

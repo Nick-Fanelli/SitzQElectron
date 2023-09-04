@@ -9,8 +9,6 @@ import './AppView.css'
 import { useEffect, useState } from 'react'
 import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
-import ApplicationCache from '../Utils/ApplicationCache'
-import { shallow } from 'zustand/shallow'
 
 interface HandleProjectAutoSaveComponentProps {
 
@@ -53,6 +51,7 @@ const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSa
 interface AppViewProps {
 
     projectFilepath?: string
+    windowID?: string
 
 }
 
@@ -61,18 +60,12 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
     if(!projectFilepath)
         return null;
 
-    console.log(projectFilepath);
-
     // Component State
     const [ isLoaded, setIsLoaded ] = useState<boolean>(false);
 
     // Project Store
     const setProjectName        = useProjectStore((state) => state.setProjectName);
     const setCueList            = useProjectStore(state => state.setCueList);
-
-    // Cache Store
-    const [ lastActiveProjects, setLastActiveProjects ] = ApplicationCache.useApplicationCacheStore(state => [ state.lastActiveProjects, state.setLastActiveProjects ], shallow);
-    const setLastOpenedProjectFilepath                  = ApplicationCache.useApplicationCacheStore(state => state.setLastOpenedProjectFilepath);
 
     // ==========================================================================================
     // Project Loads Into App View Here
@@ -85,9 +78,8 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
             
             setIsLoaded(true);
 
-            // Save Open Project to Cache
-            ApplicationCache.pushBackRecentProject(lastActiveProjects, setLastActiveProjects, { projectName: res.projectName, showFilepath: projectFilepath });
-            setLastOpenedProjectFilepath(projectFilepath);
+            // Report the active project to be cached
+            // pushBackRecentProject(setLastActiveProjects, { projectName: res.projectName, showFilepath: projectFilepath });
 
         });
     }, [projectFilepath, setIsLoaded, setProjectName]);

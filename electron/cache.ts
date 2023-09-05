@@ -2,6 +2,7 @@ import { app, ipcMain } from "electron";
 import { Launcher } from "./launcher";
 import { readFile, writeFile } from "./api/machine-api";
 import path from 'node:path'
+import { App } from "./app";
 
 export namespace ApplicationCache {
 
@@ -46,6 +47,7 @@ export namespace ApplicationCache {
     const handleStateChange = () => {
 
         Launcher.sendWebContents('cache-state-changed', activeCache);
+        App.sendWebContents('cache-state-changed', activeCache);
 
     }
 

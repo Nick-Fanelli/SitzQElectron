@@ -9,7 +9,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faPlus } from '@fortawesome/free-solid-svg-icons'
 import AppConstants from '../AppConstants'
-import { useApplicationCache } from '../Cache'
+import { useApplicationCache } from '../ApplicationCache'
+import RecentProjectElement from './RecentProjectElement'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
@@ -22,7 +23,7 @@ const LauncherView = () => {
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
 
-    const [ cache, setCache ] = useApplicationCache([ 'test' ]);
+    const [ cache ] = useApplicationCache([ 'lastActiveProjects' ]);
 
     const assignFadeInAnimation = () => {
         fadingContentRef.current!.classList.add("fadeIn");
@@ -81,8 +82,6 @@ const LauncherView = () => {
     return (
         <>
             <AppConstants />
-            <button onClick={() => setCache("test", "something")}>Set Cache</button>
-            <h1>{cache["test"]}</h1>
             {
                 <section id="lander-view">
                     <div className='container'>
@@ -97,16 +96,16 @@ const LauncherView = () => {
                             <div className="recent-projects">
                                 <div>
                                     <ul className='interactable'>
-                                        {/* {
-                                            lastActiveProjects &&
-                                            lastActiveProjects.map((project, index) => {
+                                        {
+                                            cache['lastActiveProjects'] &&
+                                            cache['lastActiveProjects'].map((project, index) => {
                                                 if(project != null) {
                                                     return <RecentProjectElement key={index} cachedProject={project} handleOpenProject={handleOpenProjectFromShowFilepath} />
                                                 } else {
                                                     return null;
                                                 }
                                             }).reverse()
-                                        } */}
+                                        }
                                     </ul>
                                 </div>
                             </div>
@@ -115,7 +114,6 @@ const LauncherView = () => {
 
                                 <FontAwesomeIcon icon={faFolder} onClick={handleOpenProjectDialog} className='icon' />
                                 <FontAwesomeIcon icon={faPlus} onClick={handleNewProject} className='icon' />
-                                {/* <button onClick={() => { window.electronAPI.appAPI.launchSecondaryWindow(); }}>Launch Secondary Window</button> */}
 
                             </div>
 

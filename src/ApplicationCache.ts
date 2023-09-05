@@ -1,9 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
 import { ApplicationCache } from "../electron/cache";
 
-type ApplicationCacheKey = 'test';
+type ApplicationCacheKey = 'lastActiveProjects';
 
-export const useApplicationCache = (keys: ApplicationCacheKey[]) : [ ApplicationCache.CacheType, <T> (key: ApplicationCacheKey, value: T) => void ] => {
+export interface CachedProject {
+
+    projectName: string,
+    showFilepath: string
+
+}
+
+export type ActiveProjectArray = [CachedProject | null, CachedProject | null, CachedProject | null]
+
+interface ActiveCache {
+
+    lastActiveProjects: ActiveProjectArray
+
+}
+
+export const useApplicationCache = (keys: (keyof ActiveCache)[]) : [ Partial<ActiveCache>, <T> (key: ApplicationCacheKey, value: T) => void, <T> (key: ApplicationCacheKey, callback: (prev: T) => T) => void ] => {
 
     const [ activeCache, setActiveCache ] = useState<ApplicationCache.CacheType>({});
 
@@ -24,7 +39,7 @@ export const useApplicationCache = (keys: ApplicationCacheKey[]) : [ Application
         if(isChanged)
             setActiveCache(updatedCachePairs);
 
-    }, [keys, activeCache, setActiveCache])
+    }, [keys, activeCache, setActiveCache]);
 
     const onCacheStateChanged = (_: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => assignCachePairs(cache);
 
@@ -41,7 +56,7 @@ export const useApplicationCache = (keys: ApplicationCacheKey[]) : [ Application
 
     }, []);
 
-    const setCache = <T> (key: ApplicationCacheKey, value: T) => {
+    const setCache = useCallback(<T> (key: ApplicationCacheKey, value: T) => {
 
         setActiveCache((prev) => {
 
@@ -54,8 +69,26 @@ export const useApplicationCache = (keys: ApplicationCacheKey[]) : [ Application
 
         window.electronAPI.appAPI.setCachePair(key, value);
 
-    }
+    }, [setActiveCache]);
 
-    return [ activeCache, setCache ];
+    const setCacheFunc = useCallback(<T> (key: string, callback: (prev: T) => T) => {
+
+        setActiveCache((prev) => {
+
+            const value = callback(prev[key]);
+
+            let updatedCache = {...prev};
+            updatedCache[key] = value;
+
+            window.electronAPI.appAPI.setCachePair(key, value);
+
+            return updatedCache;
+
+        });
+
+
+    }, [setActiveCache]);
+
+    return [ activeCache as ActiveCache, setCache, setCacheFunc ];
 
 }

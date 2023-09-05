@@ -9,6 +9,7 @@ import './AppView.css'
 import { useEffect, useState } from 'react'
 import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
+import { ActiveProjectArray, CachedProject, useApplicationCache } from '../ApplicationCache'
 
 interface HandleProjectAutoSaveComponentProps {
 
@@ -66,6 +67,8 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
     const setProjectName        = useProjectStore((state) => state.setProjectName);
     const setCueList            = useProjectStore(state => state.setCueList);
 
+    const [ _, __, setCache ]   = useApplicationCache(['lastActiveProjects']);
+
     // ==========================================================================================
     // Project Loads Into App View Here
     // ==========================================================================================
@@ -77,11 +80,44 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
             
             setIsLoaded(true);
 
+            const cachedProjectInfo: CachedProject = { projectName: res.projectName, showFilepath: projectFilepath };
+
             // Report the active project to be cached
-            // pushBackRecentProject(setLastActiveProjects, { projectName: res.projectName, showFilepath: projectFilepath });
+            setCache('lastActiveProjects', (prev: ActiveProjectArray | undefined) => {
+
+                console.log(prev);
+
+                if(!prev || prev === undefined)
+                    prev = [null, null, null];
+
+                const indexOfActiveProjectArray = (array: ActiveProjectArray, obj: CachedProject) => {
+                    for (let i = 0; i < array.length; i++) {
+                        if (obj !== null && array[i] !== null &&
+                            obj.projectName === array[i]!.projectName && obj.showFilepath === array[i]!.showFilepath) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                };
+
+                const index = indexOfActiveProjectArray(prev, cachedProjectInfo);
+
+                const updatedLastActiveProjects: ActiveProjectArray = [...prev];
+
+                if(index !== -1) {
+                    updatedLastActiveProjects.splice(index, 1);
+                } else {
+                    updatedLastActiveProjects.shift();
+                }
+
+                updatedLastActiveProjects.push(cachedProjectInfo);
+
+                return updatedLastActiveProjects;
+                
+            });
 
         });
-    }, [projectFilepath, setIsLoaded, setProjectName]);
+    }, [projectFilepath, setIsLoaded, setProjectName, setCache]);
 
     return (
         !isLoaded ?

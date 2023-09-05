@@ -2,10 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import ContextMenu from "../Utils/ContextMenu";
+import { ActiveProjectArray, CachedProject, useApplicationCache } from "../ApplicationCache";
 
 type Props = {
 
-    cachedProject: CachedProjectInfo
+    cachedProject: CachedProject
     handleOpenProject: (showFilepath: string) => void
 
 }
@@ -23,7 +24,9 @@ const RecentProjectElement = (props: Props) => {
 
     const [ contextMenu, setContextMenu ] = useState(initialContextMenu);
 
-    const handleOpenProjectFromCache = (cachedProjectInfo: CachedProjectInfo) => props.handleOpenProject(cachedProjectInfo.showFilepath)
+    const [ cache, setCache ] = useApplicationCache([ 'lastActiveProjects' ]);
+
+    const handleOpenProjectFromCache = (CachedProject: CachedProject) => props.handleOpenProject(CachedProject.showFilepath);
 
     const handleContextMenu = (event : React.MouseEvent<HTMLLIElement, globalThis.MouseEvent>) => {
 
@@ -51,20 +54,23 @@ const RecentProjectElement = (props: Props) => {
 
                 menuItems={[
                     { label: "Remove", icon: faX, onClick: () => {
-            
-                        const updatedLastActiveProjects = [...lastActiveProjects];
-                        const index = updatedLastActiveProjects.indexOf(props.cachedProject);
 
-                        if(index !== -1) {
+                            if(cache.lastActiveProjects) {
+                
+                            const updatedLastActiveProjects = [...cache.lastActiveProjects];
+                            const index = updatedLastActiveProjects.indexOf(props.cachedProject);
 
-                            updatedLastActiveProjects.splice(index, 1);
-                            updatedLastActiveProjects.push(null);
+                            if(index !== -1) {
 
-                            setLastActiveProjects(updatedLastActiveProjects as ActiveProjectArray);
+                                updatedLastActiveProjects.splice(index, 1);
+                                updatedLastActiveProjects.push(null);
 
+                                setCache('lastActiveProjects', updatedLastActiveProjects as ActiveProjectArray);
+
+                            }
                         }
 
-                    } }
+                    }}
                 ]}
 
                 x={contextMenu.x} 

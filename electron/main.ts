@@ -3,16 +3,19 @@ import path from 'node:path'
 import { bindAllIPCs } from './api/api'
 import getMenuTemplate from './menubar'
 import { Launcher } from './launcher'
+import { ApplicationCache } from './cache'
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 const launchApplication = () => {
 
-    // Load Application Cache
-
     setDefaultProtocolClient(); // Define to the OS files to identify
     bindAllIPCs(); // Bind all backend apis
+
+    // Load Application Cache
+    ApplicationCache.bindCacheIPCs();
+    ApplicationCache.loadCache();
     
     // Open Launcher Window
     Launcher.openLauncherWindow();
@@ -49,6 +52,7 @@ app.whenReady().then(() => {
 // Handle On Application Quit
 app.on('before-quit', () => {
     
+    ApplicationCache.saveCache();
     
 });
 

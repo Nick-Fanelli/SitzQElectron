@@ -112,6 +112,7 @@ const getMenuTemplate = () => {
                 { role: 'reload' },
                 { role: 'forceReload' },
                 { role: 'toggleDevTools' },
+                { type: 'separator' },
             ]
         }
 

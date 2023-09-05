@@ -83,7 +83,7 @@ export const writeFile = async (filepath: string, fileContents: string): Promise
 
 }
 
-const readFile = async (filepath: string) : Promise<string> => {
+export const readFile = async (filepath: string) : Promise<string> => {
 
     const absolutePath = path.resolve(filepath);
 

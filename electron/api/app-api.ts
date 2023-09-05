@@ -2,6 +2,7 @@ import { ipcRenderer, ipcMain, BrowserWindow, dialog } from "electron";
 import SubAPIContext from "./subapi";
 import fs from 'fs';
 import { App } from "../app";
+import { ApplicationCache } from "../cache";
 
 let applicationOpenedFile: string | null = null;
 
@@ -11,6 +12,12 @@ export interface AppAPI {
 
     addOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
     removeOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+
+    addOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
+    removeOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
+    
+    requestCachedState: (returnCallback: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
+    setCachePair: (key: string, value: any) => void
 
     getApplicationOpenedFile: (callback: (filepath: string) => void) => void
 
@@ -68,10 +75,20 @@ const onBindIPCs = () => {
 
 const boundAppAPI: AppAPI = {
 
-    addOnFileOpenedListener: (listener) => ipcRenderer.addListener('file-opened', listener),
+    addOnFileOpenedListener: (listener) => ipcRenderer.on('file-opened', listener),
     removeOnFileOpenedListener: (listener) => ipcRenderer.removeListener('file-opened', listener),
 
+    addOnCacheChangeListener: (listener) => ipcRenderer.on('cache-state-changed', listener),
+    removeOnCacheChangeListener: (listener) => ipcRenderer.removeListener('cache-state-changed', listener),
+
     getApplicationOpenedFile: (callback: (filepath: string) => void) => { if(applicationOpenedFile !== null) callback(applicationOpenedFile); },
+
+    requestCachedState: (returnCallback) => {
+        ipcRenderer.send('request-cached-state');
+
+        ipcRenderer.on('response-cached-state', returnCallback);
+    },
+    setCachePair: (key, value) => ipcRenderer.invoke("cache-set-pair", key, value),
 
     launchProject: (showFilepath: string) => ipcRenderer.invoke('app-launch-project', showFilepath),
 

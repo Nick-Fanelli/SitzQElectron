@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolder, faPlus } from '@fortawesome/free-solid-svg-icons'
 import AppConstants from '../AppConstants'
+import { useApplicationCache } from '../Cache'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
@@ -20,6 +21,8 @@ const LauncherView = () => {
 
     const slidingContentRef = useRef<HTMLDivElement>(null);
     const fadingContentRef = useRef<HTMLDivElement>(null);
+
+    const [ cache, setCache ] = useApplicationCache([ 'test' ]);
 
     const assignFadeInAnimation = () => {
         fadingContentRef.current!.classList.add("fadeIn");
@@ -74,10 +77,12 @@ const LauncherView = () => {
         window.electronAPI.appAPI.launchProject(showFilepath);
 
     }
-    
+
     return (
         <>
             <AppConstants />
+            <button onClick={() => setCache("test", "something")}>Set Cache</button>
+            <h1>{cache["test"]}</h1>
             {
                 <section id="lander-view">
                     <div className='container'>

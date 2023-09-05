@@ -51,8 +51,7 @@ const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSa
 interface AppViewProps {
 
     projectFilepath?: string
-    windowID?: string
-
+    
 }
 
 const AppView = ({ projectFilepath }: AppViewProps) => {

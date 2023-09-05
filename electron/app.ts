@@ -5,13 +5,9 @@ import path from 'node:path'
 
 export namespace App {
 
-    let GlobalAppWindowCount = 0;
-
     let appWindows: BrowserWindow[] = [];
 
     export const openAppWindow = (showFilepath: string) => {
-
-        const activeWindowID = GlobalAppWindowCount++;
 
         let appWindow: BrowserWindow | null = new BrowserWindow({
             icon: path.join(process.env.PUBLIC, "Application.icns"),
@@ -31,7 +27,6 @@ export namespace App {
     
         appWindow.loadURL(ElectronUtils.pathCreator("AppView", [ 
             { key: "projectFilepath", value: showFilepath },
-            { key: "windowID", value: activeWindowID.toString() }
         ]));
 
         appWindows.push(appWindow);

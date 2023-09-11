@@ -2,6 +2,7 @@ import { BrowserWindow } from "electron";
 import { ElectronUtils } from "./electron-utils";
 
 import path from 'node:path'
+import os from 'os'
 
 export namespace App {
 
@@ -11,6 +12,7 @@ export namespace App {
 
         let appWindow: BrowserWindow | null = new BrowserWindow({
             icon: path.join(process.env.PUBLIC, "Application.icns"),
+            backgroundColor: "#161616",
             webPreferences: {
                 contextIsolation: true,
                 nodeIntegration: true,
@@ -18,7 +20,7 @@ export namespace App {
             },
             focusable: true,
             title: showFilepath,
-            titleBarStyle: "hidden",
+            titleBarStyle: os.type() === "Darwin" ? "hidden" : 'default',
             titleBarOverlay: true,
             show: false,
         });

@@ -21,7 +21,7 @@ export namespace ApplicationCache {
             case 'darwin':
                 return path.join(os.homedir(), 'Library', 'Caches', 'SitzQ', 'Cache', cacheFilename);
             case 'win32':
-                return path.join('%LOCALAPPDATA%', 'SitzQ', 'Cache', cacheFilename);
+                return path.join(os.homedir(), 'AppData', 'Local', 'SitzQ', 'Cache', cacheFilename);
             default:
                 return path.join(os.homedir(), '.SitzQ', 'Cache', cacheFilename);
 

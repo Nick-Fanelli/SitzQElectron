@@ -1,6 +1,6 @@
 import os from 'os';
 import machineID from 'node-machine-id';
-import fs from 'fs/promises'
+import fs from 'fs'
 import path from 'path'
 
 import { BrowserWindow, dialog, ipcMain, ipcRenderer } from 'electron';
@@ -31,43 +31,46 @@ export interface MachineAPI {
 }
 
 const mkdir = async (filepath: string): Promise<void> => {
-
     const absolutePath = path.resolve(filepath);
 
     try {
-        const dirExists = await fs.access(absolutePath).then(() => true).catch(() => false);
-
-        if (!dirExists) {
-            await fs.mkdir(absolutePath, { recursive: true, mode: 0o755 });
-            console.log("Directory Created Successfully");
+        await fs.promises.access(absolutePath);
+        console.log("Directory Already Exists");
+    } catch (err: any) {
+        if (err.code === 'ENOENT') {
+            try {
+                await fs.promises.mkdir(absolutePath, { recursive: true, mode: 0o755 });
+                console.log("Directory Created Successfully");
+            } catch (mkdirErr) {
+                console.error(`Error creating directory: ${absolutePath}`, mkdirErr);
+            }
         } else {
-            console.log("Directory Already Exists");
+            console.error(`Error accessing directory: ${absolutePath}`, err);
         }
-
-    } catch (err) {
-        console.error(`Error creating directory: ${absolutePath}`, err);
     }
-
 }
+
 
 const touch = async (filepath: string): Promise<void> => {
 
     const absolutePath = path.resolve(filepath);
 
     try {
-        const fileExists = await fs.access(absolutePath)
-            .then(() => true)
-            .catch(() => false);
-
-        if (!fileExists) {
-            await fs.writeFile(absolutePath, '');
-            console.log("File Created Successfully");
+        await fs.promises.access(absolutePath);
+        console.log("File Already Exists");
+    } catch (err: any) {
+        if (err.code === 'ENOENT') {
+            try {
+                await fs.promises.writeFile(absolutePath, '');
+                console.log("File Created Successfully");
+            } catch (writeErr) {
+                console.error(`Error creating file: ${absolutePath}`, writeErr);
+            }
         } else {
-            console.log("File Already Exists");
+            console.error(`Error accessing file: ${absolutePath}`, err);
         }
-    } catch (err) {
-        console.error(`Error creating file: ${absolutePath}`, err);
     }
+
 
 
 }
@@ -78,8 +81,8 @@ export const writeFile = async (filepath: string, fileContents: string): Promise
     const dirname = path.dirname(absolutePath);
 
     try {
-        await fs.mkdir(dirname, { recursive: true });
-        await fs.writeFile(absolutePath, fileContents);
+        fs.mkdirSync(dirname, { recursive: true });
+        fs.writeFileSync(absolutePath, fileContents);
     } catch (err) {
         console.error(`Error writing file: ${absolutePath}`, err);
     }
@@ -90,7 +93,7 @@ export const readFile = async (filepath: string) : Promise<string> => {
 
     const absolutePath = path.resolve(filepath);
 
-    return fs.readFile(absolutePath, 'utf-8');
+    return fs.readFileSync(absolutePath, 'utf-8');
 
 }
 

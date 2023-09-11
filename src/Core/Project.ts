@@ -50,6 +50,8 @@ export namespace ProjectUtils {
 
         const showName = FilepathUtils.getBasename(directoryPath);
 
+        console.log(directoryPath);
+
         const resourceDirectory = window.electronAPI.machineAPI.pathJoin(directoryPath, "Resources");
         const showFilePath = window.electronAPI.machineAPI.pathJoin(directoryPath, showName + ".sqshow");
 

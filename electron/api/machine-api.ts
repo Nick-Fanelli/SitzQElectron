@@ -7,6 +7,8 @@ import { BrowserWindow, dialog, ipcMain, ipcRenderer } from 'electron';
 
 import SubAPIContext from './subapi';
 
+export type OsType = 'MacOS' | 'Windows' | 'Linux' | 'Other';
+
 export interface MachineAPI {
 
     // Variables
@@ -21,7 +23,7 @@ export interface MachineAPI {
     writeFile: (filepath: string, fileContents: string) => Promise<void>
     readFile: (filepath: string) => Promise<string>
     createDirectory: () => Promise<any>
-    osType: () => 'MacOS' | 'Windows' | 'Linux' | 'Other'
+    osType: () => OsType
 
     pathJoin: (...paths: string[]) => string
     pathBasename: (path: string) => string
@@ -92,7 +94,7 @@ export const readFile = async (filepath: string) : Promise<string> => {
 
 }
 
-const osType = (): 'MacOS' | 'Windows' | 'Linux' | 'Other' => {
+const osType = (): OsType => {
 
     switch(os.type()) {
         

@@ -19,10 +19,10 @@ const Header = () => {
         <>
         <section id="header">
 
-            {
-                
-            }
             <div>
+                {
+                    window.electronAPI.machineAPI.osType() !== 'MacOS' && getSettingsButton()
+                }
             </div>
 
             <div>
@@ -30,7 +30,9 @@ const Header = () => {
             </div>
 
             <div>
-                
+                {
+                    window.electronAPI.machineAPI.osType() === 'MacOS' && getSettingsButton()
+                }
             </div>
 
         </section>

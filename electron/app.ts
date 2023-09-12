@@ -3,12 +3,16 @@ import { ElectronUtils } from "./electron-utils";
 
 import path from 'node:path'
 import os from 'os'
+import { Launcher } from "./launcher";
+import { ApplicationCache } from "./cache";
 
 export namespace App {
 
     let appWindows: BrowserWindow[] = [];
 
     export const openAppWindow = (showFilepath: string) => {
+
+        Launcher.closeLauncherWindow();
 
         let appWindow: BrowserWindow | null = new BrowserWindow({
             icon: path.join(process.env.PUBLIC, "Application.icns"),
@@ -36,6 +40,8 @@ export namespace App {
         appWindow.on('closed', () => {
             appWindows.filter((window) => window !== appWindow);
             appWindow = null;
+            
+            ApplicationCache.saveCache();
         });
     
         appWindow.once('ready-to-show', () => appWindow?.show());

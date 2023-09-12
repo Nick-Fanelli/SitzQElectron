@@ -2,6 +2,7 @@ import path from 'node:path'
 
 import { BrowserWindow } from "electron"
 import { ElectronUtils } from './electron-utils';
+import { ApplicationCache } from './cache';
 
 export namespace Launcher {
 
@@ -40,6 +41,7 @@ export namespace Launcher {
 
         // Handle Close
         launcherWindow.on('closed', () => {
+            ApplicationCache.saveCache();
             launcherWindow = null
         });
 
@@ -66,6 +68,12 @@ export namespace Launcher {
     export const sendWebContents = <T> (messageChannel: string, data: T) => {
 
         launcherWindow?.webContents.send(messageChannel, data);
+
+    }
+
+    export const closeLauncherWindow = () => {
+
+        launcherWindow?.close();
 
     }
 

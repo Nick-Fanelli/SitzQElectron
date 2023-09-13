@@ -1,7 +1,6 @@
 import path from 'node:path'
 
 import { BrowserWindow } from "electron"
-import { ElectronUtils } from './electron-utils';
 import { ApplicationCache } from './cache';
 
 export namespace Launcher {

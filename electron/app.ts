@@ -38,10 +38,13 @@ export namespace App {
         appWindows.push(appWindow);
     
         appWindow.on('closed', () => {
-            appWindows.filter((window) => window !== appWindow);
+            appWindows = appWindows.filter((window) => window !== appWindow);
             appWindow = null;
             
             ApplicationCache.saveCache();
+
+            if(appWindows.length == 0) 
+                Launcher.openLauncherWindow();
         });
     
         appWindow.once('ready-to-show', () => appWindow?.show());

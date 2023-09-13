@@ -1,7 +1,5 @@
 import { Cue } from './Cue'
 
-import { FilepathUtils } from '../Utils/Utils'
-
 interface Project {
 
     projectName: string,
@@ -48,8 +46,8 @@ export namespace ProjectUtils {
 
     export const createProjectFromDirectory = async (directoryPath: string) : Promise<string> => {
 
-        const showName = FilepathUtils.getBasename(directoryPath);
-
+        const showName = window.electronAPI.machineAPI.pathBasename(directoryPath);
+        
         console.log(directoryPath);
 
         const resourceDirectory = window.electronAPI.machineAPI.pathJoin(directoryPath, "Resources");

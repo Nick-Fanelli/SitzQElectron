@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { HookUtils } from "./Utils"
+import { useOnClickAway } from "../Hooks"
 
 import './ContextMenu.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -29,7 +29,7 @@ const ContextMenuComponent: React.FC<ContextMenuProps> = ({ menuItems, x, y, clo
 
     const contextMenuRef = useRef<HTMLDivElement>(null);
 
-    HookUtils.useOnClickAway(contextMenuRef, closeContextMenu);
+    useOnClickAway(contextMenuRef, closeContextMenu);
 
     return (
         <div 

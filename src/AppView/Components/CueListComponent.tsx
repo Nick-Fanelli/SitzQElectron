@@ -7,7 +7,14 @@ import { useProjectStore } from "../State/AppViewStore";
 import './CueListComponent.css';
 import Draggable from "../../DragDrop/Draggable";
 import DropTarget from "../../DragDrop/DropTarget";
-import { ArrayUtils } from "../../Utils/Utils";
+
+const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number) : any[] => {
+    const result = Array.from(list);
+    const [ removed ] = result.splice(sourceIndex, 1);
+    result.splice(destinationIndex, 0, removed);
+
+    return result;
+}
 
 const CueListComponent = () => {
 
@@ -33,7 +40,7 @@ const CueListComponent = () => {
 
         if(cueSelection.length <= 1 || !cueSelection.includes(sourceUUID)) { // Handle Single Cue Move
 
-            reorderedCues = ArrayUtils.reorderArray(reorderedCues, sourceIndex, destinationIndex + (sourceIndex > destinationIndex ? 1 : 0));
+            reorderedCues = reorderArray(reorderedCues, sourceIndex, destinationIndex + (sourceIndex > destinationIndex ? 1 : 0));
 
         } else { // Handle multi cue move
 

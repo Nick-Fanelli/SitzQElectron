@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import AppView from "./AppView/AppView";
 import LauncherView from "./LauncherView/LauncherView";
-import { ElectronUtils } from "../electron/electron-utils";
+import { WindowCommon } from "../electron/window-common";
 
 const ViewManager = () => {
 
@@ -45,7 +45,7 @@ const ViewManager = () => {
             return;
         }
 
-        const pathRoute = rawPathRoute as ElectronUtils.PathRoute;
+        const pathRoute = rawPathRoute as WindowCommon.PathRoute;
         let element: ReactNode | null = null;
 
         switch(pathRoute) {

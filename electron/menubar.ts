@@ -1,5 +1,5 @@
 import isDev from 'electron-is-dev'
-import { BuildSpecs } from '../src/Utils/Utils';
+import { BuildSpecs } from '../src/BuildSpecs';
 
 const getMenuTemplate = () => {
 

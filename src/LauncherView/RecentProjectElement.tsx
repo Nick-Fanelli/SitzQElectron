@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import ContextMenu from "../Utils/ContextMenu";
+import ContextMenuComponent from "../Components/ContextMenu";
 import { ActiveProjectArray, CachedProject, useApplicationCache } from "../ApplicationCache";
 
 type Props = {
@@ -50,7 +50,7 @@ const RecentProjectElement = (props: Props) => {
             </li>
             
             { 
-            contextMenu.show && <ContextMenu
+            contextMenu.show && <ContextMenuComponent
 
                 menuItems={[
                     { label: "Remove", icon: faX, onClick: () => {

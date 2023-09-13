@@ -27,6 +27,7 @@ export namespace Launcher {
                 contextIsolation: true,
                 nodeIntegration: true,
                 preload: path.join(__dirname, 'preload.js'),
+                webSecurity: false
             },
             focusable: true,
             title: "SitzQ Launcher",
@@ -36,9 +37,8 @@ export namespace Launcher {
         // Set Size
         launcherWindow.setSize(1024, 800);
 
-        // Load URL
-
-        launcherWindow.loadURL(ElectronUtils.pathCreator("LanderView"));
+        // Launch Window
+        ElectronUtils.openWindowWithRoute(launcherWindow, 'LanderView');
 
         // Handle Close
         launcherWindow.on('closed', () => {

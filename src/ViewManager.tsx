@@ -9,7 +9,7 @@ const ViewManager = () => {
 
     useEffect(() => {
 
-        let rawPathRoute = window.location.pathname;
+        let rawPathRoute: string | null = null;
         let rawProps = window.location.search;
 
         let props: { [key: string]: string } = {};
@@ -28,16 +28,22 @@ const ViewManager = () => {
                 if(items.length !== 2) {
                     console.error("Irregular amount of prop pairs for: ", pair);
                 } else {
-                    props[items[0]] = items[1];
+                    if(items[0] === '__route__') {
+                        rawPathRoute = items[1];
+                    } else 
+                        props[items[0]] = items[1];
                 }
 
             });
 
         }
 
-        if(rawPathRoute.startsWith('/'))
-            rawPathRoute = rawPathRoute.slice(1);
+        if(!rawPathRoute) {
 
+            console.error("No path route was specified!");
+
+            return;
+        }
 
         const pathRoute = rawPathRoute as ElectronUtils.PathRoute;
         let element: ReactNode | null = null;

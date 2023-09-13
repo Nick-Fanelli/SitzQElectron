@@ -31,9 +31,9 @@ export namespace App {
     
         appWindow.setSize(1024, 800);
 
-        appWindow.loadURL(ElectronUtils.pathCreator("AppView", [ 
-            { key: "projectFilepath", value: showFilepath },
-        ]));
+        ElectronUtils.openWindowWithRoute(appWindow, 'AppView', [
+            { key: 'projectFilepath', value: showFilepath }
+        ]);
 
         appWindows.push(appWindow);
     

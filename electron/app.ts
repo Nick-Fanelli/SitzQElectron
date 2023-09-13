@@ -1,10 +1,10 @@
 import { BrowserWindow } from "electron";
-import { ElectronUtils } from "./electron-utils";
 
 import path from 'node:path'
 import os from 'os'
 import { Launcher } from "./launcher";
 import { ApplicationCache } from "./cache";
+import { WindowCommon } from "./window-common";
 
 export namespace App {
 
@@ -31,10 +31,10 @@ export namespace App {
     
         appWindow.setSize(1024, 800);
 
-        ElectronUtils.openWindowWithRoute(appWindow, 'AppView', [
+        appWindow.loadURL(WindowCommon.getWindowURL('AppView', [
             { key: 'projectFilepath', value: showFilepath }
-        ]);
-
+        ]));
+        
         appWindows.push(appWindow);
     
         appWindow.on('closed', () => {

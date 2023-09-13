@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import { BrowserWindow } from "electron"
 import { ApplicationCache } from './cache';
-import { ElectronUtils } from './electron-utils';
+import { WindowCommon } from './window-common';
 
 export namespace Launcher {
 
@@ -38,7 +38,7 @@ export namespace Launcher {
         launcherWindow.setSize(1024, 800);
 
         // Launch Window
-        ElectronUtils.openWindowWithRoute(launcherWindow, 'LanderView');
+        launcherWindow.loadURL(WindowCommon.getWindowURL('LanderView'));
 
         // Handle Close
         launcherWindow.on('closed', () => {

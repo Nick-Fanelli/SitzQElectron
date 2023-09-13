@@ -27,7 +27,6 @@ export namespace Launcher {
                 contextIsolation: true,
                 nodeIntegration: true,
                 preload: path.join(__dirname, 'preload.js'),
-                webSecurity: false
             },
             focusable: true,
             title: "SitzQ Launcher",

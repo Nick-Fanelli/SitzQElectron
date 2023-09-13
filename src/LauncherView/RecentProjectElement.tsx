@@ -55,7 +55,9 @@ const RecentProjectElement = (props: Props) => {
                 menuItems={[
                     { label: "Remove", icon: faX, onClick: () => {
 
-                            if(cache.lastActiveProjects) {
+                        console.log('REMOVING');
+
+                        if(cache.lastActiveProjects) {
                 
                             const updatedLastActiveProjects = [...cache.lastActiveProjects];
                             const index = updatedLastActiveProjects.indexOf(props.cachedProject);

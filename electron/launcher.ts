@@ -1,7 +1,7 @@
 import path from 'node:path'
 
 import { BrowserWindow } from "electron"
-import { ElectronUtils } from './electron-utils';
+// import { ElectronUtils } from './electron-utils';
 
 export namespace Launcher {
 
@@ -36,7 +36,11 @@ export namespace Launcher {
         launcherWindow.setSize(1024, 800);
 
         // Load URL
-        launcherWindow.loadURL(ElectronUtils.pathCreator("LanderView"));
+
+        launcherWindow.loadFile(process.env.DIST + "/" + 'index.html');
+        console.log(launcherWindow.webContents.getURL());
+
+        // launcherWindow.loadURL(ElectronUtils.pathCreator("LanderView"));
 
         // Handle Close
         launcherWindow.on('closed', () => {

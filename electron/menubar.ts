@@ -105,7 +105,7 @@ const getMenuTemplate = () => {
         helpMenu,
     ];
 
-    if(isDev) {
+    if(isDev || true) {
         const devMenu: Electron.MenuItemConstructorOptions = {
             label: 'Dev Tools',
             submenu: [

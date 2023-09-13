@@ -1,7 +1,6 @@
 import { BrowserWindow } from "electron"
 
-import url from 'node:url'
-import path from 'node:path'
+// import path from 'node:path'
 
 export namespace ElectronUtils {
 
@@ -41,18 +40,19 @@ export namespace ElectronUtils {
         if(VITE_DEV_SERVER_URL) {
             indexPath = VITE_DEV_SERVER_URL + route + propsString;
         } else {
-            indexPath = url.format({
-                protocol: 'file',
-                pathname: path.join(
-                    process.platform === 'darwin'
-                        ? __dirname.split('/').splice(0, -2).join('/')
-                        : __dirname.split('\\').splice(0, -2).join('/'),
-                    "build",
-                    `index.html`
-                ),
-                slashes: false
-            }) + `/${route}${propsString}`;
+            return `file://${__dirname}/index.html`;
+
+            // if(filePath.startsWith("/") || filePath.startsWith("\\"))
+            //     filePath = filePath.slice(1);
+
+            // indexPath = url.format({
+            //     protocol: 'file',
+            //     pathname: filePath,
+            //     slashes: false
+            // }) + `/${route}${propsString}`;
         }
+
+        console.log(indexPath);
 
         return indexPath;
 

@@ -24,6 +24,7 @@ export interface MachineAPI {
     osType: () => 'MacOS' | 'Windows' | 'Linux' | 'Other'
 
     pathJoin: (...paths: string[]) => string
+    pathBasename: (path: string) => string
 
 }
 
@@ -156,7 +157,8 @@ const boundMachineAPI: MachineAPI = {
     createDirectory: () => ipcRenderer.invoke('machine-open-directory'),
     osType,
 
-    pathJoin: path.join
+    pathJoin: (...filepaths: string[]) => path.join(...filepaths),
+    pathBasename: (filepath: string) => path.basename(filepath)
 
 }
 

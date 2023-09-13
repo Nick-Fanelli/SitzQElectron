@@ -11,11 +11,16 @@ const Header = () => {
     const projectName = useProjectStore((state) => state.projectName);
     const setProjectName = useProjectStore((state) => state.setProjectName);
 
+    const getSettingsButton = () => {
+        return <FontAwesomeIcon icon={faGear} className="settings-btn" onClick={() => { console.log("Hey") }} />
+    }
+
     return (
         <>
         <section id="header">
 
             <div>
+         
             </div>
 
             <div>
@@ -23,7 +28,7 @@ const Header = () => {
             </div>
 
             <div>
-                <FontAwesomeIcon icon={faGear} className="settings-btn" onClick={() => { console.log("Hey") }} />
+                { getSettingsButton() }
             </div>
 
         </section>

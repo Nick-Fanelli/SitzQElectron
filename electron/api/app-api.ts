@@ -15,6 +15,8 @@ export interface AppAPI {
 
     addOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
     removeOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
+
+    onRequestProjectSave: (listener: (event: Electron.IpcRendererEvent) => void) => (() => void)
     
     requestCachedState: (returnCallback: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
     setCachePair: (key: string, value: any) => void
@@ -81,6 +83,12 @@ const boundAppAPI: AppAPI = {
 
     addOnCacheChangeListener: (listener) => ipcRenderer.on('cache-state-changed', listener),
     removeOnCacheChangeListener: (listener) => ipcRenderer.removeListener('cache-state-changed', listener),
+
+
+    onRequestProjectSave: (listener) => {
+        ipcRenderer.on('req-project-save', listener);
+        return () => { ipcRenderer.removeListener('req-project-save', listener); }
+    },
 
     getApplicationOpenedFile: (callback: (filepath: string) => void) => { if(applicationOpenedFile !== null) callback(applicationOpenedFile); },
 

@@ -83,13 +83,19 @@ const LauncherView = () => {
             {
                 <section id="lander-view">
                     <div className='container'>
-                        <div ref={slidingContentRef} className='sliding-content'>
+                        <div ref={slidingContentRef} className='sliding-content' style={ BuildSpecs.IS_DEV ? {
+
+                            animation: 'slideAndFade 0.01s ease-in-out forwards'
+
+                        } : {}}>
                             <img src={logoIcon} alt="SitzQ Icon Logo" className='logo' />
                             <h1>SitzQ</h1>
                             <h3 onClick={toggleVersion} className='interactable'>{versionOutput}</h3>
                         </div>
 
-                        <div ref={fadingContentRef} className="fading-content">
+                        <div ref={fadingContentRef} className="fading-content" style={ BuildSpecs.IS_DEV ? {
+                            animation: 'fadeIn 0.01s linear'
+                        } : {}}>
 
                             <div className="recent-projects">
                                 <div>

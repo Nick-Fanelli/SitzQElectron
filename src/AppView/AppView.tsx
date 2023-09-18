@@ -22,25 +22,28 @@ const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSa
     const projectName       = useProjectStore(state => state.projectName);
     const cueList           = useProjectStore(state => state.cueList);
 
-    const handleOnWindowClose = () => {
+    const handleSaveProject = () => {
 
         if(projectFilepath === null)
             return;
 
         const reconstructedProject = ProjectUtils.reconstructProject(projectName, cueList);
         ProjectUtils.saveProjectToShowFile(projectFilepath, reconstructedProject);
+
     }
 
      // On Window Close
      useEffect(() => {
 
-        window.electronAPI.addOnWindowClosingListener(handleOnWindowClose);
-
+        window.electronAPI.addOnWindowClosingListener(handleSaveProject);
+        const removeOnProjectSaveListener = window.electronAPI.appAPI.onRequestProjectSave(handleSaveProject);
+        
         return () => {
-            window.electronAPI.removeOnWindowClosingListener(handleOnWindowClose);
+            window.electronAPI.removeOnWindowClosingListener(handleSaveProject);
+            removeOnProjectSaveListener();
         }
 
-    });
+    }, []);
 
     return (
         null
@@ -84,8 +87,6 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
 
             // Report the active project to be cached
             setCache('lastActiveProjects', (prev: ActiveProjectArray | undefined) => {
-
-                console.log(prev);
 
                 if(!prev || prev === undefined)
                     prev = [null, null, null];

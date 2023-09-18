@@ -50,13 +50,13 @@ export namespace MenuBar {
         const fileMenu: Electron.MenuItemConstructorOptions = {
             label: 'File',
             submenu: [
-                { label: 'New Workspace' },
-                { label: 'Open Workspace' },
-                { label: 'Save Workspace' },
-                { label: 'Save Workspace As...' },
-                { label: 'Close Workspace' },
-                { label: 'Import Show Control Settings' },
-                { label: 'Export Show Control Settings' },
+                { 
+                    label: "Save Project",
+                    click: () => {
+                        const window = WindowCommon.getActiveWindow();
+                        window?.webContents.send('req-project-save');
+                    }
+                }
             ],
         };
 

@@ -27,48 +27,49 @@ export interface AppAPI {
 
 }
 
+export const appOpenProject = async (activeWindow: BrowserWindow | null) => {
+
+    if(activeWindow == null) {
+        console.error("Active window came in as null in appOpenProject");
+        return;
+    }
+
+    try {
+
+        const result = await dialog.showOpenDialog(activeWindow, {
+            properties: ['openFile'],
+            filters: [
+                { name: "SitzQ Show File", extensions: [ 'sqshow' ] }
+            ]
+        });
+
+        if(!result.canceled && result.filePaths.length > 0) {
+
+            const selectedFile = result.filePaths[0];
+            appLaunchProject(selectedFile);
+            
+        }
+
+    } catch(error) {
+        console.error("Error while opening project: ", error);
+    }
+
+}
+
+export const appLaunchProject = (showFilepath: string) => {
+    // Validate that the show filepath exists
+    if(!fs.existsSync(showFilepath)) {
+        console.error("Show filepath does not exist");
+        return; // TODO: RETURN AN ERROR
+    }
+
+    App.openAppWindow(showFilepath)
+}
+
 const onBindIPCs = () => {
 
-    ipcMain.handle('app-open-project', async (e) => {
-
-        const activeWindow = BrowserWindow.fromWebContents(e.sender)!;
-
-        try {
-
-            const result = await dialog.showOpenDialog(activeWindow, {
-                properties: ['openFile'],
-                filters: [
-                    { name: "SitzQ Show File", extensions: [ 'sqshow' ] }
-                ]
-            });
-
-            if(!result.canceled && result.filePaths.length > 0) {
-
-                const selectedFile = result.filePaths[0];
-
-                return selectedFile;
-
-            }
-
-        } catch(error) {
-            console.error("Error while opening project: ", error);
-        }
-
-        return null;
-
-    });
-
-    ipcMain.handle('app-launch-project', async (_, showFilepath: string) => {
-
-        // Validate that the show filepath exists
-        if(!fs.existsSync(showFilepath)) {
-            console.error("Show filepath does not exist");
-            return; // TODO: RETURN AN ERROR
-        }
-
-        App.openAppWindow(showFilepath)
-
-    });
+    ipcMain.handle('app-open-project', async (e) => appOpenProject(BrowserWindow.fromWebContents(e.sender)));
+    ipcMain.handle('app-launch-project', async (_, showFilepath: string) => appLaunchProject(showFilepath));
 
 }
 

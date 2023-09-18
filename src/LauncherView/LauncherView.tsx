@@ -68,9 +68,7 @@ const LauncherView = () => {
     }
 
     const handleOpenProjectDialog = () => {
-        api.appAPI.openProject().then((value) => {
-            handleOpenProjectFromShowFilepath(value);
-        });
+        api.appAPI.openProject();
     }
 
     const handleOpenProjectFromShowFilepath = (showFilepath: string) => {

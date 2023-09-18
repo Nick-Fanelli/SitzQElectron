@@ -1,6 +1,9 @@
 import { Menu } from 'electron';
 import { BuildSpecs } from '../src/BuildSpecs';
-import { BrowserWindow } from 'electron/main';
+import { WindowCommon } from './window-common';
+import { appOpenProject } from './api/app-api';
+import { Launcher } from './launcher';
+import { BrowserWindow } from 'electron';
 
 export namespace MenuBar {
 
@@ -182,19 +185,24 @@ export namespace MenuBar {
         const fileMenu: Electron.MenuItemConstructorOptions = {
             label: 'File',
             submenu: [
-                { label: 'New Workspace' },
-                { label: 'Open Workspace' },
-                { label: 'Save Workspace' },
-                { label: 'Save Workspace As...' },
-                { label: 'Close Workspace' },
-                { label: 'Import Show Control Settings' },
-                { label: 'Export Show Control Settings' },
+                { 
+                    label: 'Open Project',
+                    accelerator: 'CmdOrCtrl+Shift+O',
+                    click: () => {
+                        Launcher.openLauncherWindow(); // Make sure launcher window is opened
+
+                        const window = WindowCommon.getActiveWindow();
+                        appOpenProject(window);
+                    }
+                }
             ],
         };
 
         const viewMenu: Electron.MenuItemConstructorOptions = {
             label: 'View',
             submenu: [
+                { label: 'Show Launcher Window', click: () => Launcher.openLauncherWindow() },
+                { type: 'separator' },
                 { role: 'zoom' },
                 { role: 'zoomIn' },
                 { role: 'zoomOut' },

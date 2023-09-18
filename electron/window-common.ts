@@ -1,3 +1,4 @@
+import { BrowserWindow } from 'electron';
 import path from 'node:path'
 
 export namespace WindowCommon {
@@ -35,6 +36,10 @@ export namespace WindowCommon {
             return 'file://' + path.join(__dirname, '../dist', 'index.html') + propsString;
         }
 
+    }
+
+    export const getActiveWindow = () => {
+        return BrowserWindow.getFocusedWindow();
     }
 
 }

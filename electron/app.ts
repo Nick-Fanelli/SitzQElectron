@@ -5,6 +5,8 @@ import os from 'os'
 import { Launcher } from "./launcher";
 import { ApplicationCache } from "./cache";
 import { WindowCommon } from "./window-common";
+import { MenuBar } from "./menubar";
+import { osType } from "./api/machine-api";
 
 export namespace App {
 
@@ -28,7 +30,9 @@ export namespace App {
             titleBarOverlay: true,
             show: false,
         });
-    
+
+        MenuBar.changeMenubar(appWindow, MenuBar.MenuBarType.App);
+
         appWindow.setSize(1024, 800);
 
         appWindow.loadURL(WindowCommon.getWindowURL('AppView', [
@@ -43,8 +47,16 @@ export namespace App {
             
             ApplicationCache.saveCache();
 
-            if(appWindows.length == 0) 
-                Launcher.openLauncherWindow();
+            if(appWindows.length == 0) {
+                MenuBar.changeMenubar(null, MenuBar.MenuBarType.Launcher);
+            }
+        });
+
+        appWindow.on('focus', () => {
+
+            if(osType() == 'MacOS')
+                MenuBar.changeMenubar(appWindow, MenuBar.MenuBarType.App);
+
         });
     
         appWindow.once('ready-to-show', () => appWindow?.show());

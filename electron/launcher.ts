@@ -3,6 +3,8 @@ import path from 'node:path'
 import { BrowserWindow } from "electron"
 import { ApplicationCache } from './cache';
 import { WindowCommon } from './window-common';
+import { MenuBar } from './menubar';
+import { osType } from './api/machine-api';
 
 export namespace Launcher {
 
@@ -33,6 +35,8 @@ export namespace Launcher {
             show: false
         });
 
+        MenuBar.changeMenubar(launcherWindow, MenuBar.MenuBarType.Launcher);
+
         // Set Size
         launcherWindow.setSize(1024, 800);
 
@@ -43,6 +47,13 @@ export namespace Launcher {
         launcherWindow.on('closed', () => {
             ApplicationCache.saveCache();
             launcherWindow = null
+        });
+
+        launcherWindow.on('focus', () => {
+
+            if(osType() == 'MacOS')
+                MenuBar.changeMenubar(launcherWindow, MenuBar.MenuBarType.Launcher);
+
         });
 
         launcherWindow.once('ready-to-show', () => {

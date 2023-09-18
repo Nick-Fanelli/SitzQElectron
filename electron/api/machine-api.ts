@@ -97,7 +97,7 @@ export const readFile = async (filepath: string) : Promise<string> => {
 
 }
 
-const osType = (): OsType => {
+export const osType = (): OsType => {
 
     switch(os.type()) {
         

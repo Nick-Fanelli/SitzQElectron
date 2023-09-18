@@ -1,139 +1,253 @@
-import isDev from 'electron-is-dev'
+import { Menu } from 'electron';
 import { BuildSpecs } from '../src/BuildSpecs';
+import { BrowserWindow } from 'electron/main';
 
-const getMenuTemplate = () => {
+export namespace MenuBar {
 
-    const isMac = process.platform === 'darwin';
+    let launcherMenubar: Menu;
+    let appMenubar: Menu;
 
-    const fileMenu: Electron.MenuItemConstructorOptions = {
-        label: 'File',
-        submenu: [
-            { label: 'New Workspace' },
-            { label: 'Open Workspace' },
-            { label: 'Save Workspace' },
-            { label: 'Save Workspace As...' },
-            { label: 'Close Workspace' },
-            { label: 'Import Show Control Settings' },
-            { label: 'Export Show Control Settings' },
-        ],
-    };
+    export enum MenuBarType { Launcher, App }
 
-    const editMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Edit',
-        submenu: [
-            { role: 'undo' },
-            { role: 'redo' },
-            { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' },
-            { role: 'delete' },
-            { type: 'separator' },
-            { role: 'selectAll' },
-        ],
-    };
+    export const createMenubars = () => {
 
-    const viewMenu: Electron.MenuItemConstructorOptions = {
-        label: 'View',
-        submenu: [
-            { role: 'zoom' },
-            { role: 'zoomIn' },
-            { role: 'zoomOut' },
-            { role: 'resetZoom' },
-        ],
-    };
+        launcherMenubar = Menu.buildFromTemplate(getLauncherMenuTemplate());
+        appMenubar = Menu.buildFromTemplate(getAppMenuTemplate());
 
-    const projectMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Project',
-        submenu: [
-            { label: 'Project Settings' }
-        ],
-    };
+    }
 
-    const cueMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Cue',
-        submenu: [
-            { label: 'New Cue' },
-            { label: 'Duplicate Cue' },
-            { label: 'Delete Cue' },
-            { label: 'Cue Inspector' },
-            { label: 'Group Cues' },
-            { label: 'Ungroup Cues' },
-            { label: 'Rename Cue' },
-        ],
-    };
+    export const changeMenubar = (window: BrowserWindow | null, menuBarType: MenuBarType) => {
 
-    const playbackMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Playback',
-        submenu: [
-        ],
-    };
+        switch(menuBarType) {
 
-    const deviceMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Device',
-        submenu: [
-        ],
-    };
+            case MenuBarType.Launcher:
+                if(window)
+                    window.setMenu(launcherMenubar);
+                Menu.setApplicationMenu(launcherMenubar);
+                break;
+            case MenuBarType.App:
+                if(window)
+                    window.setMenu(appMenubar);
+                Menu.setApplicationMenu(appMenubar);
+                break;
+            default:
+                if(window)
+                    window.setMenu(null);
+                Menu.setApplicationMenu(null);
+                break;
 
-    const windowMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Window',
-        submenu: [
-        ],
-    };
-
-    const helpMenu: Electron.MenuItemConstructorOptions = {
-        label: 'Help',
-        role: 'help',
-        id: 'help',
-        submenu: [
-            { label: "Check for Updates" },
-            { label: "SitzQ Manual" },
-            { type: 'separator' },
-            { label: "Report a Bug" }
-        ],
-    };
-
-    const template: Electron.MenuItemConstructorOptions[] = [
-        fileMenu,
-        editMenu,
-        viewMenu,
-        projectMenu,
-        cueMenu,
-        playbackMenu,
-        deviceMenu,
-        windowMenu,
-        helpMenu,
-    ];
-
-    if(isDev) {
-        const devMenu: Electron.MenuItemConstructorOptions = {
-            label: 'Dev Tools',
-            submenu: [
-                { role: 'reload' },
-                { role: 'forceReload' },
-                { role: 'toggleDevTools' },
-                { type: 'separator' },
-            ]
         }
 
-        template.push(devMenu);
     }
 
-    if (isMac) {
-        template.unshift({
-            label: 'SitzQ',
+    export const getAppMenuTemplate = () => {
+
+        const isMac = process.platform === 'darwin';
+
+        const fileMenu: Electron.MenuItemConstructorOptions = {
+            label: 'File',
             submenu: [
-                { role: 'about', label: `About SitzQ v${BuildSpecs.BUILD_VERSION}` },
+                { label: 'New Workspace' },
+                { label: 'Open Workspace' },
+                { label: 'Save Workspace' },
+                { label: 'Save Workspace As...' },
+                { label: 'Close Workspace' },
+                { label: 'Import Show Control Settings' },
+                { label: 'Export Show Control Settings' },
+            ],
+        };
+
+        const editMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Edit',
+            submenu: [
+                { role: 'undo' },
+                { role: 'redo' },
                 { type: 'separator' },
-                { label: 'Global Settings' },
+                { role: 'cut' },
+                { role: 'copy' },
+                { role: 'paste' },
+                { role: 'delete' },
                 { type: 'separator' },
-                { role: 'quit' }
-            ]
-        });
+                { role: 'selectAll' },
+            ],
+        };
+
+        const viewMenu: Electron.MenuItemConstructorOptions = {
+            label: 'View',
+            submenu: [
+                { role: 'zoom' },
+                { role: 'zoomIn' },
+                { role: 'zoomOut' },
+                { role: 'resetZoom' },
+            ],
+        };
+
+        const projectMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Project',
+            submenu: [
+                { label: 'Project Settings' }
+            ],
+        };
+
+        const cueMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Cue',
+            submenu: [
+                { label: 'New Cue' },
+                { label: 'Duplicate Cue' },
+                { label: 'Delete Cue' },
+                { label: 'Cue Inspector' },
+                { label: 'Group Cues' },
+                { label: 'Ungroup Cues' },
+                { label: 'Rename Cue' },
+            ],
+        };
+
+        const playbackMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Playback',
+            submenu: [
+            ],
+        };
+
+        const deviceMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Device',
+            submenu: [
+            ],
+        };
+
+        const windowMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Window',
+            submenu: [
+            ],
+        };
+
+        const helpMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Help',
+            role: 'help',
+            id: 'help',
+            submenu: [
+                { label: "Check for Updates" },
+                { label: "SitzQ Manual" },
+                { type: 'separator' },
+                { label: "Report a Bug" }
+            ],
+        };
+
+        const template: Electron.MenuItemConstructorOptions[] = [
+            fileMenu,
+            editMenu,
+            viewMenu,
+            projectMenu,
+            cueMenu,
+            playbackMenu,
+            deviceMenu,
+            windowMenu,
+            helpMenu,
+        ];
+
+        if(process.env.NODE_ENV === 'development') {
+            const devMenu: Electron.MenuItemConstructorOptions = {
+                label: 'Dev Tools',
+                submenu: [
+                    { role: 'reload' },
+                    { role: 'forceReload' },
+                    { role: 'toggleDevTools' },
+                    { type: 'separator' },
+                ]
+            }
+
+            template.push(devMenu);
+        }
+
+        if (isMac) {
+            template.unshift({
+                label: 'SitzQ',
+                submenu: [
+                    { role: 'about', label: `About SitzQ v${BuildSpecs.BUILD_VERSION}` },
+                    { type: 'separator' },
+                    { label: 'Global Settings' },
+                    { type: 'separator' },
+                    { role: 'quit' }
+                ]
+            });
+        }
+
+        return template;
+
     }
 
-    return template;
+    export const getLauncherMenuTemplate = () => {
 
+        const isMac = process.platform === 'darwin';
+
+        const fileMenu: Electron.MenuItemConstructorOptions = {
+            label: 'File',
+            submenu: [
+                { label: 'New Workspace' },
+                { label: 'Open Workspace' },
+                { label: 'Save Workspace' },
+                { label: 'Save Workspace As...' },
+                { label: 'Close Workspace' },
+                { label: 'Import Show Control Settings' },
+                { label: 'Export Show Control Settings' },
+            ],
+        };
+
+        const viewMenu: Electron.MenuItemConstructorOptions = {
+            label: 'View',
+            submenu: [
+                { role: 'zoom' },
+                { role: 'zoomIn' },
+                { role: 'zoomOut' },
+                { role: 'resetZoom' },
+            ],
+        };
+
+        const helpMenu: Electron.MenuItemConstructorOptions = {
+            label: 'Help',
+            role: 'help',
+            id: 'help',
+            submenu: [
+                { label: "Check for Updates" },
+                { label: "SitzQ Manual" },
+                { type: 'separator' },
+                { label: "Report a Bug" }
+            ],
+        };
+
+        const template: Electron.MenuItemConstructorOptions[] = [
+            fileMenu,
+            viewMenu,
+            helpMenu,
+        ];
+
+        if(process.env.NODE_ENV === 'development') {
+            const devMenu: Electron.MenuItemConstructorOptions = {
+                label: 'Dev Tools',
+                submenu: [
+                    { role: 'reload' },
+                    { role: 'forceReload' },
+                    { role: 'toggleDevTools' },
+                    { type: 'separator' },
+                ]
+            }
+
+            template.push(devMenu);
+        }
+
+        if (isMac) {
+            template.unshift({
+                label: 'SitzQ',
+                submenu: [
+                    { role: 'about', label: `About SitzQ v${BuildSpecs.BUILD_VERSION}` },
+                    { type: 'separator' },
+                    { label: 'Global Settings' },
+                    { type: 'separator' },
+                    { role: 'quit' }
+                ]
+            });
+        }
+
+        return template;
+
+    }
 }
-
-export default getMenuTemplate;

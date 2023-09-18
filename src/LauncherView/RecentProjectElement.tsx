@@ -55,16 +55,25 @@ const RecentProjectElement = (props: Props) => {
                 menuItems={[
                     { label: "Remove", icon: faX, onClick: () => {
 
-                        console.log('REMOVING');
-
                         if(cache.lastActiveProjects) {
-                
+
+                            
                             const updatedLastActiveProjects = [...cache.lastActiveProjects];
-                            const index = updatedLastActiveProjects.indexOf(props.cachedProject);
 
-                            if(index !== -1) {
+                            let indexToRemove = -1;
 
-                                updatedLastActiveProjects.splice(index, 1);
+                            for(let i = 0; i < updatedLastActiveProjects.length; i++) {
+                                const project = updatedLastActiveProjects[i];
+
+                                if(project?.showFilepath === props.cachedProject.showFilepath) {
+                                    indexToRemove = i;
+                                    break;
+                                }
+                            }
+
+                            if(indexToRemove !== -1) {
+
+                                updatedLastActiveProjects.splice(indexToRemove, 1);
                                 updatedLastActiveProjects.push(null);
 
                                 setCache('lastActiveProjects', updatedLastActiveProjects as ActiveProjectArray);

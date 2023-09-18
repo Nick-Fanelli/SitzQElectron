@@ -1,9 +1,11 @@
 import { app, Menu } from 'electron'
 import path from 'node:path'
 import { bindAllIPCs } from './api/api'
-import getMenuTemplate from './menubar'
 import { Launcher } from './launcher'
 import { ApplicationCache } from './cache'
+import { MenuBar } from './menubar'
+
+export const IS_DEV: boolean = process.env.NODE_ENV === 'development';
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
@@ -16,13 +18,14 @@ const launchApplication = () => {
     // Load Application Cache
     ApplicationCache.bindCacheIPCs();
     ApplicationCache.loadCache();
+
+    // Build Menubars
+    MenuBar.createMenubars();
     
     // Open Launcher Window
     Launcher.openLauncherWindow();
 
-    // Menu Bar
-    const menu = Menu.buildFromTemplate(getMenuTemplate());
-    Menu.setApplicationMenu(menu);
+    Menu.setApplicationMenu(null); // Disable global menubar
 }
 
 const setDefaultProtocolClient = () => {

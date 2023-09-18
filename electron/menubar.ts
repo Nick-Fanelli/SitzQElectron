@@ -57,6 +57,8 @@ export namespace MenuBar {
                 { label: 'Close Workspace' },
                 { label: 'Import Show Control Settings' },
                 { label: 'Export Show Control Settings' },
+                { type: 'separator' },
+                { role: 'close' }
             ],
         };
 
@@ -194,7 +196,9 @@ export namespace MenuBar {
                         const window = WindowCommon.getActiveWindow();
                         appOpenProject(window);
                     }
-                }
+                },
+                { type: 'separator' },
+                { role: 'close' }
             ],
         };
 

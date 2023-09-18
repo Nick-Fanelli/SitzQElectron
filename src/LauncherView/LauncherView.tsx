@@ -14,6 +14,8 @@ import RecentProjectElement from './RecentProjectElement'
 
 const DefaultBuildVersion = `${BuildSpecs.BUILD_VERSION}`;
 
+const ShouldDisableAnimationInDev: boolean = true;
+
 const LauncherView = () => {
 
     const api = window.electronAPI;
@@ -83,7 +85,7 @@ const LauncherView = () => {
             {
                 <section id="lander-view">
                     <div className='container'>
-                        <div ref={slidingContentRef} className='sliding-content' style={ BuildSpecs.IS_DEV ? {
+                        <div ref={slidingContentRef} className='sliding-content' style={BuildSpecs.IS_DEV && ShouldDisableAnimationInDev ? {
 
                             animation: 'slideAndFade 0.01s ease-in-out forwards'
 
@@ -93,7 +95,7 @@ const LauncherView = () => {
                             <h3 onClick={toggleVersion} className='interactable'>{versionOutput}</h3>
                         </div>
 
-                        <div ref={fadingContentRef} className="fading-content" style={ BuildSpecs.IS_DEV ? {
+                        <div ref={fadingContentRef} className="fading-content" style={BuildSpecs.IS_DEV && ShouldDisableAnimationInDev ? {
                             animation: 'fadeIn 0.01s linear'
                         } : {}}>
 

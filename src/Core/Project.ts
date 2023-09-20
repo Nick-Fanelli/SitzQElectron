@@ -40,6 +40,7 @@ export namespace ProjectUtils {
     export const saveProjectToShowFile = async (filepath: string, project: Readonly<Project>) : Promise<void> => {
 
         const fileContents = ProjectUtils.projectToJSON(project);
+
         return window.electronAPI.machineAPI.writeFile(filepath, fileContents);
 
     }
@@ -48,8 +49,6 @@ export namespace ProjectUtils {
 
         const showName = window.electronAPI.machineAPI.pathBasename(directoryPath);
         
-        console.log(directoryPath);
-
         const resourceDirectory = window.electronAPI.machineAPI.pathJoin(directoryPath, "Resources");
         const showFilePath = window.electronAPI.machineAPI.pathJoin(directoryPath, showName + ".sqshow");
 

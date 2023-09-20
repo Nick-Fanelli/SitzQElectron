@@ -52,6 +52,7 @@ export namespace MenuBar {
             submenu: [
                 { 
                     label: "Save Project",
+                    accelerator: "CommandOrControl+S",
                     click: () => {
                         const window = WindowCommon.getActiveWindow();
                         window?.webContents.send('req-project-save');

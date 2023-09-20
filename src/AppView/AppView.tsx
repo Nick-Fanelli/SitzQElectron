@@ -6,7 +6,7 @@ import StatusBarComponent from './Components/StatusBarComponent'
 import { ProjectUtils } from '../Core/Project'
 
 import './AppView.css'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 import { ActiveProjectArray, CachedProject, useApplicationCache } from '../ApplicationCache'
@@ -22,32 +22,33 @@ const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSa
     const projectName       = useProjectStore(state => state.projectName);
     const cueList           = useProjectStore(state => state.cueList);
 
-    const handleSaveProject = () => {
+    const handleSaveProject = useCallback(() => {
 
         if(projectFilepath === null)
             return;
-
+        
         const reconstructedProject = ProjectUtils.reconstructProject(projectName, cueList);
         ProjectUtils.saveProjectToShowFile(projectFilepath, reconstructedProject);
 
-    }
+        console.log(reconstructedProject);
+
+    }, [projectFilepath, projectName, cueList]);
 
      // On Window Close
      useEffect(() => {
 
-        window.electronAPI.addOnWindowClosingListener(handleSaveProject);
+        const removeOnWindowClosingListener = window.electronAPI.onWindowClosing(handleSaveProject);
         const removeOnProjectSaveListener = window.electronAPI.appAPI.onRequestProjectSave(handleSaveProject);
         
         return () => {
-            window.electronAPI.removeOnWindowClosingListener(handleSaveProject);
+            removeOnWindowClosingListener();
             removeOnProjectSaveListener();
         }
 
-    }, []);
+    }, [projectFilepath, projectName, cueList]);
 
     return (
         null
-        // <button onClick={handleOnWindowClose}>Save Me</button>
     );
 
 }

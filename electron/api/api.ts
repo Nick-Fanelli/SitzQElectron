@@ -8,8 +8,7 @@ interface ElectronAPI {
     machineAPI: MachineAPI
     appAPI: AppAPI
 
-    addOnWindowClosingListener: (listener: (event: IpcRendererEvent, ...args: any[]) => void) => void
-    removeOnWindowClosingListener: (listener: (event: IpcRendererEvent, ...args: any[]) => void) => void
+    onWindowClosing: (listener: (event: IpcRendererEvent, ...args: any[]) => void) => () => void
 
 }
 
@@ -19,9 +18,10 @@ export const boundElectronAPI : ElectronAPI = {
     machineAPI: MachineSubAPIContext.apiBindings,
     appAPI: AppSubAPIContext.apiBindings,
 
-    addOnWindowClosingListener: (listener) => { ipcRenderer.on('window-closing', listener); },
-    removeOnWindowClosingListener: (listener) => { ipcRenderer.removeListener('window-closing', listener )}
-    
+    onWindowClosing: (listener) => {
+        ipcRenderer.on('window-closing', listener);
+        return () => { ipcRenderer.removeListener('window-closing', listener); }
+    }
 
 }
 

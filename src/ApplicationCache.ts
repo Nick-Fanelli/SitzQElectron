@@ -46,12 +46,12 @@ export const useApplicationCache = (keys: (keyof ActiveCache)[]) : [ Partial<Act
     // Bind On Change Callback
     useEffect(() => {
 
-        window.electronAPI.appAPI.addOnCacheChangeListener(onCacheStateChanged);
+        const removeListener = window.electronAPI.appAPI.onCacheChange(onCacheStateChanged);
         
         window.electronAPI.appAPI.requestCachedState(onCacheStateChanged);
 
         return () => {
-            window.electronAPI.appAPI.removeOnCacheChangeListener(onCacheStateChanged);
+            removeListener();
         }
 
     }, []);

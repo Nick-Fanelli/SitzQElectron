@@ -15,10 +15,10 @@ const AppConstants = () => {
             window.electronAPI.appAPI.launchProject(filepath);
         })
 
-        window.electronAPI.appAPI.addOnFileOpenedListener(onFileOpened);
+        const removeListenerCallback = window.electronAPI.appAPI.onFileOpened(onFileOpened);
 
         return () => {
-            window.electronAPI.appAPI.removeOnFileOpenedListener(onFileOpened);
+            removeListenerCallback();
         }
 
     }, []);

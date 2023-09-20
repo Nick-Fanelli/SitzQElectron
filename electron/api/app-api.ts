@@ -10,13 +10,10 @@ export const setApplicationOpenedFile = (filepath: string) => { applicationOpene
 
 export interface AppAPI {
 
-    addOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
-    removeOnFileOpenedListener: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+    onFileOpened: (listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => () => void,
+    onCacheChange: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => () => void,
 
-    addOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
-    removeOnCacheChangeListener: (listener: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
-
-    onRequestProjectSave: (listener: (event: Electron.IpcRendererEvent) => void) => (() => void)
+    onRequestProjectSave: (listener: (event: Electron.IpcRendererEvent) => void) => () => void
     
     requestCachedState: (returnCallback: (event: Electron.IpcRendererEvent, cache: ApplicationCache.CacheType) => void) => void
     setCachePair: (key: string, value: any) => void
@@ -78,12 +75,15 @@ const onBindIPCs = () => {
 
 const boundAppAPI: AppAPI = {
 
-    addOnFileOpenedListener: (listener) => ipcRenderer.on('file-opened', listener),
-    removeOnFileOpenedListener: (listener) => ipcRenderer.removeListener('file-opened', listener),
+    onFileOpened: (listener) => {
+        ipcRenderer.on('file-opened', listener);
+        return () => { ipcRenderer.removeListener('file-opened', listener); }
+    },
 
-    addOnCacheChangeListener: (listener) => ipcRenderer.on('cache-state-changed', listener),
-    removeOnCacheChangeListener: (listener) => ipcRenderer.removeListener('cache-state-changed', listener),
-
+    onCacheChange: (listener) => {
+        ipcRenderer.on('cache-state-changed', listener);
+        return () => { ipcRenderer.removeListener('cache-state-changed', listener); }
+    },
 
     onRequestProjectSave: (listener) => {
         ipcRenderer.on('req-project-save', listener);
@@ -94,9 +94,9 @@ const boundAppAPI: AppAPI = {
 
     requestCachedState: (returnCallback) => {
         ipcRenderer.send('request-cached-state');
-
         ipcRenderer.on('response-cached-state', returnCallback);
     },
+
     setCachePair: (key, value) => ipcRenderer.invoke("cache-set-pair", key, value),
 
     launchProject: (showFilepath: string) => ipcRenderer.invoke('app-launch-project', showFilepath),

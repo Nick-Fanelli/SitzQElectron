@@ -20,7 +20,7 @@ export interface MachineAPI {
     // Functions
     mkdir: (filepath: string) => Promise<void>
     touch: (filepath: string) => Promise<void>
-    writeFile: (filepath: string, fileContents: string) => Promise<void>
+    writeFile: (filepath: string, fileContents: string) => void
     readFile: (filepath: string) => Promise<string>
     createDirectory: () => Promise<any>
     osType: () => OsType
@@ -80,12 +80,10 @@ export const writeFile = async (filepath: string, fileContents: string): Promise
     const absolutePath = path.resolve(filepath);
     const dirname = path.dirname(absolutePath);
 
-    try {
-        fs.mkdirSync(dirname, { recursive: true });
-        fs.writeFileSync(absolutePath, fileContents);
-    } catch (err) {
-        console.error(`Error writing file: ${absolutePath}`, err);
-    }
+    console.log(fileContents);
+
+    fs.mkdir(dirname, { recursive: true }, (err) => console.error(err));
+    fs.writeFile(absolutePath, fileContents, (err) => console.error(err));
 
 }
 
@@ -143,6 +141,10 @@ const onBindIPCs = () => {
         return null;
     });
 
+    ipcMain.handle('machine-write-file', async (_, filepath: string, fileContents: string) => {
+        writeFile(filepath, fileContents);
+    });
+
 }
 
 // ========================================================================================================================================
@@ -157,7 +159,7 @@ const boundMachineAPI: MachineAPI = {
     
     mkdir,
     touch,
-    writeFile,
+    writeFile: (filepath: string, fileContents: string) => ipcRenderer.invoke('machine-write-file', filepath, fileContents),
     readFile,
     createDirectory: () => ipcRenderer.invoke('machine-open-directory'),
     osType,

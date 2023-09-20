@@ -30,8 +30,6 @@ const HandleProjectAutoSaveComponent = ({ projectFilepath }: HandleProjectAutoSa
         const reconstructedProject = ProjectUtils.reconstructProject(projectName, cueList);
         ProjectUtils.saveProjectToShowFile(projectFilepath, reconstructedProject);
 
-        console.log(reconstructedProject);
-
     }, [projectFilepath, projectName, cueList]);
 
      // On Window Close

@@ -80,10 +80,8 @@ export const writeFile = async (filepath: string, fileContents: string): Promise
     const absolutePath = path.resolve(filepath);
     const dirname = path.dirname(absolutePath);
 
-    console.log(fileContents);
-
-    fs.mkdir(dirname, { recursive: true }, (err) => console.error(err));
-    fs.writeFile(absolutePath, fileContents, (err) => console.error(err));
+    fs.mkdir(dirname, { recursive: true }, (err) => { if(err) console.error(err) });
+    fs.writeFile(absolutePath, fileContents, (err) => { if(err) console.error(err) });
 
 }
 

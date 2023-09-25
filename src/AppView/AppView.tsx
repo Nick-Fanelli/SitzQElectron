@@ -11,7 +11,7 @@ import { useProjectStore } from './State/AppViewStore'
 import LoadingComponent from '../Components/LoadingComponent'
 import { ActiveProjectArray, CachedProject, useApplicationCache } from '../ApplicationCache'
 
-interface HandleProjectAutoSaveComponentProps {
+interface HandleProjectAutoSaveComponentProps {  
 
     projectFilepath: string
 
@@ -87,8 +87,10 @@ const AppView = ({ projectFilepath }: AppViewProps) => {
             // Report the active project to be cached
             setCache('lastActiveProjects', (prev: ActiveProjectArray | undefined) => {
 
-                if(!prev || prev === undefined)
+                if(!prev || prev == undefined)
                     prev = [null, null, null];
+
+                console.log(prev);
 
                 const indexOfActiveProjectArray = (array: ActiveProjectArray, obj: CachedProject) => {
                     for (let i = 0; i < array.length; i++) {

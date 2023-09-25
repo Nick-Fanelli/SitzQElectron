@@ -61,13 +61,13 @@ export const useApplicationCache = (keys: (keyof ActiveCache)[]) : [ Partial<Act
         setActiveCache((prev) => {
 
             let updatedCache = {...prev};
-            updatedCache[key] = value;
+            updatedCache.key = value;
+
+            window.electronAPI.appAPI.setCachePair(key, value);
 
             return updatedCache;
 
         });
-
-        window.electronAPI.appAPI.setCachePair(key, value);
 
     }, [setActiveCache]);
 
@@ -78,7 +78,7 @@ export const useApplicationCache = (keys: (keyof ActiveCache)[]) : [ Partial<Act
             const value = callback(prev[key]);
 
             let updatedCache = {...prev};
-            updatedCache[key] = value;
+            updatedCache.key = value;
 
             window.electronAPI.appAPI.setCachePair(key, value);
 

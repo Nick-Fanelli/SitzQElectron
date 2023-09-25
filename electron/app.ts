@@ -14,7 +14,7 @@ export namespace App {
 
     export const openAppWindow = (showFilepath: string) => {
 
-        Launcher.closeLauncherWindow();
+        // Launcher.closeLauncherWindow();
 
         let appWindow: BrowserWindow | null = new BrowserWindow({
             icon: path.join(process.env.PUBLIC, "Application.icns"),

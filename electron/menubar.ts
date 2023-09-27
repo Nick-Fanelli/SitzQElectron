@@ -4,6 +4,7 @@ import { WindowCommon } from './window-common';
 import { appOpenProject } from './api/app-api';
 import { Launcher } from './launcher';
 import { BrowserWindow } from 'electron';
+import { osType } from './api/machine-api';
 
 export namespace MenuBar {
 
@@ -31,12 +32,14 @@ export namespace MenuBar {
             case MenuBarType.App:
                 if(window)
                     window.setMenu(appMenubar);
-                Menu.setApplicationMenu(appMenubar);
+                if(osType() == 'MacOS')
+                    Menu.setApplicationMenu(appMenubar);
                 break;
             default:
                 if(window)
                     window.setMenu(null);
-                Menu.setApplicationMenu(null);
+                if(osType() == 'MacOS')
+                    Menu.setApplicationMenu(null);
                 break;
 
         }

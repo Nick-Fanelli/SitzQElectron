@@ -53,11 +53,10 @@ const RecentProjectElement = (props: Props) => {
             contextMenu.show && <ContextMenuComponent
 
                 menuItems={[
-                    { label: "Remove", icon: faX, onClick: () => {
+                    { type: 'MenuItem', label: "Remove", icon: faX, onClick: () => {
 
                         if(cache.lastActiveProjects) {
 
-                            
                             const updatedLastActiveProjects = [...cache.lastActiveProjects];
 
                             let indexToRemove = -1;
